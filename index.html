@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Securely | Cyber Readiness</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f7f7f5;
+      color: #17181b;
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .navbar {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6%;
+      border-bottom: 1px solid #e5e5e1;
+      background: rgba(255,255,255,.92);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: #a68135;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-weight: 700;
+      transition: .2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: #17181b;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #eeeeeb;
+      color: #17181b;
+    }
+
+    .hero {
+      max-width: 1150px;
+      margin: auto;
+      padding: 95px 6% 75px;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 55px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      color: #9b7830;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(42px, 6vw, 70px);
+      line-height: 1.02;
+      letter-spacing: -3px;
+      margin-bottom: 25px;
+    }
+
+    .hero p {
+      color: #62646b;
+      font-size: 18px;
+      max-width: 610px;
+      margin-bottom: 30px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .security-card {
+      background: white;
+      border: 1px solid #e4e3df;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.07);
+    }
+
+    .card-label {
+      color: #777980;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .score {
+      font-size: 62px;
+      font-weight: 850;
+      letter-spacing: -3px;
+    }
+
+    .score span {
+      font-size: 18px;
+      color: #777980;
+      letter-spacing: 0;
+    }
+
+    .score-bar {
+      height: 9px;
+      background: #ecece8;
+      border-radius: 99px;
+      overflow: hidden;
+      margin: 18px 0 25px;
+    }
+
+    .score-fill {
+      height: 100%;
+      width: 72%;
+      background: #b28c3c;
+      border-radius: inherit;
+    }
+
+    .risk {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-top: 1px solid #eeeeeb;
+      font-size: 14px;
+    }
+
+    .risk strong {
+      font-size: 14px;
+    }
+
+    .pill {
+      border-radius: 99px;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .high {
+      background: #f8dddd;
+      color: #a52c2c;
+    }
+
+    .medium {
+      background: #f7edcf;
+      color: #8c6b1d;
+    }
+
+    .low {
+      background: #dff0e4;
+      color: #327044;
+    }
+
+    .section {
+      max-width: 1150px;
+      margin: auto;
+      padding: 70px 6%;
+    }
+
+    .section-title {
+      font-size: 34px;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    .section-subtitle {
+      color: #686a71;
+      margin-bottom: 35px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .feature {
+      background: white;
+      border: 1px solid #e5e4e0;
+      border-radius: 18px;
+      padding: 25px;
+    }
+
+    .feature-icon {
+      font-size: 25px;
+      margin-bottom: 16px;
+    }
+
+    .feature h3 {
+      margin-bottom: 8px;
+    }
+
+    .feature p {
+      color: #6b6d73;
+      font-size: 14px;
+    }
+
+    .assessment {
+      display: none;
+      max-width: 760px;
+      margin: 50px auto;
+      padding: 0 6%;
+    }
+
+    .assessment-box {
+      background: white;
+      border: 1px solid #e4e3df;
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: 0 15px 45px rgba(0,0,0,.06);
+    }
+
+    .progress {
+      height: 7px;
+      background: #ecece8;
+      border-radius: 99px;
+      margin: 18px 0 30px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 20%;
+      background: #a68135;
+      transition: .25s;
+    }
+
+    .question {
+      font-size: 23px;
+      font-weight: 800;
+      margin-bottom: 22px;
+    }
+
+    .answers {
+      display: grid;
+      gap: 10px;
+    }
+
+    .answer {
+      text-align: left;
+      padding: 15px;
+      background: #f8f8f6;
+      border: 1px solid #e4e4df;
+      border-radius: 12px;
+      transition: .2s;
+    }
+
+    .answer:hover {
+      border-color: #a68135;
+      background: #fbfaf5;
+    }
+
+    .result {
+      display: none;
+      max-width: 900px;
+      margin: 55px auto;
+      padding: 0 6%;
+    }
+
+    .result-box {
+      background: white;
+      border: 1px solid #e3e2de;
+      border-radius: 24px;
+      padding: 35px;
+    }
+
+    .result-score {
+      font-size: 70px;
+      font-weight: 850;
+      letter-spacing: -4px;
+    }
+
+    .result-score small {
+      font-size: 18px;
+      letter-spacing: 0;
+      color: #777980;
+    }
+
+    .result-message {
+      color: #65676d;
+      margin: 8px 0 30px;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+    }
+
+    .action {
+      border: 1px solid #e5e4e0;
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .action-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #17181b;
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    footer {
+      border-top: 1px solid #e5e5e1;
+      padding: 35px 6%;
+      color: #777980;
+      text-align: center;
+      font-size: 13px;
+      margin-top: 50px;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 65px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        letter-spacing: -2px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Secure<span>ly</span></div>
+
+    <div class="nav-actions">
+      <button class="btn btn-secondary" onclick="startAssessment()">
+        Assess my business
+      </button>
+    </div>
+  </nav>
+
+  <main id="home">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Cyber readiness for modern businesses</div>
+
+        <h1>
+          Know what to fix before it becomes a problem.
+        </h1>
+
+        <p>
+          Securely helps small businesses understand their cybersecurity
+          readiness, identify their biggest risks, and prioritize the actions
+          that matter most.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="startAssessment()">
+            Start free assessment
+          </button>
+
+          <button class="btn btn-secondary" onclick="scrollToFeatures()">
+            Explore Securely
+          </button>
+        </div>
+      </div>
+
+      <div class="security-card">
+        <div class="card-label">SECURITY READINESS</div>
+
+        <div class="score">
+          72<span>/100</span>
+        </div>
+
+        <div class="score-bar">
+          <div class="score-fill"></div>
+        </div>
+
+        <div class="risk">
+          <strong>MFA coverage</strong>
+          <span class="pill low">Good</span>
+        </div>
+
+        <div class="risk">
+          <strong>Backup readiness</strong>
+          <span class="pill medium">Review</span>
+        </div>
+
+        <div class="risk">
+          <strong>Incident response</strong>
+          <span class="pill high">Priority</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <h2 class="section-title">Security without the jargon.</h2>
+
+      <p class="section-subtitle">
+        Understand your biggest gaps and what to do next.
+      </p>
+
+      <div class="features">
+
+        <div class="feature">
+          <div class="feature-icon">🛡️</div>
+          <h3>Readiness Score</h3>
+          <p>
+            Get a simple 0–100 score based on your business's security
+            practices.
+          </p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">⚠️</div>
+          <h3>Risk Priorities</h3>
+          <p>
+            See which security gaps deserve attention first instead of
+            drowning in technical warnings.
+          </p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">✓</div>
+          <h3>Action Plan</h3>
+          <p>
+            Turn each security gap into a practical next step your business
+            can understand.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <section class="assessment" id="assessment">
+
+    <div class="assessment-box">
+
+      <div class="eyebrow">SECURITY ASSESSMENT</div>
+
+      <h2>Let's check your security readiness.</h2>
+
+      <div class="progress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="question" id="question"></div>
+
+      <div class="answers" id="answers"></div>
+
+    </div>
+
+  </section>
+
+  <section class="result" id="result">
+
+    <div class="result-box">
+
+      <div class="eyebrow">ASSESSMENT COMPLETE</div>
+
+      <h2>Your Security Readiness</h2>
+
+      <div class="result-score">
+        <span id="finalScore">0</span><small>/100</small>
+      </div>
+
+      <p class="result-message" id="resultMessage"></p>
+
+      <h3 style="margin-bottom:15px;">Priority actions</h3>
+
+      <div class="actions" id="actions"></div>
+
+      <button
+        class="btn btn-primary"
+        style="margin-top:25px;"
+        onclick="location.reload()"
+      >
+        Start another assessment
+      </button>
+
+    </div>
+
+  </section>
+
+  <footer>
+    Securely © 2026 · Cyber readiness and security education
+  </footer>
+
+  <script>
+
+    const questions = [
+      {
+        question: "Does your business use multi-factor authentication (MFA) on important accounts?",
+        answers: [
+          { text: "Yes, on all important accounts", points: 10 },
+          { text: "Only on some accounts", points: 5 },
+          { text: "No", points: 0 }
+        ]
+      },
+
+      {
+        question: "Does your business regularly back up important data?",
+        answers: [
+          { text: "Yes, with tested backups", points: 10 },
+          { text: "We have backups but rarely test them", points: 5 },
+          { text: "No reliable backup system", points: 0 }
+        ]
+      },
+
+      {
+        question: "Are business devices regularly updated with security updates?",
+        answers: [
+          { text: "Yes, updates are managed regularly", points: 10 },
+          { text: "Usually", points: 5 },
+          { text: "Not consistently", points: 0 }
+        ]
+      },
+
+      {
+        question: "Does your business have a plan for responding to a security incident?",
+        answers: [
+          { text: "Yes, documented and reviewed", points: 10 },
+          { text: "We have an informal process", points: 5 },
+          { text: "No", points: 0 }
+        ]
+      },
+
+      {
+        question: "Does your business have rules for what employees can enter into AI tools?",
+        answers: [
+          { text: "Yes, we have clear guidelines", points: 10 },
+          { text: "Some informal guidelines", points: 5 },
+          { text: "No", points: 0 }
+        ]
+      },
+
+      {
+        question: "Are employees given basic cybersecurity awareness training?",
+        answers: [
+          { text: "Yes, regularly", points: 10 },
+          { text: "Occasionally", points: 5 },
+          { text: "No", points: 0 }
+        ]
+      },
+
+      {
+        question: "Does your business control who has access to sensitive information?",
+        answers: [
+          { text: "Yes, access is reviewed regularly", points: 10 },
+          { text: "Some access controls exist", points: 5 },
+          { text: "Not really", points: 0 }
+        ]
+      },
+
+      {
+        question: "Does your business have a process for removing access when someone leaves?",
+        answers: [
+          { text: "Yes, it is documented", points: 10 },
+          { text: "Usually", points: 5 },
+          { text: "No formal process", points: 0 }
+        ]
+      },
+
+      {
+        question: "Do you have security rules for company email accounts?",
+        answers: [
+          { text: "Yes", points: 10 },
+          { text: "Some protections", points: 5 },
+          { text: "No", points: 0 }
+        ]
+      },
+
+      {
+        question: "Do you regularly review your business's cybersecurity practices?",
+        answers: [
+          { text: "Yes, at least annually", points: 10 },
+          { text: "Occasionally", points: 5 },
+          { text: "No", points: 0 }
+        ]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let totalScore = 0;
+
+    function startAssessment() {
+      document.getElementById("home").style.display = "none";
+      document.getElementById("assessment").style.display = "block";
+      document.getElementById("result").style.display = "none";
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+
+      document.getElementById("question").textContent = q.question;
+
+      const answersContainer = document.getElementById("answers");
+      answersContainer.innerHTML = "";
+
+      q.answers.forEach(answer => {
+        const button = document.createElement("button");
+
+        button.className = "answer";
+        button.textContent = answer.text;
+
+        button.onclick = () => chooseAnswer(answer.points);
+
+        answersContainer.appendChild(button);
+      });
+
+      const progress =
+        ((currentQuestion + 1) / questions.length) * 100;
+
+      document.getElementById("progressFill").style.width =
+        progress + "%";
+    }
+
+    function chooseAnswer(points) {
+      totalScore += points;
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+
+      document.getElementById("assessment").style.display = "none";
+      document.getElementById("result").style.display = "block";
+
+      document.getElementById("finalScore").textContent =
+        totalScore;
+
+      let message;
+
+      if (totalScore >= 80) {
+        message =
+          "Your business shows a strong baseline of security readiness. Keep reviewing your practices regularly.";
+      } else if (totalScore >= 60) {
+        message =
+          "Your business has a reasonable foundation, but several areas could be strengthened.";
+      } else {
+        message =
+          "Your business has several important security gaps that should be prioritized.";
+      }
+
+      document.getElementById("resultMessage").textContent = message;
+
+      const actions = document.getElementById("actions");
+
+      actions.innerHTML = "";
+
+      const recommendations = [
+        "Enable MFA on every important business account.",
+        "Create and regularly test reliable backups.",
+        "Create a simple incident-response plan.",
+        "Define clear rules for what employees may enter into AI tools.",
+        "Review employee access to sensitive information."
+      ];
+
+      recommendations.forEach((recommendation, index) => {
+
+        const item = document.createElement("div");
+
+        item.className = "action";
+
+        item.innerHTML = `
+          <div class="action-number">${index + 1}</div>
+          <div>
+            <strong>${recommendation}</strong>
+            <p style="color:#6b6d73;font-size:14px;margin-top:5px;">
+              Recommended based on common small-business security practices.
+            </p>
+          </div>
+        `;
+
+        actions.appendChild(item);
+      });
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    function scrollToFeatures() {
+      document.getElementById("features").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+  </script>
+
+</body>
+</html>
