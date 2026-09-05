@@ -1,9 +1,25 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Securely | Cyber Readiness</title>
+
+  <!-- Supabase -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "https://hcglxmygkuuyxuxaipxg.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_-OvAVJRIlXF_s8fclAvpcw_V3h43ETB";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+  </script>
 
   <style>
     * {
@@ -36,7 +52,7 @@
       justify-content: space-between;
       padding: 0 6%;
       border-bottom: 1px solid #e5e5e1;
-      background: rgba(255,255,255,.92);
+      background: rgba(255, 255, 255, 0.92);
       position: sticky;
       top: 0;
       z-index: 10;
@@ -63,7 +79,7 @@
       border-radius: 10px;
       padding: 11px 18px;
       font-weight: 700;
-      transition: .2s ease;
+      transition: 0.2s ease;
     }
 
     .btn:hover {
@@ -75,9 +91,17 @@
       color: white;
     }
 
+    .btn-primary:hover {
+      background: #292a2e;
+    }
+
     .btn-secondary {
       background: #eeeeeb;
       color: #17181b;
+    }
+
+    .btn-secondary:hover {
+      background: #e4e4df;
     }
 
     .hero {
@@ -85,7 +109,7 @@
       margin: auto;
       padding: 95px 6% 75px;
       display: grid;
-      grid-template-columns: 1.15fr .85fr;
+      grid-template-columns: 1.15fr 0.85fr;
       gap: 55px;
       align-items: center;
     }
@@ -125,7 +149,7 @@
       border: 1px solid #e4e3df;
       border-radius: 24px;
       padding: 28px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.07);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.07);
     }
 
     .card-label {
@@ -225,6 +249,12 @@
       border: 1px solid #e5e4e0;
       border-radius: 18px;
       padding: 25px;
+      transition: 0.2s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
     }
 
     .feature-icon {
@@ -253,7 +283,11 @@
       border: 1px solid #e4e3df;
       border-radius: 22px;
       padding: 32px;
-      box-shadow: 0 15px 45px rgba(0,0,0,.06);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
+    }
+
+    .assessment-box h2 {
+      margin-bottom: 5px;
     }
 
     .progress {
@@ -266,9 +300,9 @@
 
     .progress-fill {
       height: 100%;
-      width: 20%;
+      width: 10%;
       background: #a68135;
-      transition: .25s;
+      transition: 0.25s;
     }
 
     .question {
@@ -288,12 +322,13 @@
       background: #f8f8f6;
       border: 1px solid #e4e4df;
       border-radius: 12px;
-      transition: .2s;
+      transition: 0.2s;
     }
 
     .answer:hover {
       border-color: #a68135;
       background: #fbfaf5;
+      transform: translateY(-1px);
     }
 
     .result {
@@ -314,6 +349,7 @@
       font-size: 70px;
       font-weight: 850;
       letter-spacing: -4px;
+      margin-top: 8px;
     }
 
     .result-score small {
@@ -339,6 +375,7 @@
       display: flex;
       gap: 15px;
       align-items: flex-start;
+      background: #fff;
     }
 
     .action-number {
@@ -352,6 +389,18 @@
       font-size: 12px;
       font-weight: 800;
       flex-shrink: 0;
+    }
+
+    .action p {
+      color: #6b6d73;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .save-status {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #686a71;
     }
 
     footer {
@@ -376,8 +425,46 @@
       h1 {
         letter-spacing: -2px;
       }
+
+      .navbar {
+        padding: 0 5%;
+      }
+
+      .assessment-box,
+      .result-box {
+        padding: 24px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .nav-actions .btn {
+        padding: 9px 12px;
+        font-size: 13px;
+      }
+
+      .hero {
+        padding-left: 5%;
+        padding-right: 5%;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .question {
+        font-size: 20px;
+      }
+
+      .result-score {
+        font-size: 58px;
+      }
     }
   </style>
+
 </head>
 
 <body>
@@ -385,156 +472,239 @@
   <nav class="navbar">
     <div class="logo">Secure<span>ly</span></div>
 
-    <div class="nav-actions">
-      <button class="btn btn-secondary" onclick="startAssessment()">
-        Assess my business
-      </button>
-    </div>
+```
+<div class="nav-actions">
+  <button
+    class="btn btn-secondary"
+    onclick="startAssessment()"
+  >
+    Assess my business
+  </button>
+</div>
+```
+
   </nav>
 
   <main id="home">
 
-    <section class="hero">
-      <div>
-        <div class="eyebrow">Cyber readiness for modern businesses</div>
+```
+<section class="hero">
+  <div>
 
-        <h1>
-          Know what to fix before it becomes a problem.
-        </h1>
+    <div class="eyebrow">
+      Cyber readiness for modern businesses
+    </div>
 
-        <p>
-          Securely helps small businesses understand their cybersecurity
-          readiness, identify their biggest risks, and prioritize the actions
-          that matter most.
-        </p>
+    <h1>
+      Know what to fix before it becomes a problem.
+    </h1>
 
-        <div class="hero-actions">
-          <button class="btn btn-primary" onclick="startAssessment()">
-            Start free assessment
-          </button>
+    <p>
+      Securely helps small businesses understand their cybersecurity
+      readiness, identify their biggest risks, and prioritize the actions
+      that matter most.
+    </p>
 
-          <button class="btn btn-secondary" onclick="scrollToFeatures()">
-            Explore Securely
-          </button>
-        </div>
-      </div>
+    <div class="hero-actions">
 
-      <div class="security-card">
-        <div class="card-label">SECURITY READINESS</div>
+      <button
+        class="btn btn-primary"
+        onclick="startAssessment()"
+      >
+        Start free assessment
+      </button>
 
-        <div class="score">
-          72<span>/100</span>
-        </div>
+      <button
+        class="btn btn-secondary"
+        onclick="scrollToFeatures()"
+      >
+        Explore Securely
+      </button>
 
-        <div class="score-bar">
-          <div class="score-fill"></div>
-        </div>
+    </div>
 
-        <div class="risk">
-          <strong>MFA coverage</strong>
-          <span class="pill low">Good</span>
-        </div>
+  </div>
 
-        <div class="risk">
-          <strong>Backup readiness</strong>
-          <span class="pill medium">Review</span>
-        </div>
+  <div class="security-card">
 
-        <div class="risk">
-          <strong>Incident response</strong>
-          <span class="pill high">Priority</span>
-        </div>
-      </div>
-    </section>
+    <div class="card-label">
+      SECURITY READINESS
+    </div>
 
-    <section class="section" id="features">
-      <h2 class="section-title">Security without the jargon.</h2>
+    <div class="score">
+      72<span>/100</span>
+    </div>
 
-      <p class="section-subtitle">
-        Understand your biggest gaps and what to do next.
+    <div class="score-bar">
+      <div class="score-fill"></div>
+    </div>
+
+    <div class="risk">
+      <strong>MFA coverage</strong>
+      <span class="pill low">Good</span>
+    </div>
+
+    <div class="risk">
+      <strong>Backup readiness</strong>
+      <span class="pill medium">Review</span>
+    </div>
+
+    <div class="risk">
+      <strong>Incident response</strong>
+      <span class="pill high">Priority</span>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="features">
+
+  <h2 class="section-title">
+    Security without the jargon.
+  </h2>
+
+  <p class="section-subtitle">
+    Understand your biggest gaps and what to do next.
+  </p>
+
+  <div class="features">
+
+    <div class="feature">
+
+      <div class="feature-icon">🛡️</div>
+
+      <h3>
+        Readiness Score
+      </h3>
+
+      <p>
+        Get a simple 0–100 score based on your business's security
+        practices.
       </p>
 
-      <div class="features">
+    </div>
 
-        <div class="feature">
-          <div class="feature-icon">🛡️</div>
-          <h3>Readiness Score</h3>
-          <p>
-            Get a simple 0–100 score based on your business's security
-            practices.
-          </p>
-        </div>
+    <div class="feature">
 
-        <div class="feature">
-          <div class="feature-icon">⚠️</div>
-          <h3>Risk Priorities</h3>
-          <p>
-            See which security gaps deserve attention first instead of
-            drowning in technical warnings.
-          </p>
-        </div>
+      <div class="feature-icon">⚠️</div>
 
-        <div class="feature">
-          <div class="feature-icon">✓</div>
-          <h3>Action Plan</h3>
-          <p>
-            Turn each security gap into a practical next step your business
-            can understand.
-          </p>
-        </div>
+      <h3>
+        Risk Priorities
+      </h3>
 
-      </div>
-    </section>
+      <p>
+        See which security gaps deserve attention first instead of
+        drowning in technical warnings.
+      </p>
+
+    </div>
+
+    <div class="feature">
+
+      <div class="feature-icon">✓</div>
+
+      <h3>
+        Action Plan
+      </h3>
+
+      <p>
+        Turn each security gap into a practical next step your business
+        can understand.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+```
 
   </main>
 
   <section class="assessment" id="assessment">
 
-    <div class="assessment-box">
+```
+<div class="assessment-box">
 
-      <div class="eyebrow">SECURITY ASSESSMENT</div>
+  <div class="eyebrow">
+    SECURITY ASSESSMENT
+  </div>
 
-      <h2>Let's check your security readiness.</h2>
+  <h2>
+    Let's check your security readiness.
+  </h2>
 
-      <div class="progress">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
+  <div class="progress">
+    <div
+      class="progress-fill"
+      id="progressFill"
+    ></div>
+  </div>
 
-      <div class="question" id="question"></div>
+  <div
+    class="question"
+    id="question"
+  ></div>
 
-      <div class="answers" id="answers"></div>
+  <div
+    class="answers"
+    id="answers"
+  ></div>
 
-    </div>
+</div>
+```
 
   </section>
 
   <section class="result" id="result">
 
-    <div class="result-box">
+```
+<div class="result-box">
 
-      <div class="eyebrow">ASSESSMENT COMPLETE</div>
+  <div class="eyebrow">
+    ASSESSMENT COMPLETE
+  </div>
 
-      <h2>Your Security Readiness</h2>
+  <h2>
+    Your Security Readiness
+  </h2>
 
-      <div class="result-score">
-        <span id="finalScore">0</span><small>/100</small>
-      </div>
+  <div class="result-score">
+    <span id="finalScore">0</span>
+    <small>/100</small>
+  </div>
 
-      <p class="result-message" id="resultMessage"></p>
+  <p
+    class="result-message"
+    id="resultMessage"
+  ></p>
 
-      <h3 style="margin-bottom:15px;">Priority actions</h3>
+  <h3 style="margin-bottom:15px;">
+    Priority actions
+  </h3>
 
-      <div class="actions" id="actions"></div>
+  <div
+    class="actions"
+    id="actions"
+  ></div>
 
-      <button
-        class="btn btn-primary"
-        style="margin-top:25px;"
-        onclick="location.reload()"
-      >
-        Start another assessment
-      </button>
+  <p
+    class="save-status"
+    id="saveStatus"
+  >
+    Assessment results are ready.
+  </p>
 
-    </div>
+  <button
+    class="btn btn-primary"
+    style="margin-top:25px;"
+    onclick="location.reload()"
+  >
+    Start another assessment
+  </button>
+
+</div>
+```
 
   </section>
 
@@ -544,104 +714,244 @@
 
   <script>
 
+    /*
+      ==========================================================
+      SECURITY ASSESSMENT QUESTIONS
+      ==========================================================
+    */
+
     const questions = [
+
       {
-        question: "Does your business use multi-factor authentication (MFA) on important accounts?",
+        question:
+          "Does your business use multi-factor authentication (MFA) on important accounts?",
+
         answers: [
-          { text: "Yes, on all important accounts", points: 10 },
-          { text: "Only on some accounts", points: 5 },
-          { text: "No", points: 0 }
+          {
+            text: "Yes, on all important accounts",
+            points: 10
+          },
+          {
+            text: "Only on some accounts",
+            points: 5
+          },
+          {
+            text: "No",
+            points: 0
+          }
         ]
       },
 
       {
-        question: "Does your business regularly back up important data?",
+        question:
+          "Does your business regularly back up important data?",
+
         answers: [
-          { text: "Yes, with tested backups", points: 10 },
-          { text: "We have backups but rarely test them", points: 5 },
-          { text: "No reliable backup system", points: 0 }
+          {
+            text: "Yes, with tested backups",
+            points: 10
+          },
+          {
+            text: "We have backups but rarely test them",
+            points: 5
+          },
+          {
+            text: "No reliable backup system",
+            points: 0
+          }
         ]
       },
 
       {
-        question: "Are business devices regularly updated with security updates?",
+        question:
+          "Are business devices regularly updated with security updates?",
+
         answers: [
-          { text: "Yes, updates are managed regularly", points: 10 },
-          { text: "Usually", points: 5 },
-          { text: "Not consistently", points: 0 }
+          {
+            text: "Yes, updates are managed regularly",
+            points: 10
+          },
+          {
+            text: "Usually",
+            points: 5
+          },
+          {
+            text: "Not consistently",
+            points: 0
+          }
         ]
       },
 
       {
-        question: "Does your business have a plan for responding to a security incident?",
+        question:
+          "Does your business have a plan for responding to a security incident?",
+
         answers: [
-          { text: "Yes, documented and reviewed", points: 10 },
-          { text: "We have an informal process", points: 5 },
-          { text: "No", points: 0 }
+          {
+            text: "Yes, documented and reviewed",
+            points: 10
+          },
+          {
+            text: "We have an informal process",
+            points: 5
+          },
+          {
+            text: "No",
+            points: 0
+          }
         ]
       },
 
       {
-        question: "Does your business have rules for what employees can enter into AI tools?",
+        question:
+          "Does your business have rules for what employees can enter into AI tools?",
+
         answers: [
-          { text: "Yes, we have clear guidelines", points: 10 },
-          { text: "Some informal guidelines", points: 5 },
-          { text: "No", points: 0 }
+          {
+            text: "Yes, we have clear guidelines",
+            points: 10
+          },
+          {
+            text: "Some informal guidelines",
+            points: 5
+          },
+          {
+            text: "No",
+            points: 0
+          }
         ]
       },
 
       {
-        question: "Are employees given basic cybersecurity awareness training?",
+        question:
+          "Are employees given basic cybersecurity awareness training?",
+
         answers: [
-          { text: "Yes, regularly", points: 10 },
-          { text: "Occasionally", points: 5 },
-          { text: "No", points: 0 }
+          {
+            text: "Yes, regularly",
+            points: 10
+          },
+          {
+            text: "Occasionally",
+            points: 5
+          },
+          {
+            text: "No",
+            points: 0
+          }
         ]
       },
 
       {
-        question: "Does your business control who has access to sensitive information?",
+        question:
+          "Does your business control who has access to sensitive information?",
+
         answers: [
-          { text: "Yes, access is reviewed regularly", points: 10 },
-          { text: "Some access controls exist", points: 5 },
-          { text: "Not really", points: 0 }
+          {
+            text: "Yes, access is reviewed regularly",
+            points: 10
+          },
+          {
+            text: "Some access controls exist",
+            points: 5
+          },
+          {
+            text: "Not really",
+            points: 0
+          }
         ]
       },
 
       {
-        question: "Does your business have a process for removing access when someone leaves?",
+        question:
+          "Does your business have a process for removing access when someone leaves?",
+
         answers: [
-          { text: "Yes, it is documented", points: 10 },
-          { text: "Usually", points: 5 },
-          { text: "No formal process", points: 0 }
+          {
+            text: "Yes, it is documented",
+            points: 10
+          },
+          {
+            text: "Usually",
+            points: 5
+          },
+          {
+            text: "No formal process",
+            points: 0
+          }
         ]
       },
 
       {
-        question: "Do you have security rules for company email accounts?",
+        question:
+          "Do you have security rules for company email accounts?",
+
         answers: [
-          { text: "Yes", points: 10 },
-          { text: "Some protections", points: 5 },
-          { text: "No", points: 0 }
+          {
+            text: "Yes",
+            points: 10
+          },
+          {
+            text: "Some protections",
+            points: 5
+          },
+          {
+            text: "No",
+            points: 0
+          }
         ]
       },
 
       {
-        question: "Do you regularly review your business's cybersecurity practices?",
+        question:
+          "Do you regularly review your business's cybersecurity practices?",
+
         answers: [
-          { text: "Yes, at least annually", points: 10 },
-          { text: "Occasionally", points: 5 },
-          { text: "No", points: 0 }
+          {
+            text: "Yes, at least annually",
+            points: 10
+          },
+          {
+            text: "Occasionally",
+            points: 5
+          },
+          {
+            text: "No",
+            points: 0
+          }
         ]
       }
+
     ];
+
+
+    /*
+      ==========================================================
+      ASSESSMENT STATE
+      ==========================================================
+    */
 
     let currentQuestion = 0;
     let totalScore = 0;
+    let selectedAnswers = [];
+
+
+    /*
+      ==========================================================
+      START ASSESSMENT
+      ==========================================================
+    */
 
     function startAssessment() {
+
+      currentQuestion = 0;
+      totalScore = 0;
+      selectedAnswers = [];
+
       document.getElementById("home").style.display = "none";
+
       document.getElementById("assessment").style.display = "block";
+
       document.getElementById("result").style.display = "none";
 
       window.scrollTo({
@@ -652,23 +962,40 @@
       showQuestion();
     }
 
+
+    /*
+      ==========================================================
+      SHOW QUESTION
+      ==========================================================
+    */
+
     function showQuestion() {
+
       const q = questions[currentQuestion];
 
-      document.getElementById("question").textContent = q.question;
+      document.getElementById("question").textContent =
+        q.question;
 
-      const answersContainer = document.getElementById("answers");
+      const answersContainer =
+        document.getElementById("answers");
+
       answersContainer.innerHTML = "";
 
       q.answers.forEach(answer => {
-        const button = document.createElement("button");
+
+        const button =
+          document.createElement("button");
 
         button.className = "answer";
+
+        button.type = "button";
+
         button.textContent = answer.text;
 
-        button.onclick = () => chooseAnswer(answer.points);
+        button.onclick = () => chooseAnswer(answer);
 
         answersContainer.appendChild(button);
+
       });
 
       const progress =
@@ -678,70 +1005,247 @@
         progress + "%";
     }
 
-    function chooseAnswer(points) {
-      totalScore += points;
+
+    /*
+      ==========================================================
+      SELECT ANSWER
+      ==========================================================
+    */
+
+    function chooseAnswer(answer) {
+
+      totalScore += answer.points;
+
+      selectedAnswers.push({
+        question: questions[currentQuestion].question,
+        answer: answer.text,
+        points: answer.points
+      });
+
       currentQuestion++;
 
       if (currentQuestion < questions.length) {
+
         showQuestion();
+
       } else {
+
         showResult();
+
       }
     }
 
+
+    /*
+      ==========================================================
+      SUPABASE CONNECTION TEST
+      ==========================================================
+    */
+
+    async function saveAssessmentToSupabase() {
+
+      const status =
+        document.getElementById("saveStatus");
+
+      if (!supabaseClient) {
+
+        status.textContent =
+          "Assessment completed. Supabase is not initialized.";
+
+        return;
+      }
+
+      try {
+
+        /*
+          We perform a lightweight database request.
+
+          Important:
+          RLS can legitimately prevent reading rows.
+          That does not automatically mean Supabase is broken.
+        */
+
+        const { error } =
+          await supabaseClient
+            .from("businesses")
+            .select("id")
+            .limit(1);
+
+        if (error) {
+
+          console.warn(
+            "Supabase database response:",
+            error
+          );
+
+          /*
+            If Supabase responds with an RLS/permission
+            restriction, the client itself is still reaching
+            the project.
+          */
+
+          if (
+            error.code === "42501" ||
+            error.code === "PGRST116"
+          ) {
+
+            status.textContent =
+              "Assessment completed. Securely is connected to Supabase.";
+
+          } else {
+
+            status.textContent =
+              "Assessment completed. Supabase database access needs configuration.";
+
+          }
+
+          return;
+        }
+
+        status.textContent =
+          "Assessment completed. Securely is connected to Supabase.";
+
+      } catch (error) {
+
+        console.error(
+          "Supabase connection error:",
+          error
+        );
+
+        status.textContent =
+          "Assessment completed. Supabase connection could not be verified.";
+
+      }
+    }
+
+
+    /*
+      ==========================================================
+      SHOW RESULT
+      ==========================================================
+    */
+
     function showResult() {
 
-      document.getElementById("assessment").style.display = "none";
-      document.getElementById("result").style.display = "block";
+      document.getElementById("assessment").style.display =
+        "none";
+
+      document.getElementById("result").style.display =
+        "block";
 
       document.getElementById("finalScore").textContent =
         totalScore;
 
+
       let message;
 
+
       if (totalScore >= 80) {
+
         message =
           "Your business shows a strong baseline of security readiness. Keep reviewing your practices regularly.";
+
       } else if (totalScore >= 60) {
+
         message =
           "Your business has a reasonable foundation, but several areas could be strengthened.";
+
       } else {
+
         message =
           "Your business has several important security gaps that should be prioritized.";
+
       }
 
-      document.getElementById("resultMessage").textContent = message;
 
-      const actions = document.getElementById("actions");
+      document.getElementById("resultMessage").textContent =
+        message;
+
+
+      /*
+        ========================================================
+        RECOMMENDATIONS
+        ========================================================
+      */
+
+      const actions =
+        document.getElementById("actions");
 
       actions.innerHTML = "";
 
+
       const recommendations = [
+
         "Enable MFA on every important business account.",
+
         "Create and regularly test reliable backups.",
+
         "Create a simple incident-response plan.",
+
         "Define clear rules for what employees may enter into AI tools.",
+
         "Review employee access to sensitive information."
+
       ];
 
-      recommendations.forEach((recommendation, index) => {
 
-        const item = document.createElement("div");
+      recommendations.forEach(
+        (recommendation, index) => {
 
-        item.className = "action";
+          const item =
+            document.createElement("div");
 
-        item.innerHTML = `
-          <div class="action-number">${index + 1}</div>
-          <div>
-            <strong>${recommendation}</strong>
-            <p style="color:#6b6d73;font-size:14px;margin-top:5px;">
-              Recommended based on common small-business security practices.
-            </p>
-          </div>
-        `;
+          item.className = "action";
 
-        actions.appendChild(item);
-      });
+
+          const number =
+            document.createElement("div");
+
+          number.className =
+            "action-number";
+
+          number.textContent =
+            index + 1;
+
+
+          const content =
+            document.createElement("div");
+
+
+          const title =
+            document.createElement("strong");
+
+          title.textContent =
+            recommendation;
+
+
+          const description =
+            document.createElement("p");
+
+          description.textContent =
+            "Recommended based on common small-business security practices.";
+
+
+          content.appendChild(title);
+
+          content.appendChild(description);
+
+          item.appendChild(number);
+
+          item.appendChild(content);
+
+          actions.appendChild(item);
+
+        }
+      );
+
+
+      /*
+        Test Supabase after the results are displayed.
+      */
+
+      saveAssessmentToSupabase();
+
 
       window.scrollTo({
         top: 0,
@@ -749,10 +1253,19 @@
       });
     }
 
+
+    /*
+      ==========================================================
+      SCROLL TO FEATURES
+      ==========================================================
+    */
+
     function scrollToFeatures() {
+
       document.getElementById("features").scrollIntoView({
         behavior: "smooth"
       });
+
     }
 
   </script>
