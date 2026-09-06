@@ -1,3616 +1,1643 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <script>
-    (function () {
-      const savedTheme =
-        localStorage.getItem("azele-theme") || "system";
-
-      document.documentElement.dataset.theme = savedTheme;
-    })();
-  </script>
-
-  <title>AZÈLE — Cybersecurity Readiness</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    :root {
-      --bg: #f7f4ee;
-      --surface: #fffdf9;
-      --surface-2: #f1ede4;
-      --surface-3: #ebe5d9;
-
-      --text: #171717;
-      --text-soft: #3f403f;
-      --muted: #77756e;
-
-      --border: rgba(25, 24, 21, 0.10);
-      --border-strong: rgba(25, 24, 21, 0.16);
-
-      --gold: #ae8a45;
-      --gold-dark: #8d6e34;
-      --gold-soft: rgba(174, 138, 69, 0.12);
-
-      --success-bg: #e4efe5;
-      --success-text: #386542;
-
-      --warning-bg: #f4ead1;
-      --warning-text: #80631f;
-
-      --danger-bg: #f2dddd;
-      --danger-text: #963838;
-
-      --shadow-sm: 0 8px 30px rgba(28, 25, 20, 0.05);
-      --shadow-md: 0 18px 60px rgba(28, 25, 20, 0.08);
-
-      --radius: 18px;
-      --radius-sm: 12px;
-
-      color-scheme: light;
-    }
-
-    html[data-theme="dark"] {
-      --bg: #0b0b0c;
-      --surface: #121214;
-      --surface-2: #18181a;
-      --surface-3: #202023;
-
-      --text: #f4f0e8;
-      --text-soft: #d1cdc4;
-      --muted: #9d9a92;
-
-      --border: rgba(255, 255, 255, 0.085);
-      --border-strong: rgba(255, 255, 255, 0.14);
-
-      --gold: #c6a55e;
-      --gold-dark: #d4b66f;
-      --gold-soft: rgba(198, 165, 94, 0.13);
-
-      --success-bg: rgba(74, 132, 83, 0.18);
-      --success-text: #a7d2ad;
-
-      --warning-bg: rgba(180, 143, 54, 0.17);
-      --warning-text: #e1c47b;
-
-      --danger-bg: rgba(177, 67, 67, 0.17);
-      --danger-text: #e6a3a3;
-
-      --shadow-sm: 0 8px 30px rgba(0, 0, 0, 0.20);
-      --shadow-md: 0 18px 60px rgba(0, 0, 0, 0.30);
-
-      color-scheme: dark;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      html[data-theme="system"] {
-        --bg: #0b0b0c;
-        --surface: #121214;
-        --surface-2: #18181a;
-        --surface-3: #202023;
-
-        --text: #f4f0e8;
-        --text-soft: #d1cdc4;
-        --muted: #9d9a92;
-
-        --border: rgba(255, 255, 255, 0.085);
-        --border-strong: rgba(255, 255, 255, 0.14);
-
-        --gold: #c6a55e;
-        --gold-dark: #d4b66f;
-        --gold-soft: rgba(198, 165, 94, 0.13);
-
-        --success-bg: rgba(74, 132, 83, 0.18);
-        --success-text: #a7d2ad;
-
-        --warning-bg: rgba(180, 143, 54, 0.17);
-        --warning-text: #e1c47b;
-
-        --danger-bg: rgba(177, 67, 67, 0.17);
-        --danger-text: #e6a3a3;
-
-        color-scheme: dark;
-      }
-    }
-
-    @media (prefers-color-scheme: light) {
-      html[data-theme="system"] {
-        color-scheme: light;
-      }
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(
-          circle at 80% -10%,
-          var(--gold-soft),
-          transparent 34%
-        ),
-        var(--bg);
-      color: var(--text);
-      font-family: "DM Sans", sans-serif;
-      transition:
-        background-color 0.25s ease,
-        color 0.25s ease;
-    }
-
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .container {
-      width: min(1160px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    /* ============================================================
-       NAVBAR
-       ============================================================ */
-
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: color-mix(
-        in srgb,
-        var(--bg) 86%,
-        transparent
-      );
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-inner {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      flex-shrink: 0;
-      white-space: nowrap;
-      word-break: keep-all;
-      overflow-wrap: normal;
-      font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: 32px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      color: var(--text);
-    }
-
-    .logo:hover,
-    .logo:focus,
-    .logo:visited {
-      color: var(--text);
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .theme-switcher {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      padding: 4px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .theme-btn {
-      width: 34px;
-      height: 32px;
-      border: 0;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      color: var(--muted);
-      background: transparent;
-      transition: all 0.2s ease;
-    }
-
-    .theme-btn:hover {
-      color: var(--text);
-      background: var(--surface-2);
-    }
-
-    .theme-btn.active {
-      color: var(--gold-dark);
-      background: var(--gold-soft);
-    }
-
-    .theme-btn svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .auth-area {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .user-email {
-      max-width: 180px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* ============================================================
-       BUTTONS
-       ============================================================ */
-
-    .btn {
-      border: 1px solid transparent;
-      border-radius: 10px;
-      padding: 12px 18px;
-      font-size: 14px;
-      font-weight: 600;
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn-primary {
-      color: #fffdf8;
-      background: var(--text);
-      border-color: var(--text);
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
-    }
-
-    .btn-gold {
-      color: #fffdf8;
-      background: var(--gold-dark);
-      border-color: var(--gold-dark);
-      box-shadow: 0 8px 24px rgba(174, 138, 69, 0.18);
-    }
-
-    .btn-secondary {
-      color: var(--text);
-      background: var(--surface);
-      border-color: var(--border-strong);
-    }
-
-    .btn-secondary:hover {
-      background: var(--surface-2);
-    }
-
-    /* ============================================================
-       HERO
-       ============================================================ */
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 110px 0 100px;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      width: 560px;
-      height: 560px;
-      right: -180px;
-      top: -260px;
-      background: radial-gradient(
-        circle,
-        var(--gold-soft),
-        transparent 68%
-      );
-      pointer-events: none;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      color: var(--gold-dark);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 22px;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 28px;
-      height: 1px;
-      background: var(--gold);
-    }
-
-    .hero h1 {
-      max-width: 850px;
-      margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(58px, 8vw, 96px);
-      font-weight: 600;
-      letter-spacing: -0.045em;
-      line-height: 0.88;
-    }
-
-    .hero h1 span {
-      color: var(--gold);
-    }
-
-    .hero-copy {
-      max-width: 650px;
-      margin: 28px 0 34px;
-      color: var(--text-soft);
-      font-size: 18px;
-      line-height: 1.7;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    /* ============================================================
-       FEATURES
-       ============================================================ */
-
-    .section {
-      padding: 88px 0;
-    }
-
-    .section-header {
-      max-width: 680px;
-      margin-bottom: 38px;
-    }
-
-    .section-label {
-      color: var(--gold-dark);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(42px, 5vw, 64px);
-      line-height: 0.98;
-      letter-spacing: -0.025em;
-      font-weight: 600;
-    }
-
-    .section-description {
-      color: var(--muted);
-      line-height: 1.7;
-      margin: 16px 0 0;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .feature-card {
-      min-height: 230px;
-      padding: 28px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
-      transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .feature-number {
-      color: var(--gold);
-      font-family: "Cormorant Garamond", serif;
-      font-size: 28px;
-      font-weight: 700;
-    }
-
-    .feature-card h3 {
-      margin: 30px 0 10px;
-      font-size: 18px;
-    }
-
-    .feature-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
-    }
-
-    /* ============================================================
-       SECURITY ASSISTANT
-       ============================================================ */
-
-    #assistant-section {
-      display: block;
-    }
-
-    .assistant-shell {
-      display: grid;
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .assistant-intro,
-    .assistant-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow-md);
-    }
-
-    .assistant-intro {
-      padding: 38px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .assistant-intro::after {
-      content: "";
-      position: absolute;
-      width: 280px;
-      height: 280px;
-      right: -120px;
-      bottom: -140px;
-      border-radius: 50%;
-      background: radial-gradient(
-        circle,
-        var(--gold-soft),
-        transparent 70%
-      );
-      pointer-events: none;
-    }
-
-    .assistant-mark {
-      width: 54px;
-      height: 54px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 24px;
-      border-radius: 15px;
-      color: var(--gold-dark);
-      background: var(--gold-soft);
-      border: 1px solid var(--border);
-    }
-
-    .assistant-mark svg {
-      width: 25px;
-      height: 25px;
-    }
-
-    .assistant-intro h2 {
-      margin: 0;
-      max-width: 500px;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(40px, 5vw, 58px);
-      line-height: 0.96;
-      letter-spacing: -0.025em;
-    }
-
-    .assistant-intro p {
-      max-width: 500px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin: 20px 0 0;
-    }
-
-    .assistant-safe-note {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      gap: 10px;
-      margin-top: 30px;
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--surface-2);
-      color: var(--text-soft);
-      font-size: 12px;
-      line-height: 1.55;
-    }
-
-    .assistant-safe-note svg {
-      flex-shrink: 0;
-      width: 17px;
-      height: 17px;
-      color: var(--gold);
-      margin-top: 1px;
-    }
-
-    .assistant-panel {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      min-height: 500px;
-    }
-
-    .assistant-panel-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .assistant-panel-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .assistant-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 0 5px var(--gold-soft);
-    }
-
-    .assistant-panel-title strong {
-      font-size: 14px;
-    }
-
-    .assistant-status {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .assistant-messages {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding: 22px 2px;
-      overflow-y: auto;
-      max-height: 360px;
-    }
-
-    .assistant-message {
-      max-width: 88%;
-      padding: 13px 15px;
-      border-radius: 13px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .assistant-message.bot {
-      align-self: flex-start;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      color: var(--text-soft);
-    }
-
-    .assistant-message.user {
-      align-self: flex-end;
-      background: var(--text);
-      color: var(--bg);
-    }
-
-    .assistant-quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-bottom: 12px;
-    }
-
-    .assistant-quick {
-      padding: 8px 11px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: var(--surface-2);
-      color: var(--text-soft);
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .assistant-quick:hover {
-      border-color: var(--gold);
-      color: var(--text);
-      background: var(--gold-soft);
-    }
-
-    .assistant-input-row {
-      display: flex;
-      gap: 8px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-
-    .assistant-input {
-      flex: 1;
-      min-width: 0;
-      resize: none;
-      min-height: 46px;
-      max-height: 120px;
-      padding: 12px 13px;
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      outline: none;
-      background: var(--surface-2);
-      color: var(--text);
-      font-size: 13px;
-    }
-
-    .assistant-input:focus {
-      border-color: var(--gold);
-    }
-
-    .assistant-send {
-      width: 48px;
-      flex-shrink: 0;
-      border: 0;
-      border-radius: 10px;
-      background: var(--gold-dark);
-      color: #fff;
-      display: grid;
-      place-items: center;
-    }
-
-    .assistant-send svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    /* ============================================================
-       SCAM CHECKER
-       ============================================================ */
-
-    .security-tools-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-    }
-
-    .security-tool-card {
-      padding: 30px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .tool-icon {
-      width: 45px;
-      height: 45px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      color: var(--gold-dark);
-      background: var(--gold-soft);
-      margin-bottom: 20px;
-    }
-
-    .tool-icon svg {
-      width: 21px;
-      height: 21px;
-    }
-
-    .security-tool-card h3 {
-      margin: 0 0 9px;
-      font-family: "Cormorant Garamond", serif;
-      font-size: 32px;
-      font-weight: 600;
-    }
-
-    .security-tool-card > p {
-      margin: 0 0 20px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.65;
-    }
-
-    .checker-textarea {
-      width: 100%;
-      min-height: 150px;
-      resize: vertical;
-      padding: 14px;
-      border: 1px solid var(--border-strong);
-      border-radius: 11px;
-      outline: none;
-      background: var(--surface-2);
-      color: var(--text);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    .checker-textarea:focus {
-      border-color: var(--gold);
-    }
-
-    .checker-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .checker-result {
-      display: none;
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 11px;
-      border: 1px solid var(--border);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .checker-result.show {
-      display: block;
-    }
-
-    .checker-result.safe {
-      background: var(--success-bg);
-      color: var(--success-text);
-    }
-
-    .checker-result.warning {
-      background: var(--warning-bg);
-      color: var(--warning-text);
-    }
-
-    .checker-result.danger {
-      background: var(--danger-bg);
-      color: var(--danger-text);
-    }
-
-    .privacy-list {
-      display: grid;
-      gap: 9px;
-    }
-
-    .privacy-check {
-      display: flex;
-      align-items: flex-start;
-      gap: 11px;
-      padding: 13px;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      background: var(--surface-2);
-      cursor: pointer;
-    }
-
-    .privacy-check input {
-      width: 17px;
-      height: 17px;
-      accent-color: var(--gold-dark);
-      margin-top: 1px;
-    }
-
-    .privacy-check span {
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .privacy-score {
-      margin-top: 17px;
-      padding: 14px;
-      border-radius: 11px;
-      background: var(--gold-soft);
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    /* ============================================================
-       ASSESSMENT
-       ============================================================ */
-
-    #assessment-section {
-      display: none;
-    }
-
-    .assessment-shell {
-      max-width: 850px;
-      margin: 0 auto;
-    }
-
-    .progress-wrap {
-      margin-bottom: 28px;
-    }
-
-    .progress-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 9px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      overflow: hidden;
-      background: var(--surface-3);
-      border-radius: 999px;
-    }
-
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: var(--gold);
-      transition: width 0.3s ease;
-    }
-
-    .question-card {
-      padding: clamp(26px, 5vw, 48px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow-md);
-    }
-
-    .question-number {
-      color: var(--gold-dark);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 18px;
-    }
-
-    .question-card h2 {
-      margin: 0 0 30px;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(34px, 5vw, 50px);
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-
-    .answer-options {
-      display: grid;
-      gap: 10px;
-    }
-
-    .answer-option {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 18px 20px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text);
-      text-align: left;
-      transition: all 0.2s ease;
-    }
-
-    .answer-option:hover {
-      border-color: var(--gold);
-      background: var(--gold-soft);
-      transform: translateX(2px);
-    }
-
-    .answer-option.selected {
-      border-color: var(--gold);
-      background: var(--gold-soft);
-      box-shadow: inset 0 0 0 1px var(--gold);
-    }
-
-    .answer-label {
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .answer-points {
-      flex-shrink: 0;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .assessment-controls {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    /* ============================================================
-       RESULTS
-       ============================================================ */
-
-    #results-section {
-      display: none;
-    }
-
-    .results-hero {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 48px;
-      align-items: center;
-      padding: 42px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow-md);
-      margin-bottom: 18px;
-    }
-
-    .score-circle {
-      width: 210px;
-      height: 210px;
-      margin: 0 auto;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      position: relative;
-      background:
-        radial-gradient(
-          circle at center,
-          var(--surface) 58%,
-          transparent 59%
-        ),
-        conic-gradient(
-          var(--gold) var(--score-angle, 0deg),
-          var(--surface-3) 0deg
-        );
-    }
-
-    .score-inner {
-      text-align: center;
-    }
-
-    .score-number {
-      display: block;
-      font-family: "Cormorant Garamond", serif;
-      font-size: 58px;
-      line-height: 0.9;
-      font-weight: 700;
-    }
-
-    .score-label {
-      display: block;
-      margin-top: 7px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .results-copy .eyebrow {
-      margin-bottom: 14px;
-    }
-
-    .results-copy h2 {
-      margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(42px, 5vw, 60px);
-      line-height: 0.95;
-    }
-
-    .results-copy p {
-      max-width: 600px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .risk-badge {
-      display: inline-flex;
-      margin-top: 8px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .risk-low {
-      color: var(--success-text);
-      background: var(--success-bg);
-    }
-
-    .risk-medium {
-      color: var(--warning-text);
-      background: var(--warning-bg);
-    }
-
-    .risk-high {
-      color: var(--danger-text);
-      background: var(--danger-bg);
-    }
-
-    .result-card {
-      padding: 32px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 18px;
-    }
-
-    .result-card h3 {
-      margin: 0 0 22px;
-      font-family: "Cormorant Garamond", serif;
-      font-size: 34px;
-      font-weight: 600;
-    }
-
-    .priority-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .priority-item {
-      display: grid;
-      grid-template-columns: 34px 1fr;
-      gap: 14px;
-      padding: 17px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-
-    .priority-number {
-      width: 30px;
-      height: 30px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background: var(--gold-soft);
-      color: var(--gold-dark);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .priority-item strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 14px;
-    }
-
-    .priority-item p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    .priority-severity {
-      display: inline-block;
-      margin-top: 7px;
-      padding: 4px 7px;
-      border-radius: 6px;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .priority-severity.high {
-      color: var(--danger-text);
-      background: var(--danger-bg);
-    }
-
-    .priority-severity.medium {
-      color: var(--warning-text);
-      background: var(--warning-bg);
-    }
-
-    .priority-severity.low {
-      color: var(--success-text);
-      background: var(--success-bg);
-    }
-
-    .save-message {
-      padding: 14px 16px;
-      margin-bottom: 18px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text-soft);
-      background: var(--surface-2);
-      font-size: 13px;
-    }
-
-    .results-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    /* ============================================================
-       AUTH MODAL
-       ============================================================ */
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 300;
-      display: none;
-      place-items: center;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.55);
-      backdrop-filter: blur(10px);
-    }
-
-    .modal-backdrop.open {
-      display: grid;
-    }
-
-    .auth-modal {
-      width: min(440px, 100%);
-      padding: 34px;
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: 20px;
-      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.28);
-    }
-
-    .modal-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 28px;
-    }
-
-    .modal-top h2 {
-      margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: 40px;
-      line-height: 0.95;
-    }
-
-    .modal-close {
-      width: 34px;
-      height: 34px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      color: var(--muted);
-      background: var(--surface-2);
-      font-size: 18px;
-    }
-
-    .auth-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      padding: 4px;
-      margin-bottom: 20px;
-      background: var(--surface-2);
-      border-radius: 10px;
-    }
-
-    .auth-tab {
-      padding: 10px;
-      border: 0;
-      border-radius: 7px;
-      background: transparent;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .auth-tab.active {
-      background: var(--surface);
-      color: var(--text);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .field {
-      margin-bottom: 14px;
-    }
-
-    .field label {
-      display: block;
-      margin-bottom: 7px;
-      color: var(--text-soft);
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .field input {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      outline: none;
-      background: var(--surface-2);
-      color: var(--text);
-      transition: border-color 0.2s ease;
-    }
-
-    .field input:focus {
-      border-color: var(--gold);
-    }
-
-    .auth-submit {
-      width: 100%;
-      margin-top: 8px;
-    }
-
-    .auth-status {
-      min-height: 20px;
-      margin-top: 13px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    /* ============================================================
-       FOOTER
-       ============================================================ */
-
-    footer {
-      padding: 36px 0;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .footer-logo {
-      font-family: "Cormorant Garamond", serif;
-      color: var(--text);
-      font-size: 24px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    /* ============================================================
-       TOAST
-       ============================================================ */
-
-    .toast {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      z-index: 500;
-      max-width: 380px;
-      padding: 14px 16px;
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: 12px;
-      box-shadow: var(--shadow-md);
-      color: var(--text);
-      font-size: 13px;
-      transform: translateY(30px);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.25s ease;
-    }
-
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
-
-    @media (max-width: 900px) {
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .assistant-shell,
-      .security-tools-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .results-hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      .results-copy p {
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .results-copy .eyebrow {
-        justify-content: center;
-      }
-    }
-
-    @media (max-width: 650px) {
-      .container {
-        width: min(100% - 28px, 1160px);
-      }
-
-      .nav-inner {
-        min-height: 68px;
-        gap: 8px;
-      }
-
-      .logo {
-        font-size: 27px;
-      }
-
-      .nav-right {
-        gap: 6px;
-      }
-
-      .user-email {
-        display: none;
-      }
-
-      .theme-switcher {
-        display: flex;
-      }
-
-      .theme-btn {
-        width: 30px;
-        height: 30px;
-      }
-
-      #navAssessBtn {
-        display: none;
-      }
-
-      .hero {
-        padding: 80px 0 70px;
-      }
-
-      .hero h1 {
-        font-size: 60px;
-      }
-
-      .hero-copy {
-        font-size: 16px;
-      }
-
-      .section {
-        padding: 65px 0;
-      }
-
-      .assistant-intro,
-      .assistant-panel,
-      .question-card,
-      .result-card,
-      .results-hero {
-        padding: 24px;
-      }
-
-      .score-circle {
-        width: 180px;
-        height: 180px;
-      }
-
-      .score-number {
-        font-size: 50px;
-      }
-
-      .assessment-controls {
-        flex-direction: column-reverse;
-      }
-
-      .assessment-controls .btn {
-        width: 100%;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .assistant-input-row {
-        align-items: stretch;
-      }
-
-      .assistant-send {
-        width: 44px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- ============================================================
-       NAVIGATION
-       ============================================================ -->
-
-  <nav class="navbar">
-    <div class="container nav-inner">
-
-      <a href="#" class="logo" aria-label="AZÈLE home">
-        AZÈLE
-      </a>
-
-      <div class="nav-right">
-
-        <div class="theme-switcher" aria-label="Theme selection">
-
-          <button
-            class="theme-btn"
-            data-theme-choice="light"
-            title="Light"
-            aria-label="Light theme"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <circle cx="12" cy="12" r="4"></circle>
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
-            </svg>
-          </button>
-
-          <button
-            class="theme-btn"
-            data-theme-choice="dark"
-            title="Dark"
-            aria-label="Dark theme"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M20.8 15.1A8.5 8.5 0 0 1 8.9 3.2 8.5 8.5 0 1 0 20.8 15.1Z"></path>
-            </svg>
-          </button>
-
-          <button
-            class="theme-btn"
-            data-theme-choice="system"
-            title="System"
-            aria-label="System theme"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <rect x="3" y="4" width="18" height="13" rx="2"></rect>
-              <path d="M8 21h8M12 17v4"></path>
-            </svg>
-          </button>
-
-        </div>
-
-        <div id="authArea" class="auth-area"></div>
-
-        <button
-          id="navAssessBtn"
-          class="btn btn-primary"
-          onclick="startAssessment()"
-        >
-          Assess my business
-        </button>
-
-      </div>
-    </div>
-  </nav>
-
-
-  <!-- ============================================================
-       HERO
-       ============================================================ -->
-
-  <main>
-
-    <section id="hero-section" class="hero">
-
-      <div class="container">
-
-        <div class="eyebrow">
-          Cybersecurity readiness
-        </div>
-
-        <h1>
-          Know where your
-          <span>business</span>
-          stands.
-        </h1>
-
-        <p class="hero-copy">
-          AZÈLE gives small businesses a clear picture of their cybersecurity
-          readiness, identifies the risks that matter most, and turns those
-          gaps into practical next steps.
-        </p>
-
-        <div class="hero-actions">
-
-          <button
-            class="btn btn-gold"
-            onclick="startAssessment()"
-          >
-            Begin assessment
-          </button>
-
-          <button
-            class="btn btn-secondary"
-            onclick="scrollToAssistant()"
-          >
-            Ask AZÈLE
-          </button>
-
-          <button
-            class="btn btn-secondary"
-            onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})"
-          >
-            Explore AZÈLE
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ============================================================
-         FEATURES
-         ============================================================ -->
-
-    <section id="features-section" class="section">
-
-      <div class="container">
-
-        <div class="section-header">
-
-          <div class="section-label">
-            Built for clarity
-          </div>
-
-          <h2 class="section-title">
-            Security shouldn't require a security degree.
-          </h2>
-
-          <p class="section-description">
-            AZÈLE turns complicated cybersecurity readiness into a simple,
-            business-friendly assessment and safety workspace.
-          </p>
-
-        </div>
-
-        <div class="features-grid">
-
-          <article class="feature-card">
-            <div class="feature-number">01</div>
-            <h3>Assess</h3>
-            <p>
-              Answer ten practical questions covering the security controls
-              that matter most to a modern business.
-            </p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-number">02</div>
-            <h3>Understand</h3>
-            <p>
-              Receive a readiness score and a clear explanation of where your
-              biggest security gaps are.
-            </p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-number">03</div>
-            <h3>Act</h3>
-            <p>
-              Turn your results into prioritized actions instead of another
-              report that gets forgotten in a folder.
-            </p>
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ============================================================
-         SECURITY ASSISTANT
-         ============================================================ -->
-
-    <section id="assistant-section" class="section">
-
-      <div class="container">
-
-        <div class="section-header">
-
-          <div class="section-label">
-            AZÈLE security assistant
-          </div>
-
-          <h2 class="section-title">
-            A security expert in your workspace.
-          </h2>
-
-          <p class="section-description">
-            Ask everyday cybersecurity questions, analyze suspicious messages,
-            or get practical guidance without needing to understand technical
-            jargon.
-          </p>
-
-        </div>
-
-
-        <div class="assistant-shell">
-
-          <div class="assistant-intro">
-
-            <div class="assistant-mark">
-
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-              >
-                <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"></path>
-                <path d="M9 12l2 2 4-4"></path>
-              </svg>
-
-            </div>
-
-            <h2>
-              Ask before you click.
-            </h2>
-
-            <p>
-              AZÈLE can help explain suspicious messages, improve account
-              security, understand privacy risks, and teach safer online
-              habits.
-            </p>
-
-            <div class="assistant-safe-note">
-
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-              >
-                <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"></path>
-                <path d="M12 8v4"></path>
-                <circle cx="12" cy="15.5" r=".6" fill="currentColor"></circle>
-              </svg>
-
-              <span>
-                AZÈLE focuses on defensive cybersecurity education.
-                Never paste passwords, private keys, financial information,
-                or other sensitive secrets into the assistant.
-              </span>
-
-            </div>
-
-          </div>
-
-
-          <div class="assistant-panel">
-
-            <div class="assistant-panel-top">
-
-              <div class="assistant-panel-title">
-                <span class="assistant-dot"></span>
-                <strong>AZÈLE Security Assistant</strong>
-              </div>
-
-              <span class="assistant-status">
-                Ready
-              </span>
-
-            </div>
-
-
-            <div
-              id="assistantMessages"
-              class="assistant-messages"
-            >
-
-              <div class="assistant-message bot">
-                Hi. I’m AZÈLE’s security assistant. I can help you understand
-                phishing, account security, privacy, suspicious messages,
-                and safer business practices.
-              </div>
-
-            </div>
-
-
-            <div class="assistant-quick-actions">
-
-              <button
-                class="assistant-quick"
-                onclick="runAssistantQuick('How can I protect my business email?')"
-              >
-                Protect email
-              </button>
-
-              <button
-                class="assistant-quick"
-                onclick="runAssistantQuick('How can I tell if an email is a phishing attempt?')"
-              >
-                Spot phishing
-              </button>
-
-              <button
-                class="assistant-quick"
-                onclick="runAssistantQuick('What should my business never put into an AI tool?')"
-              >
-                AI data safety
-              </button>
-
-              <button
-                class="assistant-quick"
-                onclick="runAssistantQuick('How should I secure important business accounts?')"
-              >
-                Secure accounts
-              </button>
-
-            </div>
-
-
-            <div class="assistant-input-row">
-
-              <textarea
-                id="assistantInput"
-                class="assistant-input"
-                rows="1"
-                placeholder="Ask a cybersecurity question..."
-                aria-label="Ask AZÈLE a cybersecurity question"
-              ></textarea>
-
-              <button
-                class="assistant-send"
-                onclick="sendAssistantMessage()"
-                aria-label="Send"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                >
-                  <path d="M22 2L11 13"></path>
-                  <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
-                </svg>
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ============================================================
-         SECURITY TOOLS
-         ============================================================ -->
-
-    <section id="security-tools-section" class="section">
-
-      <div class="container">
-
-        <div class="section-header">
-
-          <div class="section-label">
-            Practical protection
-          </div>
-
-          <h2 class="section-title">
-            Check the things that matter.
-          </h2>
-
-          <p class="section-description">
-            Simple defensive tools for everyday cybersecurity decisions.
-          </p>
-
-        </div>
-
-
-        <div class="security-tools-grid">
-
-          <!-- SCAM CHECKER -->
-
-          <article class="security-tool-card">
-
-            <div class="tool-icon">
-
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-              >
-                <path d="M12 3l8 4v5c0 4.7-3.2 7.9-8 9-4.8-1.1-8-4.3-8-9V7l8-4z"></path>
-                <path d="M12 8v4"></path>
-                <circle cx="12" cy="15.5" r=".7" fill="currentColor"></circle>
-              </svg>
-
-            </div>
-
-            <h3>
-              Scam detector
-            </h3>
-
-            <p>
-              Paste a suspicious message or email and AZÈLE will look for
-              common warning signs such as urgency, credential requests,
-              suspicious links, and payment pressure.
-            </p>
-
-            <textarea
-              id="scamInput"
-              class="checker-textarea"
-              placeholder="Paste a suspicious message here..."
-            ></textarea>
-
-            <div class="checker-actions">
-
-              <button
-                class="btn btn-gold"
-                onclick="checkScam()"
-              >
-                Check message
-              </button>
-
-              <button
-                class="btn btn-secondary"
-                onclick="clearScamChecker()"
-              >
-                Clear
-              </button>
-
-            </div>
-
-            <div
-              id="scamResult"
-              class="checker-result"
-            ></div>
-
-          </article>
-
-
-          <!-- PRIVACY COACH -->
-
-          <article class="security-tool-card">
-
-            <div class="tool-icon">
-
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-              >
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 11v6"></path>
-                <circle cx="12" cy="7.5" r=".7" fill="currentColor"></circle>
-              </svg>
-
-            </div>
-
-            <h3>
-              Privacy coach
-            </h3>
-
-            <p>
-              Check a few everyday habits and get a simple picture of your
-              current account and data-protection posture.
-            </p>
-
-            <div class="privacy-list">
-
-              <label class="privacy-check">
-                <input
-                  type="checkbox"
-                  class="privacy-item"
-                  value="mfa"
-                />
-                <span>
-                  Important accounts use multi-factor authentication.
-                </span>
-              </label>
-
-              <label class="privacy-check">
-                <input
-                  type="checkbox"
-                  class="privacy-item"
-                  value="passwords"
-                />
-                <span>
-                  Important passwords are unique and not reused.
-                </span>
-              </label>
-
-              <label class="privacy-check">
-                <input
-                  type="checkbox"
-                  class="privacy-item"
-                  value="updates"
-                />
-                <span>
-                  Devices and important software receive security updates.
-                </span>
-              </label>
-
-              <label class="privacy-check">
-                <input
-                  type="checkbox"
-                  class="privacy-item"
-                  value="backup"
-                />
-                <span>
-                  Important files have reliable backups.
-                </span>
-              </label>
-
-              <label class="privacy-check">
-                <input
-                  type="checkbox"
-                  class="privacy-item"
-                  value="sharing"
-                />
-                <span>
-                  Sensitive information is only shared when necessary.
-                </span>
-              </label>
-
-              <label class="privacy-check">
-                <input
-                  type="checkbox"
-                  class="privacy-item"
-                  value="ai"
-                />
-                <span>
-                  There are rules for entering sensitive information into AI tools.
-                </span>
-              </label>
-
-            </div>
-
-            <div
-              id="privacyScore"
-              class="privacy-score"
-            >
-              Select the statements that are true for you.
-            </div>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ============================================================
-         ASSESSMENT
-         ============================================================ -->
-
-    <section id="assessment-section" class="section">
-
-      <div class="container assessment-shell">
-
-        <div class="section-header">
-
-          <div class="section-label">
-            AZÈLE assessment
-          </div>
-
-          <h2 class="section-title">
-            Let's measure your readiness.
-          </h2>
-
-          <p class="section-description">
-            Choose the answer that most accurately reflects your current
-            business practices.
-          </p>
-
-        </div>
-
-        <div class="progress-wrap">
-
-          <div class="progress-top">
-            <span id="progressText">
-              Question 1 of 10
-            </span>
-
-            <span id="progressPercent">
-              10%
-            </span>
-          </div>
-
-          <div class="progress-bar">
-            <div
-              id="progressFill"
-              class="progress-fill"
-            ></div>
-          </div>
-
-        </div>
-
-        <div
-          id="questionCard"
-          class="question-card"
-        >
-
-          <div
-            id="questionNumber"
-            class="question-number"
-          >
-            Question 1
-          </div>
-
-          <h2 id="questionText"></h2>
-
-          <div
-            id="answerOptions"
-            class="answer-options"
-          ></div>
-
-          <div class="assessment-controls">
-
-            <button
-              id="previousBtn"
-              class="btn btn-secondary"
-              onclick="previousQuestion()"
-            >
-              Previous
-            </button>
-
-            <button
-              id="nextBtn"
-              class="btn btn-gold"
-              onclick="nextQuestion()"
-            >
-              Continue
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ============================================================
-         RESULTS
-         ============================================================ -->
-
-    <section id="results-section" class="section">
-
-      <div class="container">
-
-        <div
-          id="resultsHero"
-          class="results-hero"
-        >
-
-          <div
-            id="scoreCircle"
-            class="score-circle"
-          >
-
-            <div class="score-inner">
-
-              <span
-                id="scoreNumber"
-                class="score-number"
-              >
-                0
-              </span>
-
-              <span class="score-label">
-                out of 100
-              </span>
-
-            </div>
-
-          </div>
-
-
-          <div class="results-copy">
-
-            <div class="eyebrow">
-              Assessment complete
-            </div>
-
-            <h2>
-              Your security readiness
-            </h2>
-
-            <div
-              id="riskBadge"
-              class="risk-badge"
-            >
-              —
-            </div>
-
-            <p id="resultSummary"></p>
-
-          </div>
-
-        </div>
-
-
-        <div
-          id="saveStatus"
-          class="save-message"
-        >
-          Assessment results are being prepared.
-        </div>
-
-
-        <div class="result-card">
-
-          <h3>
-            Priority actions
-          </h3>
-
-          <div
-            id="priorityList"
-            class="priority-list"
-          ></div>
-
-          <div class="results-actions">
-
-            <button
-              class="btn btn-gold"
-              onclick="startAssessment()"
-            >
-              Start another assessment
-            </button>
-
-            <button
-              class="btn btn-secondary"
-              onclick="scrollToAssistant()"
-            >
-              Ask AZÈLE
-            </button>
-
-            <button
-              class="btn btn-secondary"
-              onclick="window.scrollTo({top:0,behavior:'smooth'})"
-            >
-              Back to top
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- ============================================================
-       FOOTER
-       ============================================================ -->
-
-  <footer>
-
-    <div class="container footer-inner">
-
-      <div class="footer-logo">
-        AZÈLE
-      </div>
-
-      <div>
-        AZÈLE © 2026 · Cyber readiness and security education
-      </div>
-
-    </div>
-
-  </footer>
-
-
-  <!-- ============================================================
-       AUTH MODAL
-       ============================================================ -->
-
-  <div
-    id="authModal"
-    class="modal-backdrop"
-  >
-
-    <div class="auth-modal">
-
-      <div class="modal-top">
-
-        <div>
-
-          <div class="section-label">
-            AZÈLE account
-          </div>
-
-          <h2 id="authTitle">
-            Welcome back
-          </h2>
-
-        </div>
-
-        <button
-          class="modal-close"
-          onclick="closeAuthModal()"
-          aria-label="Close"
-        >
-          ×
-        </button>
-
-      </div>
-
-
-      <div class="auth-tabs">
-
-        <button
-          id="loginTab"
-          class="auth-tab active"
-          onclick="setAuthMode('login')"
-        >
-          Log in
-        </button>
-
-        <button
-          id="signupTab"
-          class="auth-tab"
-          onclick="setAuthMode('signup')"
-        >
-          Create account
-        </button>
-
-      </div>
-
-
-      <form onsubmit="handleAuth(event)">
-
-        <div
-          id="businessNameField"
-          class="field"
-          style="display:none;"
-        >
-
-          <label for="businessName">
-            Business name
-          </label>
-
-          <input
-            id="businessName"
-            type="text"
-            placeholder="Your business"
-          />
-
-        </div>
-
-
-        <div class="field">
-
-          <label for="authEmail">
-            Email
-          </label>
-
-          <input
-            id="authEmail"
-            type="email"
-            required
-            autocomplete="email"
-            placeholder="you@company.com"
-          />
-
-        </div>
-
-
-        <div class="field">
-
-          <label for="authPassword">
-            Password
-          </label>
-
-          <input
-            id="authPassword"
-            type="password"
-            required
-            autocomplete="current-password"
-            placeholder="••••••••"
-          />
-
-        </div>
-
-
-        <button
-          id="authSubmit"
-          type="submit"
-          class="btn btn-gold auth-submit"
-        >
-          Log in
-        </button>
-
-        <div
-          id="authStatus"
-          class="auth-status"
-        ></div>
-
-      </form>
-
-    </div>
-
-  </div>
-
-
-  <div
-    id="toast"
-    class="toast"
-  ></div>
-
-
-  <script>
-    /* ============================================================
-       SUPABASE
-       ============================================================ */
-
-    const SUPABASE_URL =
-      "https://YOUR-PROJECT.supabase.co";
-
-    const SUPABASE_ANON_KEY =
-      "YOUR_SUPABASE_PUBLISHABLE_KEY";
-
-    let supabaseClient = null;
-
-    function isSupabaseConfigured() {
-      return (
-        typeof SUPABASE_URL === "string" &&
-        typeof SUPABASE_ANON_KEY === "string" &&
-        SUPABASE_URL.startsWith("https://") &&
-        !SUPABASE_URL.includes("YOUR-PROJECT") &&
-        !SUPABASE_URL.includes("PASTE_YOUR") &&
-        SUPABASE_ANON_KEY.length > 20 &&
-        !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE") &&
-        !SUPABASE_ANON_KEY.includes("PASTE_YOUR")
-      );
-    }
-
-    function initializeSupabase() {
-      if (!isSupabaseConfigured()) {
-        console.warn(
-          "AZÈLE: Supabase credentials are not configured."
-        );
-
-        return false;
-      }
-
-      try {
-        supabaseClient =
-          window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_ANON_KEY,
-            {
-              auth: {
-                persistSession: true,
-                autoRefreshToken: true,
-                detectSessionInUrl: true
-              }
-            }
-          );
-
-        return true;
-
-      } catch (error) {
-
-        console.error(
-          "AZÈLE: Supabase initialization failed:",
-          error
-        );
-
-        supabaseClient = null;
-
-        return false;
-      }
-    }
-
-    initializeSupabase();
-
-
-    /* ============================================================
-       THEME
-       ============================================================ */
-
-    function applyTheme(theme) {
-
-      const validThemes = [
-        "light",
-        "dark",
-        "system"
-      ];
-
-      if (!validThemes.includes(theme)) {
-        theme = "system";
-      }
-
-      document.documentElement.dataset.theme =
-        theme;
-
-      localStorage.setItem(
-        "azele-theme",
-        theme
+<script>
+/* ============================================================
+   AZÈLE — APPLICATION SCRIPT
+   ============================================================ */
+
+/* ============================================================
+   SUPABASE CONFIGURATION
+   ============================================================ */
+
+const SUPABASE_STORAGE_KEY = "azele-supabase-config";
+
+let supabaseClient = null;
+let currentUser = null;
+let authMode = "login";
+
+
+function getSupabaseConfig() {
+  try {
+    const saved =
+      localStorage.getItem(
+        SUPABASE_STORAGE_KEY
       );
 
-      document
-        .querySelectorAll("[data-theme-choice]")
-        .forEach((button) => {
+    if (!saved) {
+      return null;
+    }
 
-          button.classList.toggle(
-            "active",
-            button.dataset.themeChoice === theme
-          );
+    const config =
+      JSON.parse(saved);
 
-        });
+    if (
+      !config ||
+      typeof config.url !== "string" ||
+      typeof config.key !== "string"
+    ) {
+      return null;
+    }
+
+    return config;
+
+  } catch (error) {
+
+    console.error(
+      "AZÈLE: Could not read Supabase configuration.",
+      error
+    );
+
+    return null;
+  }
+}
+
+
+function isSupabaseConfigured() {
+
+  const config =
+    getSupabaseConfig();
+
+  return Boolean(
+    config &&
+    config.url &&
+    config.key &&
+    config.url.startsWith("https://") &&
+    config.key.length > 20
+  );
+}
+
+
+function initializeSupabase() {
+
+  const config =
+    getSupabaseConfig();
+
+  if (!config) {
+
+    supabaseClient = null;
+
+    console.warn(
+      "AZÈLE: Supabase credentials are not configured."
+    );
+
+    return false;
+  }
+
+
+  try {
+
+    if (
+      !window.supabase ||
+      typeof window.supabase.createClient !== "function"
+    ) {
+
+      console.error(
+        "AZÈLE: Supabase library is unavailable."
+      );
+
+      supabaseClient = null;
+
+      return false;
     }
 
 
-    document
-      .querySelectorAll("[data-theme-choice]")
-      .forEach((button) => {
-
-        button.addEventListener(
-          "click",
-          () => {
-            applyTheme(
-              button.dataset.themeChoice
-            );
+    supabaseClient =
+      window.supabase.createClient(
+        config.url,
+        config.key,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
           }
+        }
+      );
+
+
+    attachAuthListener();
+
+    console.log(
+      "AZÈLE: Supabase initialized successfully."
+    );
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "AZÈLE: Supabase initialization failed:",
+      error
+    );
+
+    supabaseClient = null;
+
+    return false;
+  }
+}
+
+
+function saveSupabaseConfig(
+  url,
+  key
+) {
+
+  const cleanUrl =
+    String(url || "")
+      .trim()
+      .replace(/\/+$/, "");
+
+  const cleanKey =
+    String(key || "")
+      .trim();
+
+
+  if (
+    !cleanUrl ||
+    !cleanUrl.startsWith("https://")
+  ) {
+
+    throw new Error(
+      "Enter a valid Supabase Project URL."
+    );
+  }
+
+
+  if (
+    cleanUrl.includes("YOUR-PROJECT") ||
+    cleanUrl.includes("PASTE_YOUR")
+  ) {
+
+    throw new Error(
+      "Enter your real Supabase Project URL."
+    );
+  }
+
+
+  if (
+    !cleanKey ||
+    cleanKey.length < 20
+  ) {
+
+    throw new Error(
+      "Enter your Supabase Publishable or anon key."
+    );
+  }
+
+
+  if (
+    cleanKey.includes("YOUR_SUPABASE") ||
+    cleanKey.includes("PASTE_YOUR")
+  ) {
+
+    throw new Error(
+      "Enter your real Supabase Publishable or anon key."
+    );
+  }
+
+
+  localStorage.setItem(
+    SUPABASE_STORAGE_KEY,
+    JSON.stringify({
+      url: cleanUrl,
+      key: cleanKey
+    })
+  );
+
+
+  return initializeSupabase();
+}
+
+
+function clearSupabaseConfig() {
+
+  localStorage.removeItem(
+    SUPABASE_STORAGE_KEY
+  );
+
+  supabaseClient = null;
+  currentUser = null;
+
+  updateAuthUI(null);
+}
+
+
+/* Initialize immediately */
+
+initializeSupabase();
+
+
+/* ============================================================
+   THEME
+   ============================================================ */
+
+function applyTheme(theme) {
+
+  const validThemes = [
+    "light",
+    "dark",
+    "system"
+  ];
+
+
+  if (
+    !validThemes.includes(theme)
+  ) {
+
+    theme = "system";
+  }
+
+
+  document.documentElement.dataset.theme =
+    theme;
+
+
+  localStorage.setItem(
+    "azele-theme",
+    theme
+  );
+
+
+  document
+    .querySelectorAll(
+      "[data-theme-choice]"
+    )
+    .forEach(
+      (button) => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.themeChoice === theme
         );
 
-      });
+      }
+    );
+}
 
 
-    applyTheme(
-      localStorage.getItem("azele-theme") ||
-      "system"
+document
+  .querySelectorAll(
+    "[data-theme-choice]"
+  )
+  .forEach(
+    (button) => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          applyTheme(
+            button.dataset.themeChoice
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+applyTheme(
+  localStorage.getItem(
+    "azele-theme"
+  ) || "system"
+);
+
+
+/* ============================================================
+   QUESTIONS
+   ============================================================ */
+
+const questions = [
+
+  {
+    id: 1,
+    text:
+      "Does your business use multi-factor authentication (MFA)?",
+
+    answers: [
+      {
+        label:
+          "Yes, across important accounts",
+        points: 10
+      },
+      {
+        label:
+          "Only for some accounts",
+        points: 5
+      },
+      {
+        label:
+          "No",
+        points: 0
+      }
+    ]
+  },
+
+  {
+    id: 2,
+    text:
+      "Does your business maintain reliable backups?",
+
+    answers: [
+      {
+        label:
+          "Yes, and we test them regularly",
+        points: 10
+      },
+      {
+        label:
+          "We have backups but rarely test them",
+        points: 5
+      },
+      {
+        label:
+          "No reliable backup process",
+        points: 0
+      }
+    ]
+  },
+
+  {
+    id: 3,
+    text:
+      "Are business devices regularly updated?",
+
+    answers: [
+      {
+        label:
+          "Yes, automatically or on a defined schedule",
+        points: 10
+      },
+      {
+        label:
+          "Usually, but not consistently",
+        points: 5
+      },
+      {
+        label:
+          "No defined process",
+        points: 0
+      }
+    ]
+  },
+
+  {
+    id: 4,
+    text:
+      "Does your business have an incident-response plan?",
+
+    answers: [
+      {
+        label:
+          "Yes, documented and understood",
+        points: 10
+      },
+      {
+        label:
+          "We have an informal plan",
+        points: 5
+      },
+      {
+        label:
+          "No",
+        points: 0
+      }
+    ]
+  },
+
+  {
+    id: 5,
+    text:
+      "Does your business have rules for what employees may enter into AI tools?",
+
+    answers: [
+      {
+        label:
+          "Yes, with clear guidelines",
+        points: 10
+      },
+      {
+        label:
+          "Some informal guidelines",
+        points: 5
+      },
+      {
+        label:
+          "No rules",
+        points: 0
+      }
+    ]
+  },
+
+  {
+    id: 6,
+    text:
+      "Do employees receive cybersecurity awareness training?",
+
+    answers: [
+      {
+        label:
+          "Yes, regularly",
+        points: 10
+      },
+      {
+        label:
+          "Occasionally",
+        points: 5
+      },
+      {
+        label:
+          "No",
+        points: 0
+      }
+    ]
+  },
+
+  {
+    id: 7,
+    text:
+      "Is access to sensitive information limited to people who need it?",
+
+    answers: [
+      {
+        label:
+          "Yes, access is reviewed",
+        points: 10
+      },
+      {
+        label:
+          "Mostly, but reviews are inconsistent",
+        points: 5
+      },
+      {
+        label:
+          "No defined access controls",
+        points: 0
+      }
+    ]
+  },
+
+  {
+    id: 8,
+    text:
+      "Is employee access removed promptly when someone leaves?",
+
+    answers: [
+      {
+        label:
+          "Yes, through a defined offboarding process",
+        points: 10
+      },
+      {
+        label:
+          "Usually",
+        points: 5
+      },
+      {
+        label:
+          "No defined process",
+        points: 0
+      }
+    ]
+  },
+
+  {
+    id: 9,
+    text:
+      "Does your business have strong email security practices?",
+
+    answers: [
+      {
+        label:
+          "Yes, including filtering and account protections",
+        points: 10
+      },
+      {
+        label:
+          "Some protections",
+        points: 5
+      },
+      {
+        label:
+          "No defined protections",
+        points: 0
+      }
+    ]
+  },
+
+  {
+    id: 10,
+    text:
+      "Does your business regularly review its cybersecurity readiness?",
+
+    answers: [
+      {
+        label:
+          "Yes, on a defined schedule",
+        points: 10
+      },
+      {
+        label:
+          "Occasionally",
+        points: 5
+      },
+      {
+        label:
+          "No",
+        points: 0
+      }
+    ]
+  }
+
+];
+
+
+/* ============================================================
+   RISK DEFINITIONS
+   ============================================================ */
+
+const riskDefinitions = {
+
+  1: {
+    title:
+      "Enable multi-factor authentication",
+
+    description:
+      "Important accounts should use MFA to reduce the risk of unauthorized access.",
+
+    severity:
+      "high",
+
+    recommendation:
+      "Enable MFA for email, administrative accounts, cloud services, and other important systems."
+  },
+
+  2: {
+    title:
+      "Create reliable backups",
+
+    description:
+      "Backups help your business recover from accidental deletion, outages, ransomware, or other incidents.",
+
+    severity:
+      "high",
+
+    recommendation:
+      "Create automated backups and test restoration regularly."
+  },
+
+  3: {
+    title:
+      "Strengthen device update practices",
+
+    description:
+      "Outdated software can leave known security weaknesses unpatched.",
+
+    severity:
+      "medium",
+
+    recommendation:
+      "Turn on automatic updates where possible and establish a regular review process."
+  },
+
+  4: {
+    title:
+      "Create an incident-response plan",
+
+    description:
+      "Without a response plan, businesses can lose valuable time during a security incident.",
+
+    severity:
+      "high",
+
+    recommendation:
+      "Document who to contact, what systems to isolate, and what steps employees should take."
+  },
+
+  5: {
+    title:
+      "Define AI data rules",
+
+    description:
+      "Employees may accidentally expose confidential information when using AI tools.",
+
+    severity:
+      "high",
+
+    recommendation:
+      "Define clear rules for what employees may and may not enter into AI systems."
+  },
+
+  6: {
+    title:
+      "Improve security awareness training",
+
+    description:
+      "Employees are an important part of a business's security defenses.",
+
+    severity:
+      "medium",
+
+    recommendation:
+      "Provide regular training covering phishing, passwords, MFA, suspicious links, and reporting."
+  },
+
+  7: {
+    title:
+      "Review sensitive-data access",
+
+    description:
+      "Employees should only have access to information required for their work.",
+
+    severity:
+      "high",
+
+    recommendation:
+      "Review permissions and remove unnecessary access."
+  },
+
+  8: {
+    title:
+      "Strengthen employee offboarding",
+
+    description:
+      "Former employees should no longer have access to business systems.",
+
+    severity:
+      "high",
+
+    recommendation:
+      "Create a documented process for disabling accounts and recovering business devices."
+  },
+
+  9: {
+    title:
+      "Improve email security",
+
+    description:
+      "Email remains a common entry point for phishing and account compromise.",
+
+    severity:
+      "medium",
+
+    recommendation:
+      "Use strong authentication, spam filtering, and employee phishing awareness."
+  },
+
+  10: {
+    title:
+      "Schedule regular security reviews",
+
+    description:
+      "Cybersecurity readiness changes as businesses add people, software, and systems.",
+
+    severity:
+      "medium",
+
+    recommendation:
+      "Review security controls on a regular schedule and update policies when the business changes."
+  }
+
+};
+
+
+/* ============================================================
+   APP STATE
+   ============================================================ */
+
+let currentQuestion = 0;
+
+let answers =
+  Array(questions.length).fill(null);
+
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+
+function showToast(message) {
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+  if (!toast) return;
+
+  toast.textContent =
+    message;
+
+  toast.classList.add(
+    "show"
+  );
+
+  clearTimeout(
+    window.__toastTimer
+  );
+
+  window.__toastTimer =
+    setTimeout(
+      () => {
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      3200
+    );
+}
+
+
+function getRiskLevel(score) {
+
+  if (score >= 75) {
+    return "low";
+  }
+
+  if (score >= 50) {
+    return "medium";
+  }
+
+  return "high";
+}
+
+
+function getRiskLabel(level) {
+
+  if (level === "low") {
+    return "Low risk";
+  }
+
+  if (level === "medium") {
+    return "Moderate risk";
+  }
+
+  return "High risk";
+}
+
+
+function scrollToAssistant() {
+
+  const section =
+    document.getElementById(
+      "assistant-section"
+    );
+
+  if (!section) return;
+
+  section.scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+
+/* ============================================================
+   START ASSESSMENT
+   ============================================================ */
+
+function startAssessment() {
+
+  currentQuestion = 0;
+
+  answers =
+    Array(questions.length).fill(null);
+
+
+  document.getElementById(
+    "hero-section"
+  ).style.display = "none";
+
+  document.getElementById(
+    "features-section"
+  ).style.display = "none";
+
+  document.getElementById(
+    "assistant-section"
+  ).style.display = "none";
+
+  document.getElementById(
+    "security-tools-section"
+  ).style.display = "none";
+
+  document.getElementById(
+    "results-section"
+  ).style.display = "none";
+
+  document.getElementById(
+    "assessment-section"
+  ).style.display = "block";
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+
+  renderQuestion();
+}
+
+
+/* ============================================================
+   RENDER QUESTION
+   ============================================================ */
+
+function renderQuestion() {
+
+  const question =
+    questions[currentQuestion];
+
+  const questionNumber =
+    currentQuestion + 1;
+
+
+  document.getElementById(
+    "questionNumber"
+  ).textContent =
+    `Question ${questionNumber}`;
+
+
+  document.getElementById(
+    "questionText"
+  ).textContent =
+    question.text;
+
+
+  const options =
+    document.getElementById(
+      "answerOptions"
+    );
+
+  options.innerHTML = "";
+
+
+  question.answers.forEach(
+    (answer, index) => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.type =
+        "button";
+
+      button.className =
+        "answer-option";
+
+
+      if (
+        answers[currentQuestion] &&
+        answers[currentQuestion].index === index
+      ) {
+
+        button.classList.add(
+          "selected"
+        );
+
+      }
+
+
+      button.innerHTML = `
+        <span class="answer-label">
+          ${escapeHtml(answer.label)}
+        </span>
+
+        <span class="answer-points">
+          ${answer.points}/10
+        </span>
+      `;
+
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          answers[currentQuestion] = {
+            index,
+            points:
+              answer.points,
+            label:
+              answer.label
+          };
+
+          renderQuestion();
+
+        }
+      );
+
+
+      options.appendChild(
+        button
+      );
+
+    }
+  );
+
+
+  const percent =
+    Math.round(
+      (questionNumber /
+        questions.length) *
+      100
     );
 
 
-    /* ============================================================
-       QUESTIONS
-       ============================================================ */
-
-    const questions = [
-
-      {
-        id: 1,
-        text: "Does your business use multi-factor authentication (MFA)?",
-        answers: [
-          {
-            label: "Yes, across important accounts",
-            points: 10
-          },
-          {
-            label: "Only for some accounts",
-            points: 5
-          },
-          {
-            label: "No",
-            points: 0
-          }
-        ]
-      },
-
-      {
-        id: 2,
-        text: "Does your business maintain reliable backups?",
-        answers: [
-          {
-            label: "Yes, and we test them regularly",
-            points: 10
-          },
-          {
-            label: "We have backups but rarely test them",
-            points: 5
-          },
-          {
-            label: "No reliable backup process",
-            points: 0
-          }
-        ]
-      },
-
-      {
-        id: 3,
-        text: "Are business devices regularly updated?",
-        answers: [
-          {
-            label: "Yes, automatically or on a defined schedule",
-            points: 10
-          },
-          {
-            label: "Usually, but not consistently",
-            points: 5
-          },
-          {
-            label: "No defined process",
-            points: 0
-          }
-        ]
-      },
-
-      {
-        id: 4,
-        text: "Does your business have an incident-response plan?",
-        answers: [
-          {
-            label: "Yes, documented and understood",
-            points: 10
-          },
-          {
-            label: "We have an informal plan",
-            points: 5
-          },
-          {
-            label: "No",
-            points: 0
-          }
-        ]
-      },
-
-      {
-        id: 5,
-        text: "Does your business have rules for what employees may enter into AI tools?",
-        answers: [
-          {
-            label: "Yes, with clear guidelines",
-            points: 10
-          },
-          {
-            label: "Some informal guidelines",
-            points: 5
-          },
-          {
-            label: "No rules",
-            points: 0
-          }
-        ]
-      },
-
-      {
-        id: 6,
-        text: "Do employees receive cybersecurity awareness training?",
-        answers: [
-          {
-            label: "Yes, regularly",
-            points: 10
-          },
-          {
-            label: "Occasionally",
-            points: 5
-          },
-          {
-            label: "No",
-            points: 0
-          }
-        ]
-      },
-
-      {
-        id: 7,
-        text: "Is access to sensitive information limited to people who need it?",
-        answers: [
-          {
-            label: "Yes, access is reviewed",
-            points: 10
-          },
-          {
-            label: "Mostly, but reviews are inconsistent",
-            points: 5
-          },
-          {
-            label: "No defined access controls",
-            points: 0
-          }
-        ]
-      },
-
-      {
-        id: 8,
-        text: "Is employee access removed promptly when someone leaves?",
-        answers: [
-          {
-            label: "Yes, through a defined offboarding process",
-            points: 10
-          },
-          {
-            label: "Usually",
-            points: 5
-          },
-          {
-            label: "No defined process",
-            points: 0
-          }
-        ]
-      },
-
-      {
-        id: 9,
-        text: "Does your business have strong email security practices?",
-        answers: [
-          {
-            label: "Yes, including filtering and account protections",
-            points: 10
-          },
-          {
-            label: "Some protections",
-            points: 5
-          },
-          {
-            label: "No defined protections",
-            points: 0
-          }
-        ]
-      },
-
-      {
-        id: 10,
-        text: "Does your business regularly review its cybersecurity readiness?",
-        answers: [
-          {
-            label: "Yes, on a defined schedule",
-            points: 10
-          },
-          {
-            label: "Occasionally",
-            points: 5
-          },
-          {
-            label: "No",
-            points: 0
-          }
-        ]
-      }
-
-    ];
+  document.getElementById(
+    "progressText"
+  ).textContent =
+    `Question ${questionNumber} of ${questions.length}`;
 
 
-    /* ============================================================
-       RISK DEFINITIONS
-       ============================================================ */
-
-    const riskDefinitions = {
-
-      1: {
-        title: "Enable multi-factor authentication",
-        description:
-          "Important accounts should use MFA to reduce the risk of unauthorized access.",
-        severity: "high",
-        recommendation:
-          "Enable MFA for email, administrative accounts, cloud services, and other important systems."
-      },
-
-      2: {
-        title: "Create reliable backups",
-        description:
-          "Backups help your business recover from accidental deletion, outages, ransomware, or other incidents.",
-        severity: "high",
-        recommendation:
-          "Create automated backups and test restoration regularly."
-      },
-
-      3: {
-        title: "Strengthen device update practices",
-        description:
-          "Outdated software can leave known security weaknesses unpatched.",
-        severity: "medium",
-        recommendation:
-          "Turn on automatic updates where possible and establish a regular review process."
-      },
-
-      4: {
-        title: "Create an incident-response plan",
-        description:
-          "Without a response plan, businesses can lose valuable time during a security incident.",
-        severity: "high",
-        recommendation:
-          "Document who to contact, what systems to isolate, and what steps employees should take."
-      },
-
-      5: {
-        title: "Define AI data rules",
-        description:
-          "Employees may accidentally expose confidential information when using AI tools.",
-        severity: "high",
-        recommendation:
-          "Define clear rules for what employees may and may not enter into AI systems."
-      },
-
-      6: {
-        title: "Improve security awareness training",
-        description:
-          "Employees are an important part of a business's security defenses.",
-        severity: "medium",
-        recommendation:
-          "Provide regular training covering phishing, passwords, MFA, suspicious links, and reporting."
-      },
-
-      7: {
-        title: "Review sensitive-data access",
-        description:
-          "Employees should only have access to information required for their work.",
-        severity: "high",
-        recommendation:
-          "Review permissions and remove unnecessary access."
-      },
-
-      8: {
-        title: "Strengthen employee offboarding",
-        description:
-          "Former employees should no longer have access to business systems.",
-        severity: "high",
-        recommendation:
-          "Create a documented process for disabling accounts and recovering business devices."
-      },
-
-      9: {
-        title: "Improve email security",
-        description:
-          "Email remains a common entry point for phishing and account compromise.",
-        severity: "medium",
-        recommendation:
-          "Use strong authentication, spam filtering, and employee phishing awareness."
-      },
-
-      10: {
-        title: "Schedule regular security reviews",
-        description:
-          "Cybersecurity readiness changes as businesses add people, software, and systems.",
-        severity: "medium",
-        recommendation:
-          "Review security controls on a regular schedule and update policies when the business changes."
-      }
-
-    };
+  document.getElementById(
+    "progressPercent"
+  ).textContent =
+    `${percent}%`;
 
 
-    /* ============================================================
-       APP STATE
-       ============================================================ */
-
-    let currentQuestion = 0;
-
-    let answers =
-      Array(questions.length).fill(null);
-
-    let authMode = "login";
-
-    let currentUser = null;
+  document.getElementById(
+    "progressFill"
+  ).style.width =
+    `${percent}%`;
 
 
-    /* ============================================================
-       HELPERS
-       ============================================================ */
-
-    function showToast(message) {
-
-      const toast =
-        document.getElementById("toast");
-
-      toast.textContent = message;
-
-      toast.classList.add("show");
-
-      clearTimeout(
-        window.__toastTimer
-      );
-
-      window.__toastTimer =
-        setTimeout(() => {
-          toast.classList.remove("show");
-        }, 3200);
-    }
+  const previousBtn =
+    document.getElementById(
+      "previousBtn"
+    );
 
 
-    function getRiskLevel(score) {
-
-      if (score >= 75) {
-        return "low";
-      }
-
-      if (score >= 50) {
-        return "medium";
-      }
-
-      return "high";
-    }
+  previousBtn.style.visibility =
+    currentQuestion === 0
+      ? "hidden"
+      : "visible";
 
 
-    function getRiskLabel(level) {
-
-      if (level === "low") {
-        return "Low risk";
-      }
-
-      if (level === "medium") {
-        return "Moderate risk";
-      }
-
-      return "High risk";
-    }
+  const nextBtn =
+    document.getElementById(
+      "nextBtn"
+    );
 
 
-    function scrollToAssistant() {
+  nextBtn.textContent =
+    currentQuestion ===
+    questions.length - 1
+      ? "Complete assessment"
+      : "Continue";
+}
 
-      const section =
+
+/* ============================================================
+   NEXT / PREVIOUS
+   ============================================================ */
+
+function nextQuestion() {
+
+  if (
+    !answers[currentQuestion]
+  ) {
+
+    showToast(
+      "Please select an answer before continuing."
+    );
+
+    return;
+  }
+
+
+  if (
+    currentQuestion <
+    questions.length - 1
+  ) {
+
+    currentQuestion++;
+
+    renderQuestion();
+
+
+    window.scrollTo({
+      top:
         document.getElementById(
-          "assistant-section"
-        );
+          "assessment-section"
+        ).offsetTop - 90,
 
-      if (!section) return;
+      behavior:
+        "smooth"
+    });
 
-      section.scrollIntoView({
-        behavior: "smooth"
-      });
-    }
-
-
-    /* ============================================================
-       START ASSESSMENT
-       ============================================================ */
-
-    function startAssessment() {
-
-      currentQuestion = 0;
-
-      answers =
-        Array(questions.length).fill(null);
-
-      document.getElementById(
-        "hero-section"
-      ).style.display = "none";
-
-      document.getElementById(
-        "features-section"
-      ).style.display = "none";
-
-      document.getElementById(
-        "assistant-section"
-      ).style.display = "none";
-
-      document.getElementById(
-        "security-tools-section"
-      ).style.display = "none";
-
-      document.getElementById(
-        "results-section"
-      ).style.display = "none";
-
-      document.getElementById(
-        "assessment-section"
-      ).style.display = "block";
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-      renderQuestion();
-    }
+    return;
+  }
 
 
-    /* ============================================================
-       RENDER QUESTION
-       ============================================================ */
-
-    function renderQuestion() {
-
-      const question =
-        questions[currentQuestion];
-
-      const questionNumber =
-        currentQuestion + 1;
-
-      document.getElementById(
-        "questionNumber"
-      ).textContent =
-        `Question ${questionNumber}`;
-
-      document.getElementById(
-        "questionText"
-      ).textContent =
-        question.text;
-
-      const options =
-        document.getElementById(
-          "answerOptions"
-        );
-
-      options.innerHTML = "";
-
-      question.answers.forEach(
-        (answer, index) => {
-
-          const button =
-            document.createElement(
-              "button"
-            );
-
-          button.type = "button";
-
-          button.className =
-            "answer-option";
-
-          if (
-            answers[currentQuestion] &&
-            answers[currentQuestion].index === index
-          ) {
-
-            button.classList.add(
-              "selected"
-            );
-
-          }
-
-          button.innerHTML = `
-            <span class="answer-label">
-              ${escapeHtml(answer.label)}
-            </span>
-
-            <span class="answer-points">
-              ${answer.points}/10
-            </span>
-          `;
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              answers[currentQuestion] = {
-                index,
-                points: answer.points,
-                label: answer.label
-              };
-
-              renderQuestion();
-
-            }
-          );
-
-          options.appendChild(
-            button
-          );
-
-        }
-      );
+  completeAssessment();
+}
 
 
-      const percent =
-        Math.round(
-          (questionNumber /
-            questions.length) *
-          100
-        );
+function previousQuestion() {
 
-      document.getElementById(
-        "progressText"
-      ).textContent =
-        `Question ${questionNumber} of ${questions.length}`;
+  if (
+    currentQuestion > 0
+  ) {
 
-      document.getElementById(
-        "progressPercent"
-      ).textContent =
-        `${percent}%`;
+    currentQuestion--;
 
-      document.getElementById(
-        "progressFill"
-      ).style.width =
-        `${percent}%`;
+    renderQuestion();
+
+  }
+}
 
 
-      const previousBtn =
-        document.getElementById(
-          "previousBtn"
-        );
+/* ============================================================
+   COMPLETE ASSESSMENT
+   ============================================================ */
 
-      previousBtn.style.visibility =
-        currentQuestion === 0
-          ? "hidden"
-          : "visible";
+async function completeAssessment() {
 
-
-      const nextBtn =
-        document.getElementById(
-          "nextBtn"
-        );
-
-      nextBtn.textContent =
-        currentQuestion ===
-        questions.length - 1
-          ? "Complete assessment"
-          : "Continue";
-    }
+  const totalPoints =
+    answers.reduce(
+      (sum, answer) =>
+        sum +
+        (
+          answer
+            ? answer.points
+            : 0
+        ),
+      0
+    );
 
 
-    /* ============================================================
-       NEXT / PREVIOUS
-       ============================================================ */
+  const score =
+    Math.round(
+      (totalPoints /
+        (questions.length * 10)) *
+      100
+    );
 
-    function nextQuestion() {
 
-      if (!answers[currentQuestion]) {
+  const riskLevel =
+    getRiskLevel(score);
 
-        showToast(
-          "Please select an answer before continuing."
-        );
 
-        return;
-      }
+  showResults(
+    score,
+    riskLevel
+  );
+
+
+  await saveAssessment(
+    score,
+    riskLevel
+  );
+}
+
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+
+function showResults(
+  score,
+  riskLevel
+) {
+
+  document.getElementById(
+    "assessment-section"
+  ).style.display =
+    "none";
+
+
+  document.getElementById(
+    "results-section"
+  ).style.display =
+    "block";
+
+
+  document.getElementById(
+    "scoreNumber"
+  ).textContent =
+    score;
+
+
+  const scoreCircle =
+    document.getElementById(
+      "scoreCircle"
+    );
+
+
+  scoreCircle.style.setProperty(
+    "--score-angle",
+    `${score * 3.6}deg`
+  );
+
+
+  const badge =
+    document.getElementById(
+      "riskBadge"
+    );
+
+
+  badge.className =
+    `risk-badge risk-${riskLevel}`;
+
+
+  badge.textContent =
+    getRiskLabel(
+      riskLevel
+    );
+
+
+  let summary =
+    "Your business has several important security gaps that should be prioritized.";
+
+
+  if (score >= 75) {
+
+    summary =
+      "Your business demonstrates a strong security foundation, with a few areas that can still be strengthened.";
+
+  } else if (score >= 50) {
+
+    summary =
+      "Your business has a reasonable foundation, but several important security gaps should be prioritized.";
+
+  }
+
+
+  document.getElementById(
+    "resultSummary"
+  ).textContent =
+    summary;
+
+
+  renderPriorityActions();
+
+
+  document.getElementById(
+    "saveStatus"
+  ).textContent =
+    currentUser
+      ? "Saving assessment to your AZÈLE account..."
+      : "Assessment completed. Log in to save your assessment to your AZÈLE account.";
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+/* ============================================================
+   DYNAMIC PRIORITY ACTIONS
+   ============================================================ */
+
+function renderPriorityActions() {
+
+  const container =
+    document.getElementById(
+      "priorityList"
+    );
+
+  container.innerHTML =
+    "";
+
+
+  const priorityActions =
+    [];
+
+
+  answers.forEach(
+    (answer, index) => {
 
       if (
-        currentQuestion <
-        questions.length - 1
+        !answer ||
+        answer.points >= 10
       ) {
-
-        currentQuestion++;
-
-        renderQuestion();
-
-        window.scrollTo({
-          top:
-            document.getElementById(
-              "assessment-section"
-            ).offsetTop - 90,
-          behavior: "smooth"
-        });
-
         return;
       }
 
-      completeAssessment();
-    }
+
+      const definition =
+        riskDefinitions[
+          questions[index].id
+        ];
 
 
-    function previousQuestion() {
-
-      if (currentQuestion > 0) {
-
-        currentQuestion--;
-
-        renderQuestion();
-
-      }
-    }
-
-
-    /* ============================================================
-       COMPLETE ASSESSMENT
-       ============================================================ */
-
-    async function completeAssessment() {
-
-      const totalPoints =
-        answers.reduce(
-          (sum, answer) =>
-            sum +
-            (
-              answer
-                ? answer.points
-                : 0
-            ),
-          0
-        );
-
-      const score =
-        Math.round(
-          (totalPoints /
-            (questions.length * 10)) *
-          100
-        );
-
-      const riskLevel =
-        getRiskLevel(score);
-
-      showResults(
-        score,
-        riskLevel
-      );
-
-      await saveAssessment(
-        score,
-        riskLevel
-      );
-    }
-
-
-    /* ============================================================
-       RESULTS
-       ============================================================ */
-
-    function showResults(
-      score,
-      riskLevel
-    ) {
-
-      document.getElementById(
-        "assessment-section"
-      ).style.display = "none";
-
-      document.getElementById(
-        "results-section"
-      ).style.display = "block";
-
-      document.getElementById(
-        "scoreNumber"
-      ).textContent = score;
-
-      const scoreCircle =
-        document.getElementById(
-          "scoreCircle"
-        );
-
-      scoreCircle.style.setProperty(
-        "--score-angle",
-        `${score * 3.6}deg`
-      );
-
-
-      const badge =
-        document.getElementById(
-          "riskBadge"
-        );
-
-      badge.className =
-        `risk-badge risk-${riskLevel}`;
-
-      badge.textContent =
-        getRiskLabel(riskLevel);
-
-
-      let summary =
-        "Your business has several important security gaps that should be prioritized.";
-
-      if (score >= 75) {
-
-        summary =
-          "Your business demonstrates a strong security foundation, with a few areas that can still be strengthened.";
-
-      } else if (score >= 50) {
-
-        summary =
-          "Your business has a reasonable foundation, but several important security gaps should be prioritized.";
-
+      if (!definition) {
+        return;
       }
 
-      document.getElementById(
-        "resultSummary"
-      ).textContent = summary;
+
+      const severity =
+        answer.points === 0
+          ? "high"
+          : definition.severity;
 
 
-      renderPriorityActions();
+      priorityActions.push({
 
+        title:
+          definition.title,
 
-      document.getElementById(
-        "saveStatus"
-      ).textContent =
-        currentUser
-          ? "Saving assessment to your AZÈLE account..."
-          : "Assessment completed. Log in to save your assessment to your AZÈLE account.";
+        description:
+          definition.recommendation,
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
+        severity
+
       });
+
+    }
+  );
+
+
+  priorityActions.sort(
+    (a, b) => {
+
+      const weight = {
+        high: 3,
+        medium: 2,
+        low: 1
+      };
+
+
+      return (
+        weight[b.severity] -
+        weight[a.severity]
+      );
+
+    }
+  );
+
+
+  const visibleActions =
+    priorityActions.slice(
+      0,
+      5
+    );
+
+
+  if (
+    visibleActions.length === 0
+  ) {
+
+    container.innerHTML = `
+      <div class="priority-item">
+        <div class="priority-number">✓</div>
+
+        <div>
+          <strong>
+            No immediate gaps identified
+          </strong>
+
+          <p>
+            Your answers indicate that the assessed controls are currently
+            in good shape. Continue reviewing them regularly.
+          </p>
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  visibleActions.forEach(
+    (action, index) => {
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+
+      item.className =
+        "priority-item";
+
+
+      item.innerHTML = `
+        <div class="priority-number">
+          ${index + 1}
+        </div>
+
+        <div>
+          <strong>
+            ${escapeHtml(action.title)}
+          </strong>
+
+          <p>
+            ${escapeHtml(action.description)}
+          </p>
+
+          <span class="priority-severity ${escapeHtml(action.severity)}">
+            ${escapeHtml(action.severity)} priority
+          </span>
+        </div>
+      `;
+
+
+      container.appendChild(
+        item
+      );
+
+    }
+  );
+}
+
+
+/* ============================================================
+   SUPABASE SAVE
+   ============================================================ */
+
+async function saveAssessment(
+  score,
+  riskLevel
+) {
+
+  if (!supabaseClient) {
+
+    document.getElementById(
+      "saveStatus"
+    ).innerHTML =
+      `
+        Assessment completed.
+        <strong>Connect Supabase to save this assessment.</strong>
+      `;
+
+    return;
+  }
+
+
+  if (!currentUser) {
+
+    document.getElementById(
+      "saveStatus"
+    ).textContent =
+      "Assessment completed. Log in to save your assessment to your AZÈLE account.";
+
+    return;
+  }
+
+
+  try {
+
+    document.getElementById(
+      "saveStatus"
+    ).textContent =
+      "Saving assessment to your AZÈLE account...";
+
+
+    const businessName =
+      localStorage.getItem(
+        "azele-business-name"
+      ) ||
+      "My Business";
+
+
+    const industry =
+      localStorage.getItem(
+        "azele-industry"
+      ) ||
+      "General";
+
+
+    /* BUSINESS */
+
+    const {
+      data: business,
+      error: businessError
+    } =
+      await supabaseClient
+        .from("businesses")
+        .insert({
+
+          user_id:
+            currentUser.id,
+
+          business_name:
+            businessName,
+
+          industry:
+            industry
+
+        })
+        .select()
+        .single();
+
+
+    if (businessError) {
+      throw businessError;
     }
 
 
-    /* ============================================================
-       DYNAMIC PRIORITY ACTIONS
-       ============================================================ */
+    /* ASSESSMENT */
 
-    function renderPriorityActions() {
+    const {
+      data: assessment,
+      error: assessmentError
+    } =
+      await supabaseClient
+        .from("assessments")
+        .insert({
 
-      const container =
-        document.getElementById(
-          "priorityList"
+          business_id:
+            business.id,
+
+          score:
+            score,
+
+          risk_level:
+            String(riskLevel)
+              .trim()
+              .toLowerCase(),
+
+          completed_at:
+            new Date().toISOString()
+
+        })
+        .select()
+        .single();
+
+
+    if (assessmentError) {
+      throw assessmentError;
+    }
+
+
+    /* ANSWERS */
+
+    const answerRows =
+      answers.map(
+        (answer, index) => ({
+
+          assessment_id:
+            assessment.id,
+
+          question_id:
+            questions[index].id,
+
+          answer:
+            answer
+              ? answer.label
+              : "",
+
+          points:
+            answer
+              ? answer.points
+              : 0
+
+        })
+      );
+
+
+    const {
+      error: answersError
+    } =
+      await supabaseClient
+        .from("assessment_answers")
+        .insert(
+          answerRows
         );
 
-      container.innerHTML = "";
+
+    if (answersError) {
+      throw answersError;
+    }
 
 
-      const priorityActions = [];
+    /* RISKS */
+
+    const riskRows = [];
 
 
-      answers.forEach(
-        (answer, index) => {
+    answers.forEach(
+      (answer, index) => {
 
-          if (
-            !answer ||
-            answer.points >= 10
-          ) {
-            return;
-          }
+        if (
+          !answer ||
+          answer.points >= 10
+        ) {
+          return;
+        }
 
-          const definition =
-            riskDefinitions[
-              questions[index].id
-            ];
 
-          if (!definition) {
-            return;
-          }
+        const definition =
+          riskDefinitions[
+            questions[index].id
+          ];
 
-          let severity =
+
+        if (!definition) {
+          return;
+        }
+
+
+        const normalizedSeverity =
+          String(
             answer.points === 0
               ? "high"
-              : definition.severity;
-
-          priorityActions.push({
-            title:
-              definition.title,
-
-            description:
-              definition.recommendation,
-
-            severity
-          });
-
-        }
-      );
+              : definition.severity
+          )
+            .trim()
+            .toLowerCase();
 
 
-      priorityActions.sort(
-        (a, b) => {
+        const allowedSeverities = [
+          "low",
+          "medium",
+          "high"
+        ];
 
-          const weight = {
-            high: 3,
-            medium: 2,
-            low: 1
-          };
 
-          return (
-            weight[b.severity] -
-            weight[a.severity]
+        if (
+          !allowedSeverities.includes(
+            normalizedSeverity
+          )
+        ) {
+
+          throw new Error(
+            "Invalid risk severity generated: " +
+            normalizedSeverity
           );
 
         }
-      );
 
 
-      const visibleActions =
-        priorityActions.slice(
-          0,
-          5
-        );
+        riskRows.push({
 
+          assessment_id:
+            assessment.id,
 
-      if (
-        visibleActions.length === 0
-      ) {
+          title:
+            definition.title,
 
-        container.innerHTML = `
-          <div class="priority-item">
-            <div class="priority-number">✓</div>
-            <div>
-              <strong>No immediate gaps identified</strong>
-              <p>
-                Your answers indicate that the assessed controls are currently
-                in good shape. Continue reviewing them regularly.
-              </p>
-            </div>
-          </div>
-        `;
+          description:
+            definition.description,
 
-        return;
+          severity:
+            normalizedSeverity,
+
+          recommendation:
+            definition.recommendation
+
+        });
+
       }
+    );
 
 
-      visibleActions.forEach(
-        (action, index) => {
+    if (
+      riskRows.length > 0
+    ) {
 
-          const item =
-            document.createElement(
-              "div"
-            );
-
-          item.className =
-            "priority-item";
-
-          item.innerHTML = `
-            <div class="priority-number">
-              ${index + 1}
-            </div>
-
-            <div>
-              <strong>
-                ${escapeHtml(action.title)}
-              </strong>
-
-              <p>
-                ${escapeHtml(action.description)}
-              </p>
-
-              <span class="priority-severity ${escapeHtml(action.severity)}">
-                ${escapeHtml(action.severity)} priority
-              </span>
-            </div>
-          `;
-
-          container.appendChild(
-            item
+      const {
+        error: risksError
+      } =
+        await supabaseClient
+          .from("risks")
+          .insert(
+            riskRows
           );
 
-        }
-      );
+
+      if (risksError) {
+        throw risksError;
+      }
     }
 
 
-    /* ============================================================
-       SUPABASE SAVE
-       ============================================================ */
+    /* ACTIONS */
 
-    async function saveAssessment(
-      score,
-      riskLevel
-    ) {
-
-      if (!supabaseClient) {
-
-        document.getElementById(
-          "saveStatus"
-        ).textContent =
-          "Assessment completed. Supabase is not configured in this copy yet.";
-
-        return;
-      }
-
-
-      if (!currentUser) {
-
-        document.getElementById(
-          "saveStatus"
-        ).textContent =
-          "Assessment completed. Log in to save this assessment to your AZÈLE account.";
-
-        return;
-      }
-
-
-      try {
-
-        document.getElementById(
-          "saveStatus"
-        ).textContent =
-          "Saving assessment to your AZÈLE account...";
-
-
-        /* BUSINESS */
-
-        const businessName =
-          localStorage.getItem(
-            "azele-business-name"
-          ) ||
-          "My Business";
-
-        const industry =
-          localStorage.getItem(
-            "azele-industry"
-          ) ||
-          "General";
-
-
-        const {
-          data: business,
-          error: businessError
-        } =
-          await supabaseClient
-            .from("businesses")
-            .insert({
-              user_id:
-                currentUser.id,
-
-              business_name:
-                businessName,
-
-              industry:
-                industry
-
-            })
-            .select()
-            .single();
-
-
-        if (businessError) {
-          throw businessError;
-        }
-
-
-        /* ASSESSMENT */
-
-        const {
-          data: assessment,
-          error: assessmentError
-        } =
-          await supabaseClient
-            .from("assessments")
-            .insert({
-
-              business_id:
-                business.id,
-
-              score:
-                score,
-
-              risk_level:
-                String(riskLevel)
-                  .trim()
-                  .toLowerCase(),
-
-              completed_at:
-                new Date().toISOString()
-
-            })
-            .select()
-            .single();
-
-
-        if (assessmentError) {
-          throw assessmentError;
-        }
-
-
-        /* ANSWERS */
-
-        const answerRows =
-          answers.map(
-            (answer, index) => ({
-
-              assessment_id:
-                assessment.id,
-
-              question_id:
-                questions[index].id,
-
-              answer:
-                answer
-                  ? answer.label
-                  : "",
-
-              points:
-                answer
-                  ? answer.points
-                  : 0
-
-            })
-          );
-
-
-        const {
-          error: answersError
-        } =
-          await supabaseClient
-            .from("assessment_answers")
-            .insert(answerRows);
-
-
-        if (answersError) {
-          throw answersError;
-        }
-
-
-        /* RISKS */
-
-        const riskRows = [];
-
-
-        answers.forEach(
+    const actionRows =
+      answers
+        .map(
           (answer, index) => {
 
             if (
               !answer ||
               answer.points >= 10
             ) {
-              return;
+              return null;
             }
+
 
             const definition =
               riskDefinitions[
                 questions[index].id
               ];
 
+
             if (!definition) {
-              return;
+              return null;
             }
 
 
-            const normalizedSeverity =
-              String(
-                answer.points === 0
-                  ? "high"
-                  : definition.severity
-              )
-                .trim()
-                .toLowerCase();
+            const priority =
+              answer.points === 0
+                ? "high"
+                : definition.severity;
 
 
-            const allowedSeverities =
-              [
-                "low",
-                "medium",
-                "high"
-              ];
-
-
-            if (
-              !allowedSeverities.includes(
-                normalizedSeverity
-              )
-            ) {
-
-              throw new Error(
-                "Invalid risk severity generated: " +
-                normalizedSeverity
-              );
-
-            }
-
-
-            riskRows.push({
+            return {
 
               assessment_id:
                 assessment.id,
@@ -3619,1246 +1646,1785 @@
                 definition.title,
 
               description:
-                definition.description,
+                definition.recommendation,
 
-              severity:
-                normalizedSeverity,
+              priority:
+                String(priority)
+                  .trim()
+                  .toLowerCase(),
 
-              recommendation:
-                definition.recommendation
+              completed:
+                false
 
-            });
+            };
 
           }
-        );
+        )
+        .filter(Boolean);
 
 
-        if (
-          riskRows.length > 0
-        ) {
-
-          const {
-            error: risksError
-          } =
-            await supabaseClient
-              .from("risks")
-              .insert(riskRows);
-
-          if (risksError) {
-            throw risksError;
-          }
-
-        }
-
-
-        /* ACTIONS */
-
-        const actionRows =
-          answers
-            .map(
-              (answer, index) => {
-
-                if (
-                  !answer ||
-                  answer.points >= 10
-                ) {
-                  return null;
-                }
-
-                const definition =
-                  riskDefinitions[
-                    questions[index].id
-                  ];
-
-                if (!definition) {
-                  return null;
-                }
-
-                const priority =
-                  answer.points === 0
-                    ? "high"
-                    : definition.severity;
-
-                return {
-
-                  assessment_id:
-                    assessment.id,
-
-                  title:
-                    definition.title,
-
-                  description:
-                    definition.recommendation,
-
-                  priority:
-                    String(priority)
-                      .trim()
-                      .toLowerCase(),
-
-                  completed:
-                    false
-
-                };
-
-              }
-            )
-            .filter(Boolean);
-
-
-        if (
-          actionRows.length > 0
-        ) {
-
-          const {
-            error: actionsError
-          } =
-            await supabaseClient
-              .from("actions")
-              .insert(actionRows);
-
-          if (actionsError) {
-            throw actionsError;
-          }
-
-        }
-
-
-        document.getElementById(
-          "saveStatus"
-        ).textContent =
-          "Assessment saved to your AZÈLE account.";
-
-        showToast(
-          "Assessment saved successfully."
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "Assessment save error:",
-          error
-        );
-
-        console.error(
-          "Supabase details:",
-          error?.message,
-          error?.code,
-          error?.details,
-          error?.hint
-        );
-
-        document.getElementById(
-          "saveStatus"
-        ).textContent =
-          "Save failed: " +
-          (
-            error?.message ||
-            "Unknown database error."
-          );
-
-      }
-    }
-
-
-    /* ============================================================
-       AUTH
-       ============================================================ */
-
-    function openAuthModal(
-      mode = "login"
+    if (
+      actionRows.length > 0
     ) {
 
-      setAuthMode(mode);
-
-      document
-        .getElementById("authModal")
-        .classList.add("open");
-    }
-
-
-    function closeAuthModal() {
-
-      document
-        .getElementById("authModal")
-        .classList.remove("open");
-
-      document.getElementById(
-        "authStatus"
-      ).textContent = "";
-    }
+      const {
+        error: actionsError
+      } =
+        await supabaseClient
+          .from("actions")
+          .insert(
+            actionRows
+          );
 
 
-    function setAuthMode(mode) {
-
-      authMode = mode;
-
-      const loginTab =
-        document.getElementById(
-          "loginTab"
-        );
-
-      const signupTab =
-        document.getElementById(
-          "signupTab"
-        );
-
-      const businessField =
-        document.getElementById(
-          "businessNameField"
-        );
-
-      const title =
-        document.getElementById(
-          "authTitle"
-        );
-
-      const submit =
-        document.getElementById(
-          "authSubmit"
-        );
-
-
-      loginTab.classList.toggle(
-        "active",
-        mode === "login"
-      );
-
-      signupTab.classList.toggle(
-        "active",
-        mode === "signup"
-      );
-
-
-      if (mode === "signup") {
-
-        title.textContent =
-          "Create your account";
-
-        submit.textContent =
-          "Create account";
-
-        businessField.style.display =
-          "block";
-
-      } else {
-
-        title.textContent =
-          "Welcome back";
-
-        submit.textContent =
-          "Log in";
-
-        businessField.style.display =
-          "none";
+      if (actionsError) {
+        throw actionsError;
       }
     }
 
 
-    async function handleAuth(event) {
+    document.getElementById(
+      "saveStatus"
+    ).textContent =
+      "Assessment saved to your AZÈLE account.";
 
-      event.preventDefault();
 
-      const status =
-        document.getElementById(
-          "authStatus"
+    showToast(
+      "Assessment saved successfully."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Assessment save error:",
+      error
+    );
+
+
+    console.error(
+      "Supabase details:",
+      error?.message,
+      error?.code,
+      error?.details,
+      error?.hint
+    );
+
+
+    document.getElementById(
+      "saveStatus"
+    ).textContent =
+      "Save failed: " +
+      (
+        error?.message ||
+        "Unknown database error."
+      );
+  }
+}
+
+
+/* ============================================================
+   SUPABASE CONNECTION MODAL
+   ============================================================ */
+
+function openSupabaseSetup() {
+
+  const existing =
+    document.getElementById(
+      "supabaseSetupModal"
+    );
+
+
+  if (existing) {
+
+    existing.classList.add(
+      "open"
+    );
+
+    return;
+  }
+
+
+  const modal =
+    document.createElement(
+      "div"
+    );
+
+
+  modal.id =
+    "supabaseSetupModal";
+
+  modal.className =
+    "modal-backdrop open";
+
+
+  const config =
+    getSupabaseConfig();
+
+
+  modal.innerHTML = `
+
+    <div class="auth-modal">
+
+      <div class="modal-top">
+
+        <div>
+
+          <div class="section-label">
+            AZÈLE connection
+          </div>
+
+          <h2>
+            Connect Supabase
+          </h2>
+
+        </div>
+
+        <button
+          class="modal-close"
+          type="button"
+          aria-label="Close"
+          onclick="closeSupabaseSetup()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <p
+        style="
+          color:var(--muted);
+          font-size:13px;
+          line-height:1.65;
+          margin:0 0 22px;
+        "
+      >
+        Connect AZÈLE to your Supabase project so accounts and
+        assessment results can be securely stored.
+      </p>
+
+
+      <div class="field">
+
+        <label for="supabaseProjectUrl">
+          Supabase Project URL
+        </label>
+
+        <input
+          id="supabaseProjectUrl"
+          type="url"
+          autocomplete="off"
+          placeholder="https://your-project.supabase.co"
+          value="${escapeHtml(config?.url || "")}"
+        />
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="supabasePublishableKey">
+          Publishable / anon key
+        </label>
+
+        <input
+          id="supabasePublishableKey"
+          type="password"
+          autocomplete="off"
+          placeholder="Your Supabase publishable key"
+          value="${escapeHtml(config?.key || "")}"
+        />
+
+      </div>
+
+
+      <div
+        id="supabaseSetupStatus"
+        class="auth-status"
+      ></div>
+
+
+      <button
+        class="btn btn-gold auth-submit"
+        type="button"
+        onclick="connectSupabase()"
+      >
+        Connect Supabase
+      </button>
+
+
+      ${
+        config
+          ? `
+            <button
+              class="btn btn-secondary auth-submit"
+              type="button"
+              style="margin-top:8px;"
+              onclick="disconnectSupabase()"
+            >
+              Disconnect
+            </button>
+          `
+          : ""
+      }
+
+
+      <p
+        style="
+          color:var(--muted);
+          font-size:11px;
+          line-height:1.55;
+          margin:16px 0 0;
+        "
+      >
+        Use only the browser-safe publishable/anon key.
+        Never enter a service-role or secret key here.
+      </p>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    modal
+  );
+
+
+  modal.addEventListener(
+    "click",
+    function(event) {
+
+      if (
+        event.target === modal
+      ) {
+
+        closeSupabaseSetup();
+
+      }
+
+    }
+  );
+}
+
+
+function closeSupabaseSetup() {
+
+  const modal =
+    document.getElementById(
+      "supabaseSetupModal"
+    );
+
+
+  if (modal) {
+
+    modal.classList.remove(
+      "open"
+    );
+
+    setTimeout(
+      () => {
+
+        modal.remove();
+
+      },
+      180
+    );
+  }
+}
+
+
+async function connectSupabase() {
+
+  const url =
+    document.getElementById(
+      "supabaseProjectUrl"
+    )?.value
+      .trim();
+
+
+  const key =
+    document.getElementById(
+      "supabasePublishableKey"
+    )?.value
+      .trim();
+
+
+  const status =
+    document.getElementById(
+      "supabaseSetupStatus"
+    );
+
+
+  try {
+
+    status.textContent =
+      "Connecting...";
+
+
+    const initialized =
+      saveSupabaseConfig(
+        url,
+        key
+      );
+
+
+    if (!initialized) {
+
+      throw new Error(
+        "Supabase could not be initialized."
+      );
+    }
+
+
+    status.textContent =
+      "Supabase connected successfully.";
+
+
+    showToast(
+      "Supabase connected to AZÈLE."
+    );
+
+
+    setTimeout(
+      () => {
+
+        closeSupabaseSetup();
+
+        loadCurrentUser();
+
+      },
+      700
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Supabase connection error:",
+      error
+    );
+
+
+    status.textContent =
+      error?.message ||
+      "Could not connect to Supabase.";
+  }
+}
+
+
+function disconnectSupabase() {
+
+  clearSupabaseConfig();
+
+  closeSupabaseSetup();
+
+  showToast(
+    "Supabase connection removed."
+  );
+}
+
+
+/* ============================================================
+   AUTH MODAL
+   ============================================================ */
+
+function openAuthModal(
+  mode = "login"
+) {
+
+  if (!supabaseClient) {
+
+    openSupabaseSetup();
+
+    return;
+  }
+
+
+  setAuthMode(
+    mode
+  );
+
+
+  document
+    .getElementById(
+      "authModal"
+    )
+    .classList.add(
+      "open"
+    );
+}
+
+
+function closeAuthModal() {
+
+  document
+    .getElementById(
+      "authModal"
+    )
+    .classList.remove(
+      "open"
+    );
+
+
+  const status =
+    document.getElementById(
+      "authStatus"
+    );
+
+
+  if (status) {
+    status.textContent = "";
+  }
+}
+
+
+function setAuthMode(
+  mode
+) {
+
+  authMode =
+    mode;
+
+
+  const loginTab =
+    document.getElementById(
+      "loginTab"
+    );
+
+
+  const signupTab =
+    document.getElementById(
+      "signupTab"
+    );
+
+
+  const businessField =
+    document.getElementById(
+      "businessNameField"
+    );
+
+
+  const title =
+    document.getElementById(
+      "authTitle"
+    );
+
+
+  const submit =
+    document.getElementById(
+      "authSubmit"
+    );
+
+
+  loginTab.classList.toggle(
+    "active",
+    mode === "login"
+  );
+
+
+  signupTab.classList.toggle(
+    "active",
+    mode === "signup"
+  );
+
+
+  if (
+    mode === "signup"
+  ) {
+
+    title.textContent =
+      "Create your account";
+
+    submit.textContent =
+      "Create account";
+
+    businessField.style.display =
+      "block";
+
+  } else {
+
+    title.textContent =
+      "Welcome back";
+
+    submit.textContent =
+      "Log in";
+
+    businessField.style.display =
+      "none";
+  }
+}
+
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+
+async function handleAuth(event) {
+
+  event.preventDefault();
+
+
+  const status =
+    document.getElementById(
+      "authStatus"
+    );
+
+
+  if (!supabaseClient) {
+
+    closeAuthModal();
+
+    openSupabaseSetup();
+
+    return;
+  }
+
+
+  const email =
+    document.getElementById(
+      "authEmail"
+    ).value
+      .trim()
+      .toLowerCase();
+
+
+  const password =
+    document.getElementById(
+      "authPassword"
+    ).value;
+
+
+  const businessName =
+    document.getElementById(
+      "businessName"
+    ).value
+      .trim();
+
+
+  if (
+    !email ||
+    !password
+  ) {
+
+    status.textContent =
+      "Please enter your email and password.";
+
+    return;
+  }
+
+
+  if (
+    password.length < 6
+  ) {
+
+    status.textContent =
+      "Your password must be at least 6 characters.";
+
+    return;
+  }
+
+
+  status.textContent =
+    authMode === "signup"
+      ? "Creating your account..."
+      : "Logging you in...";
+
+
+  try {
+
+    if (
+      authMode === "signup"
+    ) {
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.auth
+          .signUp({
+
+            email,
+            password
+
+          });
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (businessName) {
+
+        localStorage.setItem(
+          "azele-business-name",
+          businessName
         );
 
-      const email =
-        document.getElementById(
-          "authEmail"
-        ).value
-          .trim()
-          .toLowerCase();
-
-      const password =
-        document.getElementById(
-          "authPassword"
-        ).value;
-
-      const businessName =
-        document.getElementById(
-          "businessName"
-        ).value.trim();
-
-
-      if (!supabaseClient) {
-
-        status.textContent =
-          "Supabase is not configured in this copy.";
-
-        return;
       }
 
 
       if (
-        !email ||
-        !password
+        data?.session
       ) {
-
-        status.textContent =
-          "Please enter your email and password.";
-
-        return;
-      }
-
-
-      if (
-        password.length < 6
-      ) {
-
-        status.textContent =
-          "Your password must be at least 6 characters.";
-
-        return;
-      }
-
-
-      status.textContent =
-        authMode === "signup"
-          ? "Creating your account..."
-          : "Logging you in...";
-
-
-      try {
-
-        if (
-          authMode === "signup"
-        ) {
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth
-              .signUp({
-                email,
-                password
-              });
-
-
-          if (error) {
-            throw error;
-          }
-
-
-          if (businessName) {
-
-            localStorage.setItem(
-              "azele-business-name",
-              businessName
-            );
-
-          }
-
-
-          if (data?.session) {
-
-            status.textContent =
-              "Account created successfully.";
-
-          } else {
-
-            status.textContent =
-              "Check your email to confirm your account.";
-
-          }
-
-        } else {
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth
-              .signInWithPassword({
-                email,
-                password
-              });
-
-
-          if (error) {
-            throw error;
-          }
-
-
-          currentUser =
-            data?.user || null;
-
-          status.textContent =
-            "Logged in successfully.";
-
-          closeAuthModal();
-
-        }
-
-
-        await loadCurrentUser();
-
-
-      } catch (error) {
-
-        console.error(
-          "Authentication error:",
-          error
-        );
-
-        let message =
-          error?.message ||
-          "Authentication failed.";
-
-        const lower =
-          message.toLowerCase();
-
-        if (
-          lower.includes(
-            "invalid login credentials"
-          )
-        ) {
-
-          message =
-            "Incorrect email or password.";
-
-        } else if (
-          lower.includes(
-            "email not confirmed"
-          )
-        ) {
-
-          message =
-            "Please confirm your email before signing in.";
-
-        } else if (
-          lower.includes(
-            "already registered"
-          )
-        ) {
-
-          message =
-            "An account with this email already exists. Try logging in.";
-
-        }
-
-        status.textContent =
-          message;
-
-      }
-    }
-
-
-    async function loadCurrentUser() {
-
-      if (!supabaseClient) {
-
-        updateAuthUI(null);
-
-        return null;
-      }
-
-
-      try {
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient.auth
-            .getUser();
-
-
-        if (error) {
-          throw error;
-        }
-
 
         currentUser =
-          data?.user || null;
+          data.user || null;
+
+
+        status.textContent =
+          "Account created successfully.";
+
 
         updateAuthUI(
           currentUser
         );
 
-        return currentUser;
+
+        setTimeout(
+          closeAuthModal,
+          500
+        );
+
+      } else {
+
+        status.textContent =
+          "Account created. Check your email to confirm your account.";
+
+      }
+
+    } else {
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.auth
+          .signInWithPassword({
+
+            email,
+            password
+
+          });
 
 
-      } catch (error) {
+      if (error) {
+        throw error;
+      }
+
+
+      currentUser =
+        data?.user || null;
+
+
+      updateAuthUI(
+        currentUser
+      );
+
+
+      status.textContent =
+        "Logged in successfully.";
+
+
+      setTimeout(
+        closeAuthModal,
+        300
+      );
+    }
+
+
+    await loadCurrentUser();
+
+
+  } catch (error) {
+
+    console.error(
+      "Authentication error:",
+      error
+    );
+
+
+    let message =
+      error?.message ||
+      "Authentication failed.";
+
+
+    const lower =
+      message.toLowerCase();
+
+
+    if (
+      lower.includes(
+        "invalid login credentials"
+      )
+    ) {
+
+      message =
+        "Incorrect email or password.";
+
+    } else if (
+      lower.includes(
+        "email not confirmed"
+      )
+    ) {
+
+      message =
+        "Please confirm your email before signing in.";
+
+    } else if (
+      lower.includes(
+        "already registered"
+      )
+    ) {
+
+      message =
+        "An account with this email already exists. Try logging in.";
+
+    }
+
+
+    status.textContent =
+      message;
+  }
+}
+
+
+/* ============================================================
+   LOAD CURRENT USER
+   ============================================================ */
+
+async function loadCurrentUser() {
+
+  if (!supabaseClient) {
+
+    currentUser =
+      null;
+
+    updateAuthUI(
+      null
+    );
+
+    return null;
+  }
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth
+        .getUser();
+
+
+    if (error) {
+
+      /*
+       * "Auth session missing" is normal when
+       * nobody is logged in.
+       */
+
+      if (
+        !String(
+          error.message || ""
+        )
+          .toLowerCase()
+          .includes(
+            "auth session missing"
+          )
+      ) {
 
         console.error(
           "User loading error:",
           error
         );
 
-        currentUser = null;
-
-        updateAuthUI(null);
-
-        return null;
       }
+
+
+      currentUser =
+        null;
+
+      updateAuthUI(
+        null
+      );
+
+      return null;
     }
 
 
-    function updateAuthUI(user) {
+    currentUser =
+      data?.user || null;
 
-      const area =
-        document.getElementById(
-          "authArea"
+
+    updateAuthUI(
+      currentUser
+    );
+
+
+    return currentUser;
+
+
+  } catch (error) {
+
+    console.error(
+      "User loading error:",
+      error
+    );
+
+
+    currentUser =
+      null;
+
+
+    updateAuthUI(
+      null
+    );
+
+
+    return null;
+  }
+}
+
+
+/* ============================================================
+   AUTH UI
+   ============================================================ */
+
+function updateAuthUI(
+  user
+) {
+
+  const area =
+    document.getElementById(
+      "authArea"
+    );
+
+
+  if (!area) {
+    return;
+  }
+
+
+  if (!isSupabaseConfigured()) {
+
+    area.innerHTML = `
+
+      <button
+        class="btn btn-secondary"
+        onclick="openSupabaseSetup()"
+      >
+        Connect
+      </button>
+
+    `;
+
+    return;
+  }
+
+
+  if (!user) {
+
+    area.innerHTML = `
+
+      <button
+        class="btn btn-secondary"
+        onclick="openAuthModal('login')"
+      >
+        Log in
+      </button>
+
+      <button
+        class="btn btn-secondary"
+        onclick="openSupabaseSetup()"
+        title="Supabase settings"
+        aria-label="Supabase settings"
+      >
+        ⚙
+      </button>
+
+    `;
+
+    return;
+  }
+
+
+  area.innerHTML = `
+
+    <span class="user-email">
+      ${escapeHtml(user.email || "")}
+    </span>
+
+    <button
+      class="btn btn-secondary"
+      onclick="logoutUser()"
+    >
+      Log out
+    </button>
+
+    <button
+      class="btn btn-secondary"
+      onclick="openSupabaseSetup()"
+      title="Supabase settings"
+      aria-label="Supabase settings"
+    >
+      ⚙
+    </button>
+
+  `;
+}
+
+
+/* ============================================================
+   AUTH LISTENER
+   ============================================================ */
+
+function attachAuthListener() {
+
+  if (
+    !supabaseClient
+  ) {
+    return;
+  }
+
+
+  if (
+    window.__azeleAuthSubscription
+  ) {
+
+    try {
+
+      window.__azeleAuthSubscription.unsubscribe();
+
+    } catch (_) {}
+
+  }
+
+
+  const {
+    data
+  } =
+    supabaseClient.auth.onAuthStateChange(
+      (_event, session) => {
+
+        currentUser =
+          session?.user || null;
+
+
+        updateAuthUI(
+          currentUser
         );
-
-      if (!area) return;
-
-
-      if (!user) {
-
-        area.innerHTML = `
-          <button
-            class="btn btn-secondary"
-            onclick="openAuthModal('login')"
-          >
-            Log in
-          </button>
-        `;
-
-        return;
-      }
-
-
-      area.innerHTML = `
-
-        <span class="user-email">
-          ${escapeHtml(user.email || "")}
-        </span>
-
-        <button
-          class="btn btn-secondary"
-          onclick="logoutUser()"
-        >
-          Log out
-        </button>
-
-      `;
-    }
-
-
-    async function logoutUser() {
-
-      if (!supabaseClient) {
-        return;
-      }
-
-
-      try {
-
-        const {
-          error
-        } =
-          await supabaseClient.auth
-            .signOut();
-
-        if (error) {
-          throw error;
-        }
-
-        currentUser = null;
-
-        updateAuthUI(null);
-
-        showToast(
-          "You have been logged out."
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "Logout error:",
-          error
-        );
-
-      }
-    }
-
-
-    /* ============================================================
-       AI-READY SECURITY ASSISTANT
-       ============================================================ */
-
-    function addAssistantMessage(
-      message,
-      type = "bot"
-    ) {
-
-      const container =
-        document.getElementById(
-          "assistantMessages"
-        );
-
-      if (!container) return;
-
-
-      const element =
-        document.createElement(
-          "div"
-        );
-
-      element.className =
-        `assistant-message ${type}`;
-
-      element.innerHTML =
-        escapeHtml(message)
-          .replace(
-            /\n/g,
-            "<br>"
-          );
-
-
-      container.appendChild(
-        element
-      );
-
-
-      container.scrollTop =
-        container.scrollHeight;
-    }
-
-
-    function runAssistantQuick(
-      message
-    ) {
-
-      const input =
-        document.getElementById(
-          "assistantInput"
-        );
-
-      input.value = message;
-
-      sendAssistantMessage();
-    }
-
-
-    function sendAssistantMessage() {
-
-      const input =
-        document.getElementById(
-          "assistantInput"
-        );
-
-      const message =
-        input.value.trim();
-
-
-      if (!message) {
-        return;
-      }
-
-
-      addAssistantMessage(
-        message,
-        "user"
-      );
-
-      input.value = "";
-
-
-      setTimeout(
-        () => {
-
-          const response =
-            generateSecurityResponse(
-              message
-            );
-
-          addAssistantMessage(
-            response,
-            "bot"
-          );
-
-        },
-        350
-      );
-    }
-
-
-    function generateSecurityResponse(
-      message
-    ) {
-
-      const text =
-        message.toLowerCase();
-
-
-      if (
-        text.includes("phishing") ||
-        text.includes("suspicious email") ||
-        text.includes("fake email")
-      ) {
-
-        return (
-          "A few strong phishing warning signs are urgency, requests for " +
-          "passwords or codes, unexpected attachments, unusual payment " +
-          "requests, and links that do not match the organization they claim " +
-          "to represent.\n\n" +
-          "Safest next step: do not click the link or reply with sensitive " +
-          "information. Verify the request through a trusted channel you " +
-          "already know."
-        );
-      }
-
-
-      if (
-        text.includes("mfa") ||
-        text.includes("multi-factor") ||
-        text.includes("2fa")
-      ) {
-
-        return (
-          "Multi-factor authentication is one of the strongest simple " +
-          "protections you can add to important accounts.\n\n" +
-          "Prioritize email, administrator accounts, cloud services, and " +
-          "other accounts that could expose business information."
-        );
-      }
-
-
-      if (
-        text.includes("password")
-      ) {
-
-        return (
-          "Use a unique password for every important account and avoid " +
-          "reusing passwords. A reputable password manager can help create " +
-          "and remember unique passwords.\n\n" +
-          "Also enable MFA wherever it is available."
-        );
-      }
-
-
-      if (
-        text.includes("backup") ||
-        text.includes("ransomware")
-      ) {
-
-        return (
-          "Reliable backups are important because they give a business a " +
-          "way to recover after accidental deletion, hardware failure, or " +
-          "a security incident.\n\n" +
-          "Do not stop at creating backups. Test that important data can " +
-          "actually be restored."
-        );
-      }
-
-
-      if (
-        text.includes("ai") ||
-        text.includes("chatgpt") ||
-        text.includes("artificial intelligence")
-      ) {
-
-        return (
-          "A useful business rule is: do not put confidential, regulated, " +
-          "private, or credential information into an AI tool unless your " +
-          "organization has explicitly approved that use and understands " +
-          "the service's data handling.\n\n" +
-          "When in doubt, remove identifying or sensitive information first."
-        );
-      }
-
-
-      if (
-        text.includes("privacy") ||
-        text.includes("personal information") ||
-        text.includes("data")
-      ) {
-
-        return (
-          "Start with three basics: collect only information you actually " +
-          "need, restrict access to people who need it, and protect important " +
-          "accounts with strong authentication.\n\n" +
-          "Regularly review what information your business stores and who can access it."
-        );
-      }
-
-
-      if (
-        text.includes("email")
-      ) {
-
-        return (
-          "Protect business email with MFA, strong unique credentials, " +
-          "spam and phishing filtering, regular software updates, and " +
-          "employee awareness training.\n\n" +
-          "Email accounts deserve extra attention because they can be used " +
-          "to reset access to many other services."
-        );
-      }
-
-
-      if (
-        text.includes("secure my business") ||
-        text.includes("secure my business")
-      ) {
-
-        return (
-          "Start with the basics: MFA on important accounts, reliable tested " +
-          "backups, automatic security updates, strong email protection, " +
-          "limited access to sensitive information, and an incident-response plan.\n\n" +
-          "AZÈLE's assessment can help you identify which of those areas " +
-          "needs attention first."
-        );
-      }
-
-
-      if (
-        text.includes("hack") ||
-        text.includes("break into") ||
-        text.includes("exploit")
-      ) {
-
-        return (
-          "I can help with defensive cybersecurity, such as securing accounts, " +
-          "understanding vulnerabilities at a high level, detecting scams, " +
-          "and improving a business's security posture. I won't provide " +
-          "instructions for breaking into systems."
-        );
-      }
-
-
-      return (
-        "The safest way to approach that is to focus on prevention and " +
-        "protection. For a business, start with MFA, reliable backups, " +
-        "software updates, access controls, email security, employee " +
-        "awareness, and an incident-response plan.\n\n" +
-        "If you're dealing with a suspicious message, paste the non-sensitive " +
-        "parts into the Scam Detector below and AZÈLE can check for common warning signs."
-      );
-    }
-
-
-    /* ============================================================
-       SCAM DETECTOR
-       ============================================================ */
-
-    function checkScam() {
-
-      const input =
-        document.getElementById(
-          "scamInput"
-        );
-
-      const result =
-        document.getElementById(
-          "scamResult"
-        );
-
-      const text =
-        input.value.trim();
-
-
-      if (!text) {
-
-        result.className =
-          "checker-result show warning";
-
-        result.innerHTML =
-          "<strong>Add a message first.</strong><br>Paste the non-sensitive parts of the suspicious message so AZÈLE can check common warning signs.";
-
-        return;
-      }
-
-
-      const lower =
-        text.toLowerCase();
-
-
-      const signals = [];
-
-
-      const urgencyPatterns = [
-        "urgent",
-        "immediately",
-        "act now",
-        "within 24 hours",
-        "expires today",
-        "final warning",
-        "account will be closed"
-      ];
-
-
-      const credentialPatterns = [
-        "password",
-        "verification code",
-        "security code",
-        "login",
-        "sign in",
-        "verify your account",
-        "confirm your identity"
-      ];
-
-
-      const paymentPatterns = [
-        "gift card",
-        "wire transfer",
-        "send money",
-        "payment required",
-        "crypto",
-        "bitcoin",
-        "bank transfer"
-      ];
-
-
-      const linkPatterns = [
-        "http://",
-        "https://",
-        "bit.ly/",
-        "tinyurl.com/",
-        "click here",
-        "click the link"
-      ];
-
-
-      urgencyPatterns.forEach(
-        (pattern) => {
-
-          if (lower.includes(pattern)) {
-            signals.push(
-              "Creates urgency or pressure"
-            );
-          }
-
-        }
-      );
-
-
-      credentialPatterns.forEach(
-        (pattern) => {
-
-          if (lower.includes(pattern)) {
-            signals.push(
-              "Requests or discusses account credentials"
-            );
-          }
-
-        }
-      );
-
-
-      paymentPatterns.forEach(
-        (pattern) => {
-
-          if (lower.includes(pattern)) {
-            signals.push(
-              "Contains payment or money-related pressure"
-            );
-          }
-
-        }
-      );
-
-
-      linkPatterns.forEach(
-        (pattern) => {
-
-          if (lower.includes(pattern)) {
-            signals.push(
-              "Contains a link or encourages clicking"
-            );
-          }
-
-        }
-      );
-
-
-      const uniqueSignals =
-        [...new Set(signals)];
-
-
-      if (
-        uniqueSignals.length >= 3
-      ) {
-
-        result.className =
-          "checker-result show danger";
-
-        result.innerHTML = `
-          <strong>High number of warning signs detected.</strong>
-          <br><br>
-          ${uniqueSignals
-            .map(
-              signal =>
-                "• " +
-                escapeHtml(signal)
-            )
-            .join("<br>")}
-          <br><br>
-          <strong>Safer move:</strong>
-          Do not click links, provide credentials, or send money.
-          Verify the request independently through a trusted channel.
-        `;
-
-        return;
-      }
-
-
-      if (
-        uniqueSignals.length >= 1
-      ) {
-
-        result.className =
-          "checker-result show warning";
-
-        result.innerHTML = `
-          <strong>Some warning signs detected.</strong>
-          <br><br>
-          ${uniqueSignals
-            .map(
-              signal =>
-                "• " +
-                escapeHtml(signal)
-            )
-            .join("<br>")}
-          <br><br>
-          This does not prove the message is a scam. Verify the sender
-          independently before taking action.
-        `;
-
-        return;
-      }
-
-
-      result.className =
-        "checker-result show safe";
-
-      result.innerHTML = `
-        <strong>No obvious warning patterns detected.</strong>
-        <br><br>
-        That does not guarantee the message is legitimate. Be cautious with
-        unexpected requests, links, attachments, payments, or login prompts.
-      `;
-    }
-
-
-    function clearScamChecker() {
-
-      document.getElementById(
-        "scamInput"
-      ).value = "";
-
-      const result =
-        document.getElementById(
-          "scamResult"
-        );
-
-      result.className =
-        "checker-result";
-
-      result.innerHTML = "";
-    }
-
-
-    /* ============================================================
-       PRIVACY COACH
-       ============================================================ */
-
-    document
-      .querySelectorAll(".privacy-item")
-      .forEach(
-        (checkbox) => {
-
-          checkbox.addEventListener(
-            "change",
-            updatePrivacyScore
-          );
-
-        }
-      );
-
-
-    function updatePrivacyScore() {
-
-      const items =
-        document.querySelectorAll(
-          ".privacy-item"
-        );
-
-      const checked =
-        document.querySelectorAll(
-          ".privacy-item:checked"
-        ).length;
-
-      const total =
-        items.length;
-
-      const score =
-        Math.round(
-          (checked / total) * 100
-        );
-
-
-      const output =
-        document.getElementById(
-          "privacyScore"
-        );
-
-
-      if (checked === 0) {
-
-        output.innerHTML =
-          "Select the statements that are true for you.";
-
-        return;
-      }
-
-
-      let message = "";
-
-
-      if (score < 50) {
-
-        message =
-          "Your current checklist suggests several areas deserve attention. Start with MFA, unique passwords, updates, backups, and careful handling of sensitive information.";
-
-      } else if (score < 84) {
-
-        message =
-          "You have a reasonable foundation. Focus on the unchecked areas first, especially protections around accounts and sensitive information.";
-
-      } else {
-
-        message =
-          "Strong checklist result. Keep reviewing these practices because security changes as accounts, people, and technology change.";
-
-      }
-
-
-      output.innerHTML =
-        `<strong>${score}% coverage</strong><br>${escapeHtml(message)}`;
-    }
-
-
-    /* ============================================================
-       ESCAPE HTML
-       ============================================================ */
-
-    function escapeHtml(value) {
-
-      return String(value)
-        .replaceAll(
-          "&",
-          "&amp;"
-        )
-        .replaceAll(
-          "<",
-          "&lt;"
-        )
-        .replaceAll(
-          ">",
-          "&gt;"
-        )
-        .replaceAll(
-          '"',
-          "&quot;"
-        )
-        .replaceAll(
-          "'",
-          "&#039;"
-        );
-    }
-
-
-    /* ============================================================
-       ASSISTANT ENTER KEY
-       ============================================================ */
-
-    document
-      .getElementById(
-        "assistantInput"
-      )
-      .addEventListener(
-        "keydown",
-        function (event) {
-
-          if (
-            event.key === "Enter" &&
-            !event.shiftKey
-          ) {
-
-            event.preventDefault();
-
-            sendAssistantMessage();
-
-          }
-
-        }
-      );
-
-
-    /* ============================================================
-       MODAL BEHAVIOR
-       ============================================================ */
-
-    document
-      .getElementById("authModal")
-      .addEventListener(
-        "click",
-        function (event) {
-
-          if (
-            event.target === this
-          ) {
-
-            closeAuthModal();
-
-          }
-
-        }
-      );
-
-
-    document.addEventListener(
-      "keydown",
-      function (event) {
-
-        if (
-          event.key === "Escape"
-        ) {
-
-          closeAuthModal();
-
-        }
 
       }
     );
 
 
-    /* ============================================================
-       AUTH STATE LISTENER
-       ============================================================ */
+  window.__azeleAuthSubscription =
+    data?.subscription || null;
+}
 
-    if (supabaseClient) {
 
-      supabaseClient.auth.onAuthStateChange(
-        (_event, session) => {
+/* ============================================================
+   LOGOUT
+   ============================================================ */
 
-          currentUser =
-            session?.user || null;
+async function logoutUser() {
 
-          updateAuthUI(
-            currentUser
-          );
+  if (
+    !supabaseClient
+  ) {
+    return;
+  }
 
-        }
-      );
 
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient.auth
+        .signOut();
+
+
+    if (error) {
+      throw error;
     }
 
 
-    /* ============================================================
-       INITIALIZE
-       ============================================================ */
+    currentUser =
+      null;
 
-    loadCurrentUser();
 
-  </script>
+    updateAuthUI(
+      null
+    );
 
-</body>
-</html>
+
+    showToast(
+      "You have been logged out."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Logout error:",
+      error
+    );
+
+
+    showToast(
+      "Could not log out. Please try again."
+    );
+  }
+}
+
+
+/* ============================================================
+   SECURITY ASSISTANT
+   ============================================================ */
+
+function addAssistantMessage(
+  message,
+  type = "bot"
+) {
+
+  const container =
+    document.getElementById(
+      "assistantMessages"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  const element =
+    document.createElement(
+      "div"
+    );
+
+
+  element.className =
+    `assistant-message ${type}`;
+
+
+  element.innerHTML =
+    escapeHtml(message)
+      .replace(
+        /\n/g,
+        "<br>"
+      );
+
+
+  container.appendChild(
+    element
+  );
+
+
+  container.scrollTop =
+    container.scrollHeight;
+}
+
+
+function runAssistantQuick(
+  message
+) {
+
+  const input =
+    document.getElementById(
+      "assistantInput"
+    );
+
+
+  input.value =
+    message;
+
+
+  sendAssistantMessage();
+}
+
+
+function sendAssistantMessage() {
+
+  const input =
+    document.getElementById(
+      "assistantInput"
+    );
+
+
+  const message =
+    input.value.trim();
+
+
+  if (!message) {
+    return;
+  }
+
+
+  addAssistantMessage(
+    message,
+    "user"
+  );
+
+
+  input.value =
+    "";
+
+
+  setTimeout(
+    () => {
+
+      const response =
+        generateSecurityResponse(
+          message
+        );
+
+
+      addAssistantMessage(
+        response,
+        "bot"
+      );
+
+    },
+    350
+  );
+}
+
+
+function generateSecurityResponse(
+  message
+) {
+
+  const text =
+    message.toLowerCase();
+
+
+  if (
+    text.includes("phishing") ||
+    text.includes("suspicious email") ||
+    text.includes("fake email")
+  ) {
+
+    return (
+      "A few strong phishing warning signs are urgency, requests for " +
+      "passwords or codes, unexpected attachments, unusual payment " +
+      "requests, and links that do not match the organization they claim " +
+      "to represent.\n\n" +
+      "Safest next step: do not click the link or reply with sensitive " +
+      "information. Verify the request through a trusted channel you " +
+      "already know."
+    );
+  }
+
+
+  if (
+    text.includes("mfa") ||
+    text.includes("multi-factor") ||
+    text.includes("2fa")
+  ) {
+
+    return (
+      "Multi-factor authentication is one of the strongest simple " +
+      "protections you can add to important accounts.\n\n" +
+      "Prioritize email, administrator accounts, cloud services, and " +
+      "other accounts that could expose business information."
+    );
+  }
+
+
+  if (
+    text.includes("password")
+  ) {
+
+    return (
+      "Use a unique password for every important account and avoid " +
+      "reusing passwords. A reputable password manager can help create " +
+      "and remember unique passwords.\n\n" +
+      "Also enable MFA wherever it is available."
+    );
+  }
+
+
+  if (
+    text.includes("backup") ||
+    text.includes("ransomware")
+  ) {
+
+    return (
+      "Reliable backups are important because they give a business a " +
+      "way to recover after accidental deletion, hardware failure, or " +
+      "a security incident.\n\n" +
+      "Do not stop at creating backups. Test that important data can " +
+      "actually be restored."
+    );
+  }
+
+
+  if (
+    text.includes("ai") ||
+    text.includes("chatgpt") ||
+    text.includes("artificial intelligence")
+  ) {
+
+    return (
+      "A useful business rule is: do not put confidential, regulated, " +
+      "private, or credential information into an AI tool unless your " +
+      "organization has explicitly approved that use and understands " +
+      "the service's data handling.\n\n" +
+      "When in doubt, remove identifying or sensitive information first."
+    );
+  }
+
+
+  if (
+    text.includes("privacy") ||
+    text.includes("personal information") ||
+    text.includes("data")
+  ) {
+
+    return (
+      "Start with three basics: collect only information you actually " +
+      "need, restrict access to people who need it, and protect important " +
+      "accounts with strong authentication.\n\n" +
+      "Regularly review what information your business stores and who can access it."
+    );
+  }
+
+
+  if (
+    text.includes("email")
+  ) {
+
+    return (
+      "Protect business email with MFA, strong unique credentials, " +
+      "spam and phishing filtering, regular software updates, and " +
+      "employee awareness training.\n\n" +
+      "Email accounts deserve extra attention because they can be used " +
+      "to reset access to many other services."
+    );
+  }
+
+
+  if (
+    text.includes("secure my business")
+  ) {
+
+    return (
+      "Start with the basics: MFA on important accounts, reliable tested " +
+      "backups, automatic security updates, strong email protection, " +
+      "limited access to sensitive information, and an incident-response plan.\n\n" +
+      "AZÈLE's assessment can help you identify which of those areas " +
+      "needs attention first."
+    );
+  }
+
+
+  if (
+    text.includes("hack") ||
+    text.includes("break into") ||
+    text.includes("exploit")
+  ) {
+
+    return (
+      "I can help with defensive cybersecurity, such as securing accounts, " +
+      "understanding vulnerabilities at a high level, detecting scams, " +
+      "and improving a business's security posture. I won't provide " +
+      "instructions for breaking into systems."
+    );
+  }
+
+
+  return (
+    "The safest way to approach that is to focus on prevention and " +
+    "protection. For a business, start with MFA, reliable backups, " +
+    "software updates, access controls, email security, employee " +
+    "awareness, and an incident-response plan.\n\n" +
+    "If you're dealing with a suspicious message, paste the non-sensitive " +
+    "parts into the Scam Detector below and AZÈLE can check for common warning signs."
+  );
+}
+
+
+/* ============================================================
+   SCAM DETECTOR
+   ============================================================ */
+
+function checkScam() {
+
+  const input =
+    document.getElementById(
+      "scamInput"
+    );
+
+
+  const result =
+    document.getElementById(
+      "scamResult"
+    );
+
+
+  const text =
+    input.value.trim();
+
+
+  if (!text) {
+
+    result.className =
+      "checker-result show warning";
+
+
+    result.innerHTML =
+      "<strong>Add a message first.</strong><br>Paste the non-sensitive parts of the suspicious message so AZÈLE can check common warning signs.";
+
+    return;
+  }
+
+
+  const lower =
+    text.toLowerCase();
+
+
+  const signals = [];
+
+
+  const urgencyPatterns = [
+    "urgent",
+    "immediately",
+    "act now",
+    "within 24 hours",
+    "expires today",
+    "final warning",
+    "account will be closed"
+  ];
+
+
+  const credentialPatterns = [
+    "password",
+    "verification code",
+    "security code",
+    "login",
+    "sign in",
+    "verify your account",
+    "confirm your identity"
+  ];
+
+
+  const paymentPatterns = [
+    "gift card",
+    "wire transfer",
+    "send money",
+    "payment required",
+    "crypto",
+    "bitcoin",
+    "bank transfer"
+  ];
+
+
+  const linkPatterns = [
+    "http://",
+    "https://",
+    "bit.ly/",
+    "tinyurl.com/",
+    "click here",
+    "click the link"
+  ];
+
+
+  urgencyPatterns.forEach(
+    (pattern) => {
+
+      if (
+        lower.includes(pattern)
+      ) {
+
+        signals.push(
+          "Creates urgency or pressure"
+        );
+
+      }
+
+    }
+  );
+
+
+  credentialPatterns.forEach(
+    (pattern) => {
+
+      if (
+        lower.includes(pattern)
+      ) {
+
+        signals.push(
+          "Requests or discusses account credentials"
+        );
+
+      }
+
+    }
+  );
+
+
+  paymentPatterns.forEach(
+    (pattern) => {
+
+      if (
+        lower.includes(pattern)
+      ) {
+
+        signals.push(
+          "Contains payment or money-related pressure"
+        );
+
+      }
+
+    }
+  );
+
+
+  linkPatterns.forEach(
+    (pattern) => {
+
+      if (
+        lower.includes(pattern)
+      ) {
+
+        signals.push(
+          "Contains a link or encourages clicking"
+        );
+
+      }
+
+    }
+  );
+
+
+  const uniqueSignals =
+    [...new Set(signals)];
+
+
+  if (
+    uniqueSignals.length >= 3
+  ) {
+
+    result.className =
+      "checker-result show danger";
+
+
+    result.innerHTML = `
+      <strong>
+        High number of warning signs detected.
+      </strong>
+
+      <br><br>
+
+      ${uniqueSignals
+        .map(
+          signal =>
+            "• " +
+            escapeHtml(signal)
+        )
+        .join("<br>")}
+
+      <br><br>
+
+      <strong>
+        Safer move:
+      </strong>
+
+      Do not click links, provide credentials, or send money.
+      Verify the request independently through a trusted channel.
+    `;
+
+
+    return;
+  }
+
+
+  if (
+    uniqueSignals.length >= 1
+  ) {
+
+    result.className =
+      "checker-result show warning";
+
+
+    result.innerHTML = `
+      <strong>
+        Some warning signs detected.
+      </strong>
+
+      <br><br>
+
+      ${uniqueSignals
+        .map(
+          signal =>
+            "• " +
+            escapeHtml(signal)
+        )
+        .join("<br>")}
+
+      <br><br>
+
+      This does not prove the message is a scam.
+      Verify the sender independently before taking action.
+    `;
+
+
+    return;
+  }
+
+
+  result.className =
+    "checker-result show safe";
+
+
+  result.innerHTML = `
+    <strong>
+      No obvious warning patterns detected.
+    </strong>
+
+    <br><br>
+
+    That does not guarantee the message is legitimate.
+    Be cautious with unexpected requests, links, attachments,
+    payments, or login prompts.
+  `;
+}
+
+
+function clearScamChecker() {
+
+  document.getElementById(
+    "scamInput"
+  ).value =
+    "";
+
+
+  const result =
+    document.getElementById(
+      "scamResult"
+    );
+
+
+  result.className =
+    "checker-result";
+
+
+  result.innerHTML =
+    "";
+}
+
+
+/* ============================================================
+   PRIVACY COACH
+   ============================================================ */
+
+document
+  .querySelectorAll(
+    ".privacy-item"
+  )
+  .forEach(
+    (checkbox) => {
+
+      checkbox.addEventListener(
+        "change",
+        updatePrivacyScore
+      );
+
+    }
+  );
+
+
+function updatePrivacyScore() {
+
+  const items =
+    document.querySelectorAll(
+      ".privacy-item"
+    );
+
+
+  const checked =
+    document.querySelectorAll(
+      ".privacy-item:checked"
+    ).length;
+
+
+  const total =
+    items.length;
+
+
+  const score =
+    total
+      ? Math.round(
+          (checked / total) *
+          100
+        )
+      : 0;
+
+
+  const output =
+    document.getElementById(
+      "privacyScore"
+    );
+
+
+  if (
+    checked === 0
+  ) {
+
+    output.innerHTML =
+      "Select the statements that are true for you.";
+
+    return;
+  }
+
+
+  let message =
+    "";
+
+
+  if (
+    score < 50
+  ) {
+
+    message =
+      "Your current checklist suggests several areas deserve attention. Start with MFA, unique passwords, updates, backups, and careful handling of sensitive information.";
+
+  } else if (
+    score < 84
+  ) {
+
+    message =
+      "You have a reasonable foundation. Focus on the unchecked areas first, especially protections around accounts and sensitive information.";
+
+  } else {
+
+    message =
+      "Strong checklist result. Keep reviewing these practices because security changes as accounts, people, and technology change.";
+
+  }
+
+
+  output.innerHTML =
+    `<strong>${score}% coverage</strong><br>${escapeHtml(message)}`;
+}
+
+
+/* ============================================================
+   ESCAPE HTML
+   ============================================================ */
+
+function escapeHtml(
+  value
+) {
+
+  return String(value)
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+}
+
+
+/* ============================================================
+   ASSISTANT ENTER KEY
+   ============================================================ */
+
+document
+  .getElementById(
+    "assistantInput"
+  )
+  .addEventListener(
+    "keydown",
+    function(event) {
+
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey
+      ) {
+
+        event.preventDefault();
+
+        sendAssistantMessage();
+
+      }
+
+    }
+  );
+
+
+/* ============================================================
+   MODAL BEHAVIOR
+   ============================================================ */
+
+document
+  .getElementById(
+    "authModal"
+  )
+  .addEventListener(
+    "click",
+    function(event) {
+
+      if (
+        event.target === this
+      ) {
+
+        closeAuthModal();
+
+      }
+
+    }
+  );
+
+
+document.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Escape"
+    ) {
+
+      closeAuthModal();
+      closeSupabaseSetup();
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   INITIALIZE AZÈLE
+   ============================================================ */
+
+initializeSupabase();
+
+updateAuthUI(
+  null
+);
+
+loadCurrentUser();
+
+</script>
