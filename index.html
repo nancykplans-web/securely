@@ -1658,7 +1658,6 @@
         /*
           3. Create the assessment.
 
-          IMPORTANT:
           Supabase requires lowercase risk levels:
           low / medium / high
         */
@@ -1716,6 +1715,10 @@
 
         /*
           5. Create risks based on the answers.
+
+          IMPORTANT:
+          Supabase requires lowercase severity values:
+          low / medium / high
         */
 
         const riskDefinitions = [
@@ -1725,7 +1728,7 @@
             title: "MFA coverage",
             description:
               "Multi-factor authentication is not enabled across all important accounts.",
-            severity: "High",
+            severity: "high",
             recommendation:
               "Enable MFA on every important business account."
           },
@@ -1735,7 +1738,7 @@
             title: "Backup readiness",
             description:
               "Important business data may not have sufficiently tested backups.",
-            severity: "High",
+            severity: "high",
             recommendation:
               "Create and regularly test reliable backups."
           },
@@ -1745,7 +1748,7 @@
             title: "Device updates",
             description:
               "Security updates may not be applied consistently.",
-            severity: "Medium",
+            severity: "medium",
             recommendation:
               "Create a regular process for applying security updates."
           },
@@ -1755,7 +1758,7 @@
             title: "Incident response",
             description:
               "The business does not have a documented incident-response plan.",
-            severity: "High",
+            severity: "high",
             recommendation:
               "Create a simple incident-response plan."
           },
@@ -1765,7 +1768,7 @@
             title: "AI data handling",
             description:
               "Employees may not have clear rules for what information can be entered into AI tools.",
-            severity: "Medium",
+            severity: "medium",
             recommendation:
               "Define clear rules for what employees may enter into AI tools."
           },
@@ -1775,7 +1778,7 @@
             title: "Security awareness",
             description:
               "Cybersecurity awareness training may not happen consistently.",
-            severity: "Medium",
+            severity: "medium",
             recommendation:
               "Provide basic cybersecurity awareness training regularly."
           },
@@ -1785,7 +1788,7 @@
             title: "Sensitive information access",
             description:
               "Access to sensitive information may not be reviewed consistently.",
-            severity: "High",
+            severity: "high",
             recommendation:
               "Review employee access to sensitive information."
           },
@@ -1795,7 +1798,7 @@
             title: "Employee offboarding",
             description:
               "Access removal may not follow a formal documented process.",
-            severity: "Medium",
+            severity: "medium",
             recommendation:
               "Create a documented process for removing access when employees leave."
           },
@@ -1805,7 +1808,7 @@
             title: "Email security",
             description:
               "Company email accounts may not have comprehensive security protections.",
-            severity: "Medium",
+            severity: "medium",
             recommendation:
               "Strengthen security rules and protections for company email."
           },
@@ -1815,7 +1818,7 @@
             title: "Security reviews",
             description:
               "Cybersecurity practices may not be reviewed regularly.",
-            severity: "Medium",
+            severity: "medium",
             recommendation:
               "Review cybersecurity practices at least annually."
           }
@@ -1836,10 +1839,12 @@
               assessment_id: assessment.id,
               title: definition.title,
               description: definition.description,
+
               severity:
                 answer.points === 0
-                  ? "High"
+                  ? "high"
                   : definition.severity,
+
               recommendation:
                 definition.recommendation
             });
