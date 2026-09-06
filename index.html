@@ -6,7 +6,9 @@
 
   <script>
     (function () {
-      const savedTheme = localStorage.getItem("azele-theme") || "system";
+      const savedTheme =
+        localStorage.getItem("azele-theme") || "system";
+
       document.documentElement.dataset.theme = savedTheme;
     })();
   </script>
@@ -15,7 +17,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -150,7 +155,8 @@
     }
 
     button,
-    input {
+    input,
+    textarea {
       font: inherit;
     }
 
@@ -163,12 +169,18 @@
       text-decoration: none;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     .container {
       width: min(1160px, calc(100% - 40px));
       margin: 0 auto;
     }
 
-    /* NAVBAR */
+    /* ============================================================
+       NAVBAR
+       ============================================================ */
 
     .navbar {
       position: sticky;
@@ -199,26 +211,24 @@
       white-space: nowrap;
       word-break: keep-all;
       overflow-wrap: normal;
-      font-family: "Cormorant Garamond", serif;
+      font-family: "Cormorant Garamond", Georgia, serif;
       font-size: 32px;
-      font-weight: 700;
-      letter-spacing: 0.015em;
+      font-weight: 600;
+      letter-spacing: -0.02em;
       line-height: 1;
+      color: var(--text);
     }
 
-    .logo-main {
-      white-space: nowrap;
-    }
-
-    .logo-accent {
-      color: var(--gold);
-      white-space: nowrap;
+    .logo:hover,
+    .logo:focus,
+    .logo:visited {
+      color: var(--text);
     }
 
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
     }
 
     .theme-switcher {
@@ -274,7 +284,9 @@
       font-size: 13px;
     }
 
-    /* BUTTONS */
+    /* ============================================================
+       BUTTONS
+       ============================================================ */
 
     .btn {
       border: 1px solid transparent;
@@ -321,13 +333,9 @@
       background: var(--surface-2);
     }
 
-    .btn-danger {
-      color: var(--danger-text);
-      background: var(--danger-bg);
-      border-color: transparent;
-    }
-
-    /* HERO */
+    /* ============================================================
+       HERO
+       ============================================================ */
 
     .hero {
       position: relative;
@@ -397,7 +405,9 @@
       gap: 12px;
     }
 
-    /* FEATURES */
+    /* ============================================================
+       FEATURES
+       ============================================================ */
 
     .section {
       padding: 88px 0;
@@ -474,7 +484,385 @@
       line-height: 1.65;
     }
 
-    /* ASSESSMENT */
+    /* ============================================================
+       SECURITY ASSISTANT
+       ============================================================ */
+
+    #assistant-section {
+      display: block;
+    }
+
+    .assistant-shell {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .assistant-intro,
+    .assistant-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .assistant-intro {
+      padding: 38px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .assistant-intro::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      right: -120px;
+      bottom: -140px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        var(--gold-soft),
+        transparent 70%
+      );
+      pointer-events: none;
+    }
+
+    .assistant-mark {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 24px;
+      border-radius: 15px;
+      color: var(--gold-dark);
+      background: var(--gold-soft);
+      border: 1px solid var(--border);
+    }
+
+    .assistant-mark svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    .assistant-intro h2 {
+      margin: 0;
+      max-width: 500px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(40px, 5vw, 58px);
+      line-height: 0.96;
+      letter-spacing: -0.025em;
+    }
+
+    .assistant-intro p {
+      max-width: 500px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 20px 0 0;
+    }
+
+    .assistant-safe-note {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-2);
+      color: var(--text-soft);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .assistant-safe-note svg {
+      flex-shrink: 0;
+      width: 17px;
+      height: 17px;
+      color: var(--gold);
+      margin-top: 1px;
+    }
+
+    .assistant-panel {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      min-height: 500px;
+    }
+
+    .assistant-panel-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .assistant-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .assistant-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 5px var(--gold-soft);
+    }
+
+    .assistant-panel-title strong {
+      font-size: 14px;
+    }
+
+    .assistant-status {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .assistant-messages {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 22px 2px;
+      overflow-y: auto;
+      max-height: 360px;
+    }
+
+    .assistant-message {
+      max-width: 88%;
+      padding: 13px 15px;
+      border-radius: 13px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .assistant-message.bot {
+      align-self: flex-start;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+    }
+
+    .assistant-message.user {
+      align-self: flex-end;
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .assistant-quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    .assistant-quick {
+      padding: 8px 11px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface-2);
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .assistant-quick:hover {
+      border-color: var(--gold);
+      color: var(--text);
+      background: var(--gold-soft);
+    }
+
+    .assistant-input-row {
+      display: flex;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .assistant-input {
+      flex: 1;
+      min-width: 0;
+      resize: none;
+      min-height: 46px;
+      max-height: 120px;
+      padding: 12px 13px;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      outline: none;
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .assistant-input:focus {
+      border-color: var(--gold);
+    }
+
+    .assistant-send {
+      width: 48px;
+      flex-shrink: 0;
+      border: 0;
+      border-radius: 10px;
+      background: var(--gold-dark);
+      color: #fff;
+      display: grid;
+      place-items: center;
+    }
+
+    .assistant-send svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ============================================================
+       SCAM CHECKER
+       ============================================================ */
+
+    .security-tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .security-tool-card {
+      padding: 30px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tool-icon {
+      width: 45px;
+      height: 45px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: var(--gold-dark);
+      background: var(--gold-soft);
+      margin-bottom: 20px;
+    }
+
+    .tool-icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .security-tool-card h3 {
+      margin: 0 0 9px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 32px;
+      font-weight: 600;
+    }
+
+    .security-tool-card > p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .checker-textarea {
+      width: 100%;
+      min-height: 150px;
+      resize: vertical;
+      padding: 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: 11px;
+      outline: none;
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .checker-textarea:focus {
+      border-color: var(--gold);
+    }
+
+    .checker-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .checker-result {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .checker-result.show {
+      display: block;
+    }
+
+    .checker-result.safe {
+      background: var(--success-bg);
+      color: var(--success-text);
+    }
+
+    .checker-result.warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+    }
+
+    .checker-result.danger {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .privacy-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .privacy-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--surface-2);
+      cursor: pointer;
+    }
+
+    .privacy-check input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--gold-dark);
+      margin-top: 1px;
+    }
+
+    .privacy-check span {
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .privacy-score {
+      margin-top: 17px;
+      padding: 14px;
+      border-radius: 11px;
+      background: var(--gold-soft);
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       ASSESSMENT
+       ============================================================ */
 
     #assessment-section {
       display: none;
@@ -589,7 +977,9 @@
       margin-top: 18px;
     }
 
-    /* RESULTS */
+    /* ============================================================
+       RESULTS
+       ============================================================ */
 
     #results-section {
       display: none;
@@ -748,6 +1138,32 @@
       line-height: 1.55;
     }
 
+    .priority-severity {
+      display: inline-block;
+      margin-top: 7px;
+      padding: 4px 7px;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .priority-severity.high {
+      color: var(--danger-text);
+      background: var(--danger-bg);
+    }
+
+    .priority-severity.medium {
+      color: var(--warning-text);
+      background: var(--warning-bg);
+    }
+
+    .priority-severity.low {
+      color: var(--success-text);
+      background: var(--success-bg);
+    }
+
     .save-message {
       padding: 14px 16px;
       margin-bottom: 18px;
@@ -765,7 +1181,9 @@
       margin-top: 24px;
     }
 
-    /* AUTH MODAL */
+    /* ============================================================
+       AUTH MODAL
+       ============================================================ */
 
     .modal-backdrop {
       position: fixed;
@@ -881,7 +1299,9 @@
       line-height: 1.5;
     }
 
-    /* FOOTER */
+    /* ============================================================
+       FOOTER
+       ============================================================ */
 
     footer {
       padding: 36px 0;
@@ -905,7 +1325,9 @@
       white-space: nowrap;
     }
 
-    /* TOAST */
+    /* ============================================================
+       TOAST
+       ============================================================ */
 
     .toast {
       position: fixed;
@@ -931,10 +1353,17 @@
       opacity: 1;
     }
 
-    /* RESPONSIVE */
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
 
-    @media (max-width: 850px) {
+    @media (max-width: 900px) {
       .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .assistant-shell,
+      .security-tools-grid {
         grid-template-columns: 1fr;
       }
 
@@ -960,14 +1389,31 @@
 
       .nav-inner {
         min-height: 68px;
-        gap: 10px;
+        gap: 8px;
       }
 
       .logo {
         font-size: 27px;
       }
 
+      .nav-right {
+        gap: 6px;
+      }
+
       .user-email {
+        display: none;
+      }
+
+      .theme-switcher {
+        display: flex;
+      }
+
+      .theme-btn {
+        width: 30px;
+        height: 30px;
+      }
+
+      #navAssessBtn {
         display: none;
       }
 
@@ -987,6 +1433,8 @@
         padding: 65px 0;
       }
 
+      .assistant-intro,
+      .assistant-panel,
       .question-card,
       .result-card,
       .results-hero {
@@ -1002,10 +1450,6 @@
         font-size: 50px;
       }
 
-      .theme-switcher {
-        display: none;
-      }
-
       .assessment-controls {
         flex-direction: column-reverse;
       }
@@ -1018,23 +1462,35 @@
         flex-direction: column;
         align-items: flex-start;
       }
+
+      .assistant-input-row {
+        align-items: stretch;
+      }
+
+      .assistant-send {
+        width: 44px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+
   <nav class="navbar">
     <div class="container nav-inner">
 
       <a href="#" class="logo" aria-label="AZÈLE home">
-        <span class="logo-main">AZÈL</span><span class="logo-accent">E</span>
+        AZÈLE
       </a>
 
       <div class="nav-right">
 
         <div class="theme-switcher" aria-label="Theme selection">
+
           <button
             class="theme-btn"
             data-theme-choice="light"
@@ -1069,6 +1525,7 @@
               <path d="M8 21h8M12 17v4"></path>
             </svg>
           </button>
+
         </div>
 
         <div id="authArea" class="auth-area"></div>
@@ -1086,13 +1543,19 @@
   </nav>
 
 
-  <!-- HERO -->
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+
   <main>
 
     <section id="hero-section" class="hero">
+
       <div class="container">
 
-        <div class="eyebrow">Cybersecurity readiness</div>
+        <div class="eyebrow">
+          Cybersecurity readiness
+        </div>
 
         <h1>
           Know where your
@@ -1107,6 +1570,7 @@
         </p>
 
         <div class="hero-actions">
+
           <button
             class="btn btn-gold"
             onclick="startAssessment()"
@@ -1116,29 +1580,48 @@
 
           <button
             class="btn btn-secondary"
+            onclick="scrollToAssistant()"
+          >
+            Ask AZÈLE
+          </button>
+
+          <button
+            class="btn btn-secondary"
             onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})"
           >
             Explore AZÈLE
           </button>
+
         </div>
 
       </div>
+
     </section>
 
 
-    <!-- FEATURES -->
+    <!-- ============================================================
+         FEATURES
+         ============================================================ -->
+
     <section id="features-section" class="section">
+
       <div class="container">
 
         <div class="section-header">
-          <div class="section-label">Built for clarity</div>
+
+          <div class="section-label">
+            Built for clarity
+          </div>
+
           <h2 class="section-title">
             Security shouldn't require a security degree.
           </h2>
+
           <p class="section-description">
             AZÈLE turns complicated cybersecurity readiness into a simple,
-            business-friendly assessment.
+            business-friendly assessment and safety workspace.
           </p>
+
         </div>
 
         <div class="features-grid">
@@ -1171,45 +1654,457 @@
           </article>
 
         </div>
+
       </div>
+
     </section>
 
 
-    <!-- ASSESSMENT -->
+    <!-- ============================================================
+         SECURITY ASSISTANT
+         ============================================================ -->
+
+    <section id="assistant-section" class="section">
+
+      <div class="container">
+
+        <div class="section-header">
+
+          <div class="section-label">
+            AZÈLE security assistant
+          </div>
+
+          <h2 class="section-title">
+            A security expert in your workspace.
+          </h2>
+
+          <p class="section-description">
+            Ask everyday cybersecurity questions, analyze suspicious messages,
+            or get practical guidance without needing to understand technical
+            jargon.
+          </p>
+
+        </div>
+
+
+        <div class="assistant-shell">
+
+          <div class="assistant-intro">
+
+            <div class="assistant-mark">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+              >
+                <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"></path>
+                <path d="M9 12l2 2 4-4"></path>
+              </svg>
+
+            </div>
+
+            <h2>
+              Ask before you click.
+            </h2>
+
+            <p>
+              AZÈLE can help explain suspicious messages, improve account
+              security, understand privacy risks, and teach safer online
+              habits.
+            </p>
+
+            <div class="assistant-safe-note">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+              >
+                <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"></path>
+                <path d="M12 8v4"></path>
+                <circle cx="12" cy="15.5" r=".6" fill="currentColor"></circle>
+              </svg>
+
+              <span>
+                AZÈLE focuses on defensive cybersecurity education.
+                Never paste passwords, private keys, financial information,
+                or other sensitive secrets into the assistant.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="assistant-panel">
+
+            <div class="assistant-panel-top">
+
+              <div class="assistant-panel-title">
+                <span class="assistant-dot"></span>
+                <strong>AZÈLE Security Assistant</strong>
+              </div>
+
+              <span class="assistant-status">
+                Ready
+              </span>
+
+            </div>
+
+
+            <div
+              id="assistantMessages"
+              class="assistant-messages"
+            >
+
+              <div class="assistant-message bot">
+                Hi. I’m AZÈLE’s security assistant. I can help you understand
+                phishing, account security, privacy, suspicious messages,
+                and safer business practices.
+              </div>
+
+            </div>
+
+
+            <div class="assistant-quick-actions">
+
+              <button
+                class="assistant-quick"
+                onclick="runAssistantQuick('How can I protect my business email?')"
+              >
+                Protect email
+              </button>
+
+              <button
+                class="assistant-quick"
+                onclick="runAssistantQuick('How can I tell if an email is a phishing attempt?')"
+              >
+                Spot phishing
+              </button>
+
+              <button
+                class="assistant-quick"
+                onclick="runAssistantQuick('What should my business never put into an AI tool?')"
+              >
+                AI data safety
+              </button>
+
+              <button
+                class="assistant-quick"
+                onclick="runAssistantQuick('How should I secure important business accounts?')"
+              >
+                Secure accounts
+              </button>
+
+            </div>
+
+
+            <div class="assistant-input-row">
+
+              <textarea
+                id="assistantInput"
+                class="assistant-input"
+                rows="1"
+                placeholder="Ask a cybersecurity question..."
+                aria-label="Ask AZÈLE a cybersecurity question"
+              ></textarea>
+
+              <button
+                class="assistant-send"
+                onclick="sendAssistantMessage()"
+                aria-label="Send"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M22 2L11 13"></path>
+                  <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+                </svg>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         SECURITY TOOLS
+         ============================================================ -->
+
+    <section id="security-tools-section" class="section">
+
+      <div class="container">
+
+        <div class="section-header">
+
+          <div class="section-label">
+            Practical protection
+          </div>
+
+          <h2 class="section-title">
+            Check the things that matter.
+          </h2>
+
+          <p class="section-description">
+            Simple defensive tools for everyday cybersecurity decisions.
+          </p>
+
+        </div>
+
+
+        <div class="security-tools-grid">
+
+          <!-- SCAM CHECKER -->
+
+          <article class="security-tool-card">
+
+            <div class="tool-icon">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+              >
+                <path d="M12 3l8 4v5c0 4.7-3.2 7.9-8 9-4.8-1.1-8-4.3-8-9V7l8-4z"></path>
+                <path d="M12 8v4"></path>
+                <circle cx="12" cy="15.5" r=".7" fill="currentColor"></circle>
+              </svg>
+
+            </div>
+
+            <h3>
+              Scam detector
+            </h3>
+
+            <p>
+              Paste a suspicious message or email and AZÈLE will look for
+              common warning signs such as urgency, credential requests,
+              suspicious links, and payment pressure.
+            </p>
+
+            <textarea
+              id="scamInput"
+              class="checker-textarea"
+              placeholder="Paste a suspicious message here..."
+            ></textarea>
+
+            <div class="checker-actions">
+
+              <button
+                class="btn btn-gold"
+                onclick="checkScam()"
+              >
+                Check message
+              </button>
+
+              <button
+                class="btn btn-secondary"
+                onclick="clearScamChecker()"
+              >
+                Clear
+              </button>
+
+            </div>
+
+            <div
+              id="scamResult"
+              class="checker-result"
+            ></div>
+
+          </article>
+
+
+          <!-- PRIVACY COACH -->
+
+          <article class="security-tool-card">
+
+            <div class="tool-icon">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+              >
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 11v6"></path>
+                <circle cx="12" cy="7.5" r=".7" fill="currentColor"></circle>
+              </svg>
+
+            </div>
+
+            <h3>
+              Privacy coach
+            </h3>
+
+            <p>
+              Check a few everyday habits and get a simple picture of your
+              current account and data-protection posture.
+            </p>
+
+            <div class="privacy-list">
+
+              <label class="privacy-check">
+                <input
+                  type="checkbox"
+                  class="privacy-item"
+                  value="mfa"
+                />
+                <span>
+                  Important accounts use multi-factor authentication.
+                </span>
+              </label>
+
+              <label class="privacy-check">
+                <input
+                  type="checkbox"
+                  class="privacy-item"
+                  value="passwords"
+                />
+                <span>
+                  Important passwords are unique and not reused.
+                </span>
+              </label>
+
+              <label class="privacy-check">
+                <input
+                  type="checkbox"
+                  class="privacy-item"
+                  value="updates"
+                />
+                <span>
+                  Devices and important software receive security updates.
+                </span>
+              </label>
+
+              <label class="privacy-check">
+                <input
+                  type="checkbox"
+                  class="privacy-item"
+                  value="backup"
+                />
+                <span>
+                  Important files have reliable backups.
+                </span>
+              </label>
+
+              <label class="privacy-check">
+                <input
+                  type="checkbox"
+                  class="privacy-item"
+                  value="sharing"
+                />
+                <span>
+                  Sensitive information is only shared when necessary.
+                </span>
+              </label>
+
+              <label class="privacy-check">
+                <input
+                  type="checkbox"
+                  class="privacy-item"
+                  value="ai"
+                />
+                <span>
+                  There are rules for entering sensitive information into AI tools.
+                </span>
+              </label>
+
+            </div>
+
+            <div
+              id="privacyScore"
+              class="privacy-score"
+            >
+              Select the statements that are true for you.
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         ASSESSMENT
+         ============================================================ -->
+
     <section id="assessment-section" class="section">
+
       <div class="container assessment-shell">
 
         <div class="section-header">
-          <div class="section-label">AZÈLE assessment</div>
+
+          <div class="section-label">
+            AZÈLE assessment
+          </div>
+
           <h2 class="section-title">
             Let's measure your readiness.
           </h2>
+
           <p class="section-description">
             Choose the answer that most accurately reflects your current
             business practices.
           </p>
+
         </div>
 
         <div class="progress-wrap">
+
           <div class="progress-top">
-            <span id="progressText">Question 1 of 10</span>
-            <span id="progressPercent">10%</span>
+            <span id="progressText">
+              Question 1 of 10
+            </span>
+
+            <span id="progressPercent">
+              10%
+            </span>
           </div>
 
           <div class="progress-bar">
-            <div id="progressFill" class="progress-fill"></div>
+            <div
+              id="progressFill"
+              class="progress-fill"
+            ></div>
           </div>
+
         </div>
 
-        <div id="questionCard" class="question-card">
+        <div
+          id="questionCard"
+          class="question-card"
+        >
 
-          <div id="questionNumber" class="question-number">
+          <div
+            id="questionNumber"
+            class="question-number"
+          >
             Question 1
           </div>
 
           <h2 id="questionText"></h2>
 
-          <div id="answerOptions" class="answer-options"></div>
+          <div
+            id="answerOptions"
+            class="answer-options"
+          ></div>
 
           <div class="assessment-controls">
 
@@ -1232,50 +2127,90 @@
           </div>
 
         </div>
+
       </div>
+
     </section>
 
 
-    <!-- RESULTS -->
+    <!-- ============================================================
+         RESULTS
+         ============================================================ -->
+
     <section id="results-section" class="section">
+
       <div class="container">
 
-        <div id="resultsHero" class="results-hero">
+        <div
+          id="resultsHero"
+          class="results-hero"
+        >
 
           <div
             id="scoreCircle"
             class="score-circle"
           >
+
             <div class="score-inner">
-              <span id="scoreNumber" class="score-number">0</span>
-              <span class="score-label">out of 100</span>
+
+              <span
+                id="scoreNumber"
+                class="score-number"
+              >
+                0
+              </span>
+
+              <span class="score-label">
+                out of 100
+              </span>
+
             </div>
+
           </div>
 
+
           <div class="results-copy">
-            <div class="eyebrow">Assessment complete</div>
 
-            <h2>Your security readiness</h2>
+            <div class="eyebrow">
+              Assessment complete
+            </div>
 
-            <div id="riskBadge" class="risk-badge">
+            <h2>
+              Your security readiness
+            </h2>
+
+            <div
+              id="riskBadge"
+              class="risk-badge"
+            >
               —
             </div>
 
             <p id="resultSummary"></p>
+
           </div>
 
         </div>
 
 
-        <div id="saveStatus" class="save-message">
+        <div
+          id="saveStatus"
+          class="save-message"
+        >
           Assessment results are being prepared.
         </div>
 
 
         <div class="result-card">
-          <h3>Priority actions</h3>
 
-          <div id="priorityList" class="priority-list"></div>
+          <h3>
+            Priority actions
+          </h3>
+
+          <div
+            id="priorityList"
+            class="priority-list"
+          ></div>
 
           <div class="results-actions">
 
@@ -1288,22 +2223,35 @@
 
             <button
               class="btn btn-secondary"
+              onclick="scrollToAssistant()"
+            >
+              Ask AZÈLE
+            </button>
+
+            <button
+              class="btn btn-secondary"
               onclick="window.scrollTo({top:0,behavior:'smooth'})"
             >
               Back to top
             </button>
 
           </div>
+
         </div>
 
       </div>
+
     </section>
 
   </main>
 
 
-  <!-- FOOTER -->
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+
   <footer>
+
     <div class="container footer-inner">
 
       <div class="footer-logo">
@@ -1315,19 +2263,33 @@
       </div>
 
     </div>
+
   </footer>
 
 
-  <!-- AUTH MODAL -->
-  <div id="authModal" class="modal-backdrop">
+  <!-- ============================================================
+       AUTH MODAL
+       ============================================================ -->
+
+  <div
+    id="authModal"
+    class="modal-backdrop"
+  >
 
     <div class="auth-modal">
 
       <div class="modal-top">
 
         <div>
-          <div class="section-label">AZÈLE account</div>
-          <h2 id="authTitle">Welcome back</h2>
+
+          <div class="section-label">
+            AZÈLE account
+          </div>
+
+          <h2 id="authTitle">
+            Welcome back
+          </h2>
+
         </div>
 
         <button
@@ -1369,6 +2331,7 @@
           class="field"
           style="display:none;"
         >
+
           <label for="businessName">
             Business name
           </label>
@@ -1378,10 +2341,12 @@
             type="text"
             placeholder="Your business"
           />
+
         </div>
 
 
         <div class="field">
+
           <label for="authEmail">
             Email
           </label>
@@ -1393,10 +2358,12 @@
             autocomplete="email"
             placeholder="you@company.com"
           />
+
         </div>
 
 
         <div class="field">
+
           <label for="authPassword">
             Password
           </label>
@@ -1408,6 +2375,7 @@
             autocomplete="current-password"
             placeholder="••••••••"
           />
+
         </div>
 
 
@@ -1427,10 +2395,14 @@
       </form>
 
     </div>
+
   </div>
 
 
-  <div id="toast" class="toast"></div>
+  <div
+    id="toast"
+    class="toast"
+  ></div>
 
 
   <script>
@@ -1446,21 +2418,58 @@
 
     let supabaseClient = null;
 
-    try {
-      if (
-        window.supabase &&
-        SUPABASE_URL.includes("supabase.co") &&
-        !SUPABASE_URL.includes("YOUR-PROJECT")
-      ) {
+    function isSupabaseConfigured() {
+      return (
+        typeof SUPABASE_URL === "string" &&
+        typeof SUPABASE_ANON_KEY === "string" &&
+        SUPABASE_URL.startsWith("https://") &&
+        !SUPABASE_URL.includes("YOUR-PROJECT") &&
+        !SUPABASE_URL.includes("PASTE_YOUR") &&
+        SUPABASE_ANON_KEY.length > 20 &&
+        !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE") &&
+        !SUPABASE_ANON_KEY.includes("PASTE_YOUR")
+      );
+    }
+
+    function initializeSupabase() {
+      if (!isSupabaseConfigured()) {
+        console.warn(
+          "AZÈLE: Supabase credentials are not configured."
+        );
+
+        return false;
+      }
+
+      try {
         supabaseClient =
           window.supabase.createClient(
             SUPABASE_URL,
-            SUPABASE_ANON_KEY
+            SUPABASE_ANON_KEY,
+            {
+              auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+              }
+            }
           );
+
+        return true;
+
+      } catch (error) {
+
+        console.error(
+          "AZÈLE: Supabase initialization failed:",
+          error
+        );
+
+        supabaseClient = null;
+
+        return false;
       }
-    } catch (error) {
-      console.error("Supabase initialization error:", error);
     }
+
+    initializeSupabase();
 
 
     /* ============================================================
@@ -1468,6 +2477,7 @@
        ============================================================ */
 
     function applyTheme(theme) {
+
       const validThemes = [
         "light",
         "dark",
@@ -1478,7 +2488,8 @@
         theme = "system";
       }
 
-      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.theme =
+        theme;
 
       localStorage.setItem(
         "azele-theme",
@@ -1488,10 +2499,12 @@
       document
         .querySelectorAll("[data-theme-choice]")
         .forEach((button) => {
+
           button.classList.toggle(
             "active",
             button.dataset.themeChoice === theme
           );
+
         });
     }
 
@@ -1499,16 +2512,22 @@
     document
       .querySelectorAll("[data-theme-choice]")
       .forEach((button) => {
-        button.addEventListener("click", () => {
-          applyTheme(
-            button.dataset.themeChoice
-          );
-        });
+
+        button.addEventListener(
+          "click",
+          () => {
+            applyTheme(
+              button.dataset.themeChoice
+            );
+          }
+        );
+
       });
 
 
     applyTheme(
-      localStorage.getItem("azele-theme") || "system"
+      localStorage.getItem("azele-theme") ||
+      "system"
     );
 
 
@@ -1517,6 +2536,7 @@
        ============================================================ */
 
     const questions = [
+
       {
         id: 1,
         text: "Does your business use multi-factor authentication (MFA)?",
@@ -1535,6 +2555,7 @@
           }
         ]
       },
+
       {
         id: 2,
         text: "Does your business maintain reliable backups?",
@@ -1553,6 +2574,7 @@
           }
         ]
       },
+
       {
         id: 3,
         text: "Are business devices regularly updated?",
@@ -1571,6 +2593,7 @@
           }
         ]
       },
+
       {
         id: 4,
         text: "Does your business have an incident-response plan?",
@@ -1589,6 +2612,7 @@
           }
         ]
       },
+
       {
         id: 5,
         text: "Does your business have rules for what employees may enter into AI tools?",
@@ -1607,6 +2631,7 @@
           }
         ]
       },
+
       {
         id: 6,
         text: "Do employees receive cybersecurity awareness training?",
@@ -1625,6 +2650,7 @@
           }
         ]
       },
+
       {
         id: 7,
         text: "Is access to sensitive information limited to people who need it?",
@@ -1643,6 +2669,7 @@
           }
         ]
       },
+
       {
         id: 8,
         text: "Is employee access removed promptly when someone leaves?",
@@ -1661,6 +2688,7 @@
           }
         ]
       },
+
       {
         id: 9,
         text: "Does your business have strong email security practices?",
@@ -1679,6 +2707,7 @@
           }
         ]
       },
+
       {
         id: 10,
         text: "Does your business regularly review its cybersecurity readiness?",
@@ -1697,6 +2726,7 @@
           }
         ]
       }
+
     ];
 
 
@@ -1705,6 +2735,7 @@
        ============================================================ */
 
     const riskDefinitions = {
+
       1: {
         title: "Enable multi-factor authentication",
         description:
@@ -1794,41 +2825,8 @@
         recommendation:
           "Review security controls on a regular schedule and update policies when the business changes."
       }
+
     };
-
-
-    const actionDefinitions = [
-      {
-        title: "Enable MFA",
-        description:
-          "Protect important accounts with multi-factor authentication.",
-        priority: "high"
-      },
-      {
-        title: "Create reliable backups",
-        description:
-          "Maintain backups and test that your business can actually restore them.",
-        priority: "high"
-      },
-      {
-        title: "Create an incident-response plan",
-        description:
-          "Document the steps your team should take during a security incident.",
-        priority: "high"
-      },
-      {
-        title: "Define AI data rules",
-        description:
-          "Set clear rules for what employees can enter into AI tools.",
-        priority: "high"
-      },
-      {
-        title: "Review employee access",
-        description:
-          "Make sure sensitive information is only accessible to people who need it.",
-        priority: "high"
-      }
-    ];
 
 
     /* ============================================================
@@ -1837,9 +2835,8 @@
 
     let currentQuestion = 0;
 
-    let answers = Array(
-      questions.length
-    ).fill(null);
+    let answers =
+      Array(questions.length).fill(null);
 
     let authMode = "login";
 
@@ -1851,10 +2848,12 @@
        ============================================================ */
 
     function showToast(message) {
+
       const toast =
         document.getElementById("toast");
 
       toast.textContent = message;
+
       toast.classList.add("show");
 
       clearTimeout(
@@ -1869,6 +2868,7 @@
 
 
     function getRiskLevel(score) {
+
       if (score >= 75) {
         return "low";
       }
@@ -1882,6 +2882,7 @@
 
 
     function getRiskLabel(level) {
+
       if (level === "low") {
         return "Low risk";
       }
@@ -1894,16 +2895,31 @@
     }
 
 
+    function scrollToAssistant() {
+
+      const section =
+        document.getElementById(
+          "assistant-section"
+        );
+
+      if (!section) return;
+
+      section.scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+
     /* ============================================================
        START ASSESSMENT
        ============================================================ */
 
     function startAssessment() {
+
       currentQuestion = 0;
 
-      answers = Array(
-        questions.length
-      ).fill(null);
+      answers =
+        Array(questions.length).fill(null);
 
       document.getElementById(
         "hero-section"
@@ -1911,6 +2927,14 @@
 
       document.getElementById(
         "features-section"
+      ).style.display = "none";
+
+      document.getElementById(
+        "assistant-section"
+      ).style.display = "none";
+
+      document.getElementById(
+        "security-tools-section"
       ).style.display = "none";
 
       document.getElementById(
@@ -1935,6 +2959,7 @@
        ============================================================ */
 
     function renderQuestion() {
+
       const question =
         questions[currentQuestion];
 
@@ -1962,9 +2987,12 @@
         (answer, index) => {
 
           const button =
-            document.createElement("button");
+            document.createElement(
+              "button"
+            );
 
           button.type = "button";
+
           button.className =
             "answer-option";
 
@@ -1972,9 +3000,11 @@
             answers[currentQuestion] &&
             answers[currentQuestion].index === index
           ) {
+
             button.classList.add(
               "selected"
             );
+
           }
 
           button.innerHTML = `
@@ -1990,6 +3020,7 @@
           button.addEventListener(
             "click",
             () => {
+
               answers[currentQuestion] = {
                 index,
                 points: answer.points,
@@ -1997,17 +3028,22 @@
               };
 
               renderQuestion();
+
             }
           );
 
-          options.appendChild(button);
+          options.appendChild(
+            button
+          );
+
         }
       );
 
 
       const percent =
         Math.round(
-          (questionNumber / questions.length) *
+          (questionNumber /
+            questions.length) *
           100
         );
 
@@ -2044,7 +3080,8 @@
         );
 
       nextBtn.textContent =
-        currentQuestion === questions.length - 1
+        currentQuestion ===
+        questions.length - 1
           ? "Complete assessment"
           : "Continue";
     }
@@ -2055,10 +3092,13 @@
        ============================================================ */
 
     function nextQuestion() {
+
       if (!answers[currentQuestion]) {
+
         showToast(
           "Please select an answer before continuing."
         );
+
         return;
       }
 
@@ -2066,13 +3106,16 @@
         currentQuestion <
         questions.length - 1
       ) {
+
         currentQuestion++;
+
         renderQuestion();
 
         window.scrollTo({
-          top: document.getElementById(
-            "assessment-section"
-          ).offsetTop - 90,
+          top:
+            document.getElementById(
+              "assessment-section"
+            ).offsetTop - 90,
           behavior: "smooth"
         });
 
@@ -2084,9 +3127,13 @@
 
 
     function previousQuestion() {
+
       if (currentQuestion > 0) {
+
         currentQuestion--;
+
         renderQuestion();
+
       }
     }
 
@@ -2096,13 +3143,16 @@
        ============================================================ */
 
     async function completeAssessment() {
+
       const totalPoints =
         answers.reduce(
           (sum, answer) =>
             sum +
-            (answer
-              ? answer.points
-              : 0),
+            (
+              answer
+                ? answer.points
+                : 0
+            ),
           0
         );
 
@@ -2136,6 +3186,7 @@
       score,
       riskLevel
     ) {
+
       document.getElementById(
         "assessment-section"
       ).style.display = "none";
@@ -2175,11 +3226,15 @@
         "Your business has several important security gaps that should be prioritized.";
 
       if (score >= 75) {
+
         summary =
           "Your business demonstrates a strong security foundation, with a few areas that can still be strengthened.";
+
       } else if (score >= 50) {
+
         summary =
           "Your business has a reasonable foundation, but several important security gaps should be prioritized.";
+
       }
 
       document.getElementById(
@@ -2204,7 +3259,12 @@
     }
 
 
+    /* ============================================================
+       DYNAMIC PRIORITY ACTIONS
+       ============================================================ */
+
     function renderPriorityActions() {
+
       const container =
         document.getElementById(
           "priorityList"
@@ -2212,11 +3272,101 @@
 
       container.innerHTML = "";
 
-      actionDefinitions.forEach(
+
+      const priorityActions = [];
+
+
+      answers.forEach(
+        (answer, index) => {
+
+          if (
+            !answer ||
+            answer.points >= 10
+          ) {
+            return;
+          }
+
+          const definition =
+            riskDefinitions[
+              questions[index].id
+            ];
+
+          if (!definition) {
+            return;
+          }
+
+          let severity =
+            answer.points === 0
+              ? "high"
+              : definition.severity;
+
+          priorityActions.push({
+            title:
+              definition.title,
+
+            description:
+              definition.recommendation,
+
+            severity
+          });
+
+        }
+      );
+
+
+      priorityActions.sort(
+        (a, b) => {
+
+          const weight = {
+            high: 3,
+            medium: 2,
+            low: 1
+          };
+
+          return (
+            weight[b.severity] -
+            weight[a.severity]
+          );
+
+        }
+      );
+
+
+      const visibleActions =
+        priorityActions.slice(
+          0,
+          5
+        );
+
+
+      if (
+        visibleActions.length === 0
+      ) {
+
+        container.innerHTML = `
+          <div class="priority-item">
+            <div class="priority-number">✓</div>
+            <div>
+              <strong>No immediate gaps identified</strong>
+              <p>
+                Your answers indicate that the assessed controls are currently
+                in good shape. Continue reviewing them regularly.
+              </p>
+            </div>
+          </div>
+        `;
+
+        return;
+      }
+
+
+      visibleActions.forEach(
         (action, index) => {
 
           const item =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
 
           item.className =
             "priority-item";
@@ -2234,10 +3384,17 @@
               <p>
                 ${escapeHtml(action.description)}
               </p>
+
+              <span class="priority-severity ${escapeHtml(action.severity)}">
+                ${escapeHtml(action.severity)} priority
+              </span>
             </div>
           `;
 
-          container.appendChild(item);
+          container.appendChild(
+            item
+          );
+
         }
       );
     }
@@ -2251,7 +3408,9 @@
       score,
       riskLevel
     ) {
+
       if (!supabaseClient) {
+
         document.getElementById(
           "saveStatus"
         ).textContent =
@@ -2260,7 +3419,9 @@
         return;
       }
 
+
       if (!currentUser) {
+
         document.getElementById(
           "saveStatus"
         ).textContent =
@@ -2278,17 +3439,15 @@
           "Saving assessment to your AZÈLE account...";
 
 
-        /* --------------------------------------------------------
-           BUSINESS
-           -------------------------------------------------------- */
+        /* BUSINESS */
 
-        let businessName =
+        const businessName =
           localStorage.getItem(
             "azele-business-name"
           ) ||
           "My Business";
 
-        let industry =
+        const industry =
           localStorage.getItem(
             "azele-industry"
           ) ||
@@ -2304,10 +3463,13 @@
             .insert({
               user_id:
                 currentUser.id,
+
               business_name:
                 businessName,
+
               industry:
                 industry
+
             })
             .select()
             .single();
@@ -2318,9 +3480,7 @@
         }
 
 
-        /* --------------------------------------------------------
-           ASSESSMENT
-           -------------------------------------------------------- */
+        /* ASSESSMENT */
 
         const {
           data: assessment,
@@ -2329,16 +3489,21 @@
           await supabaseClient
             .from("assessments")
             .insert({
+
               business_id:
                 business.id,
+
               score:
                 score,
+
               risk_level:
                 String(riskLevel)
                   .trim()
                   .toLowerCase(),
+
               completed_at:
                 new Date().toISOString()
+
             })
             .select()
             .single();
@@ -2349,13 +3514,12 @@
         }
 
 
-        /* --------------------------------------------------------
-           ANSWERS
-           -------------------------------------------------------- */
+        /* ANSWERS */
 
         const answerRows =
           answers.map(
             (answer, index) => ({
+
               assessment_id:
                 assessment.id,
 
@@ -2371,6 +3535,7 @@
                 answer
                   ? answer.points
                   : 0
+
             })
           );
 
@@ -2379,9 +3544,7 @@
           error: answersError
         } =
           await supabaseClient
-            .from(
-              "assessment_answers"
-            )
+            .from("assessment_answers")
             .insert(answerRows);
 
 
@@ -2390,9 +3553,7 @@
         }
 
 
-        /* --------------------------------------------------------
-           RISKS
-           -------------------------------------------------------- */
+        /* RISKS */
 
         const riskRows = [];
 
@@ -2440,14 +3601,17 @@
                 normalizedSeverity
               )
             ) {
+
               throw new Error(
                 "Invalid risk severity generated: " +
                 normalizedSeverity
               );
+
             }
 
 
             riskRows.push({
+
               assessment_id:
                 assessment.id,
 
@@ -2462,12 +3626,16 @@
 
               recommendation:
                 definition.recommendation
+
             });
+
           }
         );
 
 
-        if (riskRows.length > 0) {
+        if (
+          riskRows.length > 0
+        ) {
 
           const {
             error: risksError
@@ -2479,48 +3647,79 @@
           if (risksError) {
             throw risksError;
           }
+
         }
 
 
-        /* --------------------------------------------------------
-           ACTIONS
-           -------------------------------------------------------- */
+        /* ACTIONS */
 
         const actionRows =
-          actionDefinitions.map(
-            (action) => ({
-              assessment_id:
-                assessment.id,
+          answers
+            .map(
+              (answer, index) => {
 
-              title:
-                action.title,
+                if (
+                  !answer ||
+                  answer.points >= 10
+                ) {
+                  return null;
+                }
 
-              description:
-                action.description,
+                const definition =
+                  riskDefinitions[
+                    questions[index].id
+                  ];
 
-              priority:
-                String(
-                  action.priority
-                )
-                  .trim()
-                  .toLowerCase(),
+                if (!definition) {
+                  return null;
+                }
 
-              completed:
-                false
-            })
-          );
+                const priority =
+                  answer.points === 0
+                    ? "high"
+                    : definition.severity;
+
+                return {
+
+                  assessment_id:
+                    assessment.id,
+
+                  title:
+                    definition.title,
+
+                  description:
+                    definition.recommendation,
+
+                  priority:
+                    String(priority)
+                      .trim()
+                      .toLowerCase(),
+
+                  completed:
+                    false
+
+                };
+
+              }
+            )
+            .filter(Boolean);
 
 
-        const {
-          error: actionsError
-        } =
-          await supabaseClient
-            .from("actions")
-            .insert(actionRows);
+        if (
+          actionRows.length > 0
+        ) {
 
+          const {
+            error: actionsError
+          } =
+            await supabaseClient
+              .from("actions")
+              .insert(actionRows);
 
-        if (actionsError) {
-          throw actionsError;
+          if (actionsError) {
+            throw actionsError;
+          }
+
         }
 
 
@@ -2532,6 +3731,7 @@
         showToast(
           "Assessment saved successfully."
         );
+
 
       } catch (error) {
 
@@ -2548,7 +3748,6 @@
           error?.hint
         );
 
-
         document.getElementById(
           "saveStatus"
         ).textContent =
@@ -2557,6 +3756,7 @@
             error?.message ||
             "Unknown database error."
           );
+
       }
     }
 
@@ -2568,6 +3768,7 @@
     function openAuthModal(
       mode = "login"
     ) {
+
       setAuthMode(mode);
 
       document
@@ -2577,6 +3778,7 @@
 
 
     function closeAuthModal() {
+
       document
         .getElementById("authModal")
         .classList.remove("open");
@@ -2588,6 +3790,7 @@
 
 
     function setAuthMode(mode) {
+
       authMode = mode;
 
       const loginTab =
@@ -2653,6 +3856,7 @@
 
 
     async function handleAuth(event) {
+
       event.preventDefault();
 
       const status =
@@ -2663,7 +3867,9 @@
       const email =
         document.getElementById(
           "authEmail"
-        ).value.trim();
+        ).value
+          .trim()
+          .toLowerCase();
 
       const password =
         document.getElementById(
@@ -2677,8 +3883,32 @@
 
 
       if (!supabaseClient) {
+
         status.textContent =
           "Supabase is not configured in this copy.";
+
+        return;
+      }
+
+
+      if (
+        !email ||
+        !password
+      ) {
+
+        status.textContent =
+          "Please enter your email and password.";
+
+        return;
+      }
+
+
+      if (
+        password.length < 6
+      ) {
+
+        status.textContent =
+          "Your password must be at least 6 characters.";
 
         return;
       }
@@ -2692,7 +3922,9 @@
 
       try {
 
-        if (authMode === "signup") {
+        if (
+          authMode === "signup"
+        ) {
 
           const {
             data,
@@ -2711,24 +3943,31 @@
 
 
           if (businessName) {
+
             localStorage.setItem(
               "azele-business-name",
               businessName
             );
+
           }
 
 
-          if (data.user) {
+          if (data?.session) {
+
             status.textContent =
               "Account created successfully.";
+
           } else {
+
             status.textContent =
               "Check your email to confirm your account.";
+
           }
 
         } else {
 
           const {
+            data,
             error
           } =
             await supabaseClient.auth
@@ -2743,14 +3982,19 @@
           }
 
 
+          currentUser =
+            data?.user || null;
+
           status.textContent =
             "Logged in successfully.";
 
           closeAuthModal();
+
         }
 
 
         await loadCurrentUser();
+
 
       } catch (error) {
 
@@ -2759,27 +4003,73 @@
           error
         );
 
-        status.textContent =
+        let message =
           error?.message ||
           "Authentication failed.";
+
+        const lower =
+          message.toLowerCase();
+
+        if (
+          lower.includes(
+            "invalid login credentials"
+          )
+        ) {
+
+          message =
+            "Incorrect email or password.";
+
+        } else if (
+          lower.includes(
+            "email not confirmed"
+          )
+        ) {
+
+          message =
+            "Please confirm your email before signing in.";
+
+        } else if (
+          lower.includes(
+            "already registered"
+          )
+        ) {
+
+          message =
+            "An account with this email already exists. Try logging in.";
+
+        }
+
+        status.textContent =
+          message;
+
       }
     }
 
 
     async function loadCurrentUser() {
+
       if (!supabaseClient) {
+
         updateAuthUI(null);
-        return;
+
+        return null;
       }
 
 
       try {
 
         const {
-          data
+          data,
+          error
         } =
           await supabaseClient.auth
             .getUser();
+
+
+        if (error) {
+          throw error;
+        }
+
 
         currentUser =
           data?.user || null;
@@ -2787,6 +4077,9 @@
         updateAuthUI(
           currentUser
         );
+
+        return currentUser;
+
 
       } catch (error) {
 
@@ -2798,15 +4091,21 @@
         currentUser = null;
 
         updateAuthUI(null);
+
+        return null;
       }
     }
 
 
     function updateAuthUI(user) {
+
       const area =
         document.getElementById(
           "authArea"
         );
+
+      if (!area) return;
+
 
       if (!user) {
 
@@ -2824,6 +4123,7 @@
 
 
       area.innerHTML = `
+
         <span class="user-email">
           ${escapeHtml(user.email || "")}
         </span>
@@ -2834,6 +4134,7 @@
         >
           Log out
         </button>
+
       `;
     }
 
@@ -2847,7 +4148,15 @@
 
       try {
 
-        await supabaseClient.auth.signOut();
+        const {
+          error
+        } =
+          await supabaseClient.auth
+            .signOut();
+
+        if (error) {
+          throw error;
+        }
 
         currentUser = null;
 
@@ -2857,13 +4166,572 @@
           "You have been logged out."
         );
 
+
       } catch (error) {
 
         console.error(
           "Logout error:",
           error
         );
+
       }
+    }
+
+
+    /* ============================================================
+       AI-READY SECURITY ASSISTANT
+       ============================================================ */
+
+    function addAssistantMessage(
+      message,
+      type = "bot"
+    ) {
+
+      const container =
+        document.getElementById(
+          "assistantMessages"
+        );
+
+      if (!container) return;
+
+
+      const element =
+        document.createElement(
+          "div"
+        );
+
+      element.className =
+        `assistant-message ${type}`;
+
+      element.innerHTML =
+        escapeHtml(message)
+          .replace(
+            /\n/g,
+            "<br>"
+          );
+
+
+      container.appendChild(
+        element
+      );
+
+
+      container.scrollTop =
+        container.scrollHeight;
+    }
+
+
+    function runAssistantQuick(
+      message
+    ) {
+
+      const input =
+        document.getElementById(
+          "assistantInput"
+        );
+
+      input.value = message;
+
+      sendAssistantMessage();
+    }
+
+
+    function sendAssistantMessage() {
+
+      const input =
+        document.getElementById(
+          "assistantInput"
+        );
+
+      const message =
+        input.value.trim();
+
+
+      if (!message) {
+        return;
+      }
+
+
+      addAssistantMessage(
+        message,
+        "user"
+      );
+
+      input.value = "";
+
+
+      setTimeout(
+        () => {
+
+          const response =
+            generateSecurityResponse(
+              message
+            );
+
+          addAssistantMessage(
+            response,
+            "bot"
+          );
+
+        },
+        350
+      );
+    }
+
+
+    function generateSecurityResponse(
+      message
+    ) {
+
+      const text =
+        message.toLowerCase();
+
+
+      if (
+        text.includes("phishing") ||
+        text.includes("suspicious email") ||
+        text.includes("fake email")
+      ) {
+
+        return (
+          "A few strong phishing warning signs are urgency, requests for " +
+          "passwords or codes, unexpected attachments, unusual payment " +
+          "requests, and links that do not match the organization they claim " +
+          "to represent.\n\n" +
+          "Safest next step: do not click the link or reply with sensitive " +
+          "information. Verify the request through a trusted channel you " +
+          "already know."
+        );
+      }
+
+
+      if (
+        text.includes("mfa") ||
+        text.includes("multi-factor") ||
+        text.includes("2fa")
+      ) {
+
+        return (
+          "Multi-factor authentication is one of the strongest simple " +
+          "protections you can add to important accounts.\n\n" +
+          "Prioritize email, administrator accounts, cloud services, and " +
+          "other accounts that could expose business information."
+        );
+      }
+
+
+      if (
+        text.includes("password")
+      ) {
+
+        return (
+          "Use a unique password for every important account and avoid " +
+          "reusing passwords. A reputable password manager can help create " +
+          "and remember unique passwords.\n\n" +
+          "Also enable MFA wherever it is available."
+        );
+      }
+
+
+      if (
+        text.includes("backup") ||
+        text.includes("ransomware")
+      ) {
+
+        return (
+          "Reliable backups are important because they give a business a " +
+          "way to recover after accidental deletion, hardware failure, or " +
+          "a security incident.\n\n" +
+          "Do not stop at creating backups. Test that important data can " +
+          "actually be restored."
+        );
+      }
+
+
+      if (
+        text.includes("ai") ||
+        text.includes("chatgpt") ||
+        text.includes("artificial intelligence")
+      ) {
+
+        return (
+          "A useful business rule is: do not put confidential, regulated, " +
+          "private, or credential information into an AI tool unless your " +
+          "organization has explicitly approved that use and understands " +
+          "the service's data handling.\n\n" +
+          "When in doubt, remove identifying or sensitive information first."
+        );
+      }
+
+
+      if (
+        text.includes("privacy") ||
+        text.includes("personal information") ||
+        text.includes("data")
+      ) {
+
+        return (
+          "Start with three basics: collect only information you actually " +
+          "need, restrict access to people who need it, and protect important " +
+          "accounts with strong authentication.\n\n" +
+          "Regularly review what information your business stores and who can access it."
+        );
+      }
+
+
+      if (
+        text.includes("email")
+      ) {
+
+        return (
+          "Protect business email with MFA, strong unique credentials, " +
+          "spam and phishing filtering, regular software updates, and " +
+          "employee awareness training.\n\n" +
+          "Email accounts deserve extra attention because they can be used " +
+          "to reset access to many other services."
+        );
+      }
+
+
+      if (
+        text.includes("secure my business") ||
+        text.includes("secure my business")
+      ) {
+
+        return (
+          "Start with the basics: MFA on important accounts, reliable tested " +
+          "backups, automatic security updates, strong email protection, " +
+          "limited access to sensitive information, and an incident-response plan.\n\n" +
+          "AZÈLE's assessment can help you identify which of those areas " +
+          "needs attention first."
+        );
+      }
+
+
+      if (
+        text.includes("hack") ||
+        text.includes("break into") ||
+        text.includes("exploit")
+      ) {
+
+        return (
+          "I can help with defensive cybersecurity, such as securing accounts, " +
+          "understanding vulnerabilities at a high level, detecting scams, " +
+          "and improving a business's security posture. I won't provide " +
+          "instructions for breaking into systems."
+        );
+      }
+
+
+      return (
+        "The safest way to approach that is to focus on prevention and " +
+        "protection. For a business, start with MFA, reliable backups, " +
+        "software updates, access controls, email security, employee " +
+        "awareness, and an incident-response plan.\n\n" +
+        "If you're dealing with a suspicious message, paste the non-sensitive " +
+        "parts into the Scam Detector below and AZÈLE can check for common warning signs."
+      );
+    }
+
+
+    /* ============================================================
+       SCAM DETECTOR
+       ============================================================ */
+
+    function checkScam() {
+
+      const input =
+        document.getElementById(
+          "scamInput"
+        );
+
+      const result =
+        document.getElementById(
+          "scamResult"
+        );
+
+      const text =
+        input.value.trim();
+
+
+      if (!text) {
+
+        result.className =
+          "checker-result show warning";
+
+        result.innerHTML =
+          "<strong>Add a message first.</strong><br>Paste the non-sensitive parts of the suspicious message so AZÈLE can check common warning signs.";
+
+        return;
+      }
+
+
+      const lower =
+        text.toLowerCase();
+
+
+      const signals = [];
+
+
+      const urgencyPatterns = [
+        "urgent",
+        "immediately",
+        "act now",
+        "within 24 hours",
+        "expires today",
+        "final warning",
+        "account will be closed"
+      ];
+
+
+      const credentialPatterns = [
+        "password",
+        "verification code",
+        "security code",
+        "login",
+        "sign in",
+        "verify your account",
+        "confirm your identity"
+      ];
+
+
+      const paymentPatterns = [
+        "gift card",
+        "wire transfer",
+        "send money",
+        "payment required",
+        "crypto",
+        "bitcoin",
+        "bank transfer"
+      ];
+
+
+      const linkPatterns = [
+        "http://",
+        "https://",
+        "bit.ly/",
+        "tinyurl.com/",
+        "click here",
+        "click the link"
+      ];
+
+
+      urgencyPatterns.forEach(
+        (pattern) => {
+
+          if (lower.includes(pattern)) {
+            signals.push(
+              "Creates urgency or pressure"
+            );
+          }
+
+        }
+      );
+
+
+      credentialPatterns.forEach(
+        (pattern) => {
+
+          if (lower.includes(pattern)) {
+            signals.push(
+              "Requests or discusses account credentials"
+            );
+          }
+
+        }
+      );
+
+
+      paymentPatterns.forEach(
+        (pattern) => {
+
+          if (lower.includes(pattern)) {
+            signals.push(
+              "Contains payment or money-related pressure"
+            );
+          }
+
+        }
+      );
+
+
+      linkPatterns.forEach(
+        (pattern) => {
+
+          if (lower.includes(pattern)) {
+            signals.push(
+              "Contains a link or encourages clicking"
+            );
+          }
+
+        }
+      );
+
+
+      const uniqueSignals =
+        [...new Set(signals)];
+
+
+      if (
+        uniqueSignals.length >= 3
+      ) {
+
+        result.className =
+          "checker-result show danger";
+
+        result.innerHTML = `
+          <strong>High number of warning signs detected.</strong>
+          <br><br>
+          ${uniqueSignals
+            .map(
+              signal =>
+                "• " +
+                escapeHtml(signal)
+            )
+            .join("<br>")}
+          <br><br>
+          <strong>Safer move:</strong>
+          Do not click links, provide credentials, or send money.
+          Verify the request independently through a trusted channel.
+        `;
+
+        return;
+      }
+
+
+      if (
+        uniqueSignals.length >= 1
+      ) {
+
+        result.className =
+          "checker-result show warning";
+
+        result.innerHTML = `
+          <strong>Some warning signs detected.</strong>
+          <br><br>
+          ${uniqueSignals
+            .map(
+              signal =>
+                "• " +
+                escapeHtml(signal)
+            )
+            .join("<br>")}
+          <br><br>
+          This does not prove the message is a scam. Verify the sender
+          independently before taking action.
+        `;
+
+        return;
+      }
+
+
+      result.className =
+        "checker-result show safe";
+
+      result.innerHTML = `
+        <strong>No obvious warning patterns detected.</strong>
+        <br><br>
+        That does not guarantee the message is legitimate. Be cautious with
+        unexpected requests, links, attachments, payments, or login prompts.
+      `;
+    }
+
+
+    function clearScamChecker() {
+
+      document.getElementById(
+        "scamInput"
+      ).value = "";
+
+      const result =
+        document.getElementById(
+          "scamResult"
+        );
+
+      result.className =
+        "checker-result";
+
+      result.innerHTML = "";
+    }
+
+
+    /* ============================================================
+       PRIVACY COACH
+       ============================================================ */
+
+    document
+      .querySelectorAll(".privacy-item")
+      .forEach(
+        (checkbox) => {
+
+          checkbox.addEventListener(
+            "change",
+            updatePrivacyScore
+          );
+
+        }
+      );
+
+
+    function updatePrivacyScore() {
+
+      const items =
+        document.querySelectorAll(
+          ".privacy-item"
+        );
+
+      const checked =
+        document.querySelectorAll(
+          ".privacy-item:checked"
+        ).length;
+
+      const total =
+        items.length;
+
+      const score =
+        Math.round(
+          (checked / total) * 100
+        );
+
+
+      const output =
+        document.getElementById(
+          "privacyScore"
+        );
+
+
+      if (checked === 0) {
+
+        output.innerHTML =
+          "Select the statements that are true for you.";
+
+        return;
+      }
+
+
+      let message = "";
+
+
+      if (score < 50) {
+
+        message =
+          "Your current checklist suggests several areas deserve attention. Start with MFA, unique passwords, updates, backups, and careful handling of sensitive information.";
+
+      } else if (score < 84) {
+
+        message =
+          "You have a reasonable foundation. Focus on the unchecked areas first, especially protections around accounts and sensitive information.";
+
+      } else {
+
+        message =
+          "Strong checklist result. Keep reviewing these practices because security changes as accounts, people, and technology change.";
+
+      }
+
+
+      output.innerHTML =
+        `<strong>${score}% coverage</strong><br>${escapeHtml(message)}`;
     }
 
 
@@ -2872,13 +4740,56 @@
        ============================================================ */
 
     function escapeHtml(value) {
+
       return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+        .replaceAll(
+          "&",
+          "&amp;"
+        )
+        .replaceAll(
+          "<",
+          "&lt;"
+        )
+        .replaceAll(
+          ">",
+          "&gt;"
+        )
+        .replaceAll(
+          '"',
+          "&quot;"
+        )
+        .replaceAll(
+          "'",
+          "&#039;"
+        );
     }
+
+
+    /* ============================================================
+       ASSISTANT ENTER KEY
+       ============================================================ */
+
+    document
+      .getElementById(
+        "assistantInput"
+      )
+      .addEventListener(
+        "keydown",
+        function (event) {
+
+          if (
+            event.key === "Enter" &&
+            !event.shiftKey
+          ) {
+
+            event.preventDefault();
+
+            sendAssistantMessage();
+
+          }
+
+        }
+      );
 
 
     /* ============================================================
@@ -2892,10 +4803,11 @@
         function (event) {
 
           if (
-            event.target ===
-            this
+            event.target === this
           ) {
+
             closeAuthModal();
+
           }
 
         }
@@ -2909,7 +4821,9 @@
         if (
           event.key === "Escape"
         ) {
+
           closeAuthModal();
+
         }
 
       }
@@ -2943,8 +4857,6 @@
        ============================================================ */
 
     loadCurrentUser();
-
-    updateAuthUI(null);
 
   </script>
 
