@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,17 +24,169 @@
   </script>
 
   <style>
+    /* =========================================================
+       SECURELY — LUXURY DESIGN SYSTEM
+       ========================================================= */
+
+    :root {
+      --bg: #f8f7f3;
+      --bg-secondary: #f2f0eb;
+      --surface: #ffffff;
+      --surface-soft: #fbfaf7;
+
+      --text: #17181b;
+      --text-secondary: #65666d;
+      --text-muted: #85868c;
+
+      --border: #e5e2da;
+      --border-strong: #d8d4ca;
+
+      --gold: #b08a3e;
+      --gold-light: #d4b56a;
+      --gold-soft: rgba(176, 138, 62, 0.10);
+
+      --button: #18191c;
+      --button-hover: #292a2e;
+      --button-text: #ffffff;
+
+      --success-bg: #e3f1e6;
+      --success-text: #356d43;
+
+      --warning-bg: #f7edd2;
+      --warning-text: #88681d;
+
+      --danger-bg: #f7dfdf;
+      --danger-text: #a23939;
+
+      --shadow-sm:
+        0 4px 18px rgba(18, 19, 22, 0.045);
+
+      --shadow-md:
+        0 14px 45px rgba(18, 19, 22, 0.075);
+
+      --shadow-lg:
+        0 25px 80px rgba(18, 19, 22, 0.12);
+
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --radius-xl: 28px;
+
+      --transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #090a0c;
+      --bg-secondary: #0e1013;
+      --surface: #121417;
+      --surface-soft: #17191d;
+
+      --text: #f6f4ee;
+      --text-secondary: #a8a8aa;
+      --text-muted: #77787d;
+
+      --border: #282a2f;
+      --border-strong: #36383e;
+
+      --gold: #d0aa58;
+      --gold-light: #e1c47d;
+      --gold-soft: rgba(208, 170, 88, 0.12);
+
+      --button: #f5f2e9;
+      --button-hover: #ffffff;
+      --button-text: #121316;
+
+      --success-bg: rgba(63, 128, 78, 0.18);
+      --success-text: #88c995;
+
+      --warning-bg: rgba(176, 138, 42, 0.17);
+      --warning-text: #dfbf69;
+
+      --danger-bg: rgba(174, 61, 61, 0.17);
+      --danger-text: #e48787;
+
+      --shadow-sm:
+        0 5px 22px rgba(0, 0, 0, 0.20);
+
+      --shadow-md:
+        0 18px 55px rgba(0, 0, 0, 0.30);
+
+      --shadow-lg:
+        0 30px 90px rgba(0, 0, 0, 0.45);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html[data-theme="system"] {
+        --bg: #090a0c;
+        --bg-secondary: #0e1013;
+        --surface: #121417;
+        --surface-soft: #17191d;
+
+        --text: #f6f4ee;
+        --text-secondary: #a8a8aa;
+        --text-muted: #77787d;
+
+        --border: #282a2f;
+        --border-strong: #36383e;
+
+        --gold: #d0aa58;
+        --gold-light: #e1c47d;
+        --gold-soft: rgba(208, 170, 88, 0.12);
+
+        --button: #f5f2e9;
+        --button-hover: #ffffff;
+        --button-text: #121316;
+
+        --success-bg: rgba(63, 128, 78, 0.18);
+        --success-text: #88c995;
+
+        --warning-bg: rgba(176, 138, 42, 0.17);
+        --warning-text: #dfbf69;
+
+        --danger-bg: rgba(174, 61, 61, 0.17);
+        --danger-text: #e48787;
+      }
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: Inter, Arial, sans-serif;
-      background: #f7f7f5;
-      color: #17181b;
-      line-height: 1.5;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+
+      transition: var(--transition);
+    }
+
+    body,
+    button,
+    input,
+    select {
+      transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
     }
 
     button,
@@ -46,503 +199,1261 @@
       cursor: pointer;
     }
 
+    /* =========================================================
+       NAVBAR
+       ========================================================= */
+
     .navbar {
-      height: 72px;
+      height: 76px;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 6%;
-      border-bottom: 1px solid #e5e5e1;
-      background: rgba(255, 255, 255, 0.92);
+
+      padding: 0 5.5%;
+
+      border-bottom: 1px solid var(--border);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--bg) 82%,
+          transparent
+        );
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
       position: sticky;
       top: 0;
-      z-index: 10;
-      backdrop-filter: blur(12px);
+      z-index: 50;
     }
 
     .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
       font-size: 21px;
       font-weight: 800;
-      letter-spacing: -0.5px;
+
+      letter-spacing: -0.8px;
+    }
+
+    .logo-mark {
+      width: 30px;
+      height: 30px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 9px;
+
+      background:
+        linear-gradient(
+          145deg,
+          var(--gold-light),
+          var(--gold)
+        );
+
+      color: #17181b;
+
+      font-size: 13px;
+      font-weight: 900;
+
+      box-shadow:
+        0 5px 18px
+        rgba(176, 138, 62, 0.18);
     }
 
     .logo span {
-      color: #a68135;
+      color: var(--gold);
     }
 
     .nav-actions {
       display: flex;
-      gap: 10px;
       align-items: center;
+      gap: 9px;
     }
 
     .btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 11px 18px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+
+      padding: 11px 17px;
+
       font-weight: 700;
-      transition: 0.2s ease;
+      font-size: 13px;
+
+      letter-spacing: -0.1px;
+
+      transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
     }
 
     .btn:hover {
       transform: translateY(-1px);
     }
 
+    .btn:active {
+      transform: translateY(0);
+    }
+
     .btn-primary {
-      background: #17181b;
-      color: white;
+      background: var(--button);
+      color: var(--button-text);
+
+      box-shadow:
+        0 7px 20px rgba(0, 0, 0, 0.08);
     }
 
     .btn-primary:hover {
-      background: #292a2e;
+      background: var(--button-hover);
+      box-shadow:
+        0 10px 26px rgba(0, 0, 0, 0.12);
     }
 
     .btn-secondary {
-      background: #eeeeeb;
-      color: #17181b;
+      background: var(--surface);
+      color: var(--text);
+
+      border-color: var(--border);
     }
 
     .btn-secondary:hover {
-      background: #e4e4df;
+      border-color: var(--border-strong);
+      background: var(--surface-soft);
     }
 
+    /* =========================================================
+       THEME SELECTOR
+       ========================================================= */
+
+    .theme-wrapper {
+      position: relative;
+    }
+
+    .theme-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      height: 42px;
+
+      padding: 0 12px;
+
+      background: var(--surface);
+      color: var(--text);
+
+      border: 1px solid var(--border);
+      border-radius: 11px;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .theme-button:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-soft);
+    }
+
+    .theme-icon {
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .theme-chevron {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .theme-menu {
+      position: absolute;
+
+      top: calc(100% + 9px);
+      right: 0;
+
+      width: 175px;
+
+      padding: 7px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+      border-radius: 14px;
+
+      box-shadow: var(--shadow-md);
+
+      display: none;
+
+      animation: themeMenuIn 0.16s ease;
+    }
+
+    .theme-menu.open {
+      display: block;
+    }
+
+    @keyframes themeMenuIn {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .theme-option {
+      width: 100%;
+
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      padding: 10px 11px;
+
+      border: 0;
+      border-radius: 9px;
+
+      background: transparent;
+      color: var(--text);
+
+      text-align: left;
+
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .theme-option:hover {
+      background: var(--gold-soft);
+    }
+
+    .theme-option.active {
+      background: var(--gold-soft);
+      color: var(--gold);
+    }
+
+    .theme-option-check {
+      margin-left: auto;
+      opacity: 0;
+    }
+
+    .theme-option.active .theme-option-check {
+      opacity: 1;
+    }
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+
     .hero {
-      max-width: 1150px;
+      max-width: 1180px;
+
       margin: auto;
-      padding: 95px 6% 75px;
+
+      padding:
+        105px 5.5%
+        90px;
+
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 55px;
+
+      grid-template-columns:
+        minmax(0, 1.08fr)
+        minmax(350px, 0.82fr);
+
+      gap: 70px;
+
       align-items: center;
     }
 
+    .hero-copy {
+      max-width: 690px;
+    }
+
     .eyebrow {
-      display: inline-block;
-      color: #9b7830;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+
+      color: var(--gold);
+
+      font-size: 11px;
       font-weight: 800;
-      font-size: 13px;
-      letter-spacing: 1.4px;
+
+      letter-spacing: 1.7px;
+
       text-transform: uppercase;
+
       margin-bottom: 18px;
     }
 
+    .eyebrow::before {
+      content: "";
+
+      width: 22px;
+      height: 1px;
+
+      background: var(--gold);
+    }
+
     h1 {
-      font-size: clamp(42px, 6vw, 70px);
-      line-height: 1.02;
-      letter-spacing: -3px;
-      margin-bottom: 25px;
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size:
+        clamp(46px, 6vw, 76px);
+
+      line-height: 0.98;
+
+      letter-spacing: -3.7px;
+
+      font-weight: 500;
+
+      margin-bottom: 27px;
+
+      max-width: 720px;
     }
 
     .hero p {
-      color: #62646b;
-      font-size: 18px;
-      max-width: 610px;
-      margin-bottom: 30px;
+      color: var(--text-secondary);
+
+      font-size: 17px;
+
+      line-height: 1.75;
+
+      max-width: 620px;
+
+      margin-bottom: 32px;
     }
 
     .hero-actions {
       display: flex;
-      gap: 12px;
+      gap: 11px;
       flex-wrap: wrap;
     }
 
+    .hero-actions .btn {
+      padding: 13px 19px;
+    }
+
+    /* =========================================================
+       SECURITY CARD
+       ========================================================= */
+
     .security-card {
-      background: white;
-      border: 1px solid #e4e3df;
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.07);
+      position: relative;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius-xl);
+
+      padding: 31px;
+
+      box-shadow: var(--shadow-lg);
+
+      overflow: hidden;
+    }
+
+    .security-card::before {
+      content: "";
+
+      position: absolute;
+
+      width: 190px;
+      height: 190px;
+
+      top: -100px;
+      right: -80px;
+
+      background:
+        radial-gradient(
+          circle,
+          var(--gold-soft),
+          transparent 70%
+        );
+
+      pointer-events: none;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 24px;
     }
 
     .card-label {
-      color: #777980;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 10px;
+      color: var(--text-muted);
+
+      font-size: 10px;
+      font-weight: 800;
+
+      letter-spacing: 1.4px;
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      color: var(--success-text);
+
+      font-size: 10px;
+      font-weight: 750;
+
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+
+      border-radius: 50%;
+
+      background: var(--success-text);
     }
 
     .score {
-      font-size: 62px;
-      font-weight: 850;
-      letter-spacing: -3px;
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 68px;
+
+      font-weight: 500;
+
+      letter-spacing: -4px;
+
+      line-height: 1;
     }
 
     .score span {
-      font-size: 18px;
-      color: #777980;
+      font-family:
+        Inter,
+        sans-serif;
+
+      font-size: 17px;
+
+      color: var(--text-muted);
+
       letter-spacing: 0;
+
+      margin-left: 4px;
+    }
+
+    .score-caption {
+      color: var(--text-secondary);
+
+      font-size: 12px;
+
+      margin-top: 7px;
     }
 
     .score-bar {
-      height: 9px;
-      background: #ecece8;
+      height: 7px;
+
+      background: var(--bg-secondary);
+
       border-radius: 99px;
+
       overflow: hidden;
-      margin: 18px 0 25px;
+
+      margin: 22px 0 25px;
     }
 
     .score-fill {
       height: 100%;
+
       width: 72%;
-      background: #b28c3c;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light)
+        );
+
       border-radius: inherit;
     }
 
     .risk {
       display: flex;
+
       justify-content: space-between;
       align-items: center;
-      padding: 13px 0;
-      border-top: 1px solid #eeeeeb;
-      font-size: 14px;
+
+      padding: 14px 0;
+
+      border-top: 1px solid var(--border);
+
+      font-size: 13px;
     }
 
     .risk strong {
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 650;
     }
 
     .pill {
       border-radius: 99px;
+
       padding: 5px 9px;
-      font-size: 11px;
+
+      font-size: 10px;
+
       font-weight: 800;
+
+      letter-spacing: 0.3px;
     }
 
     .high {
-      background: #f8dddd;
-      color: #a52c2c;
+      background: var(--danger-bg);
+      color: var(--danger-text);
     }
 
     .medium {
-      background: #f7edcf;
-      color: #8c6b1d;
+      background: var(--warning-bg);
+      color: var(--warning-text);
     }
 
     .low {
-      background: #dff0e4;
-      color: #327044;
+      background: var(--success-bg);
+      color: var(--success-text);
     }
 
+    /* =========================================================
+       FEATURES
+       ========================================================= */
+
     .section {
-      max-width: 1150px;
+      max-width: 1180px;
+
       margin: auto;
-      padding: 70px 6%;
+
+      padding:
+        82px 5.5%;
+    }
+
+    .section-heading {
+      max-width: 650px;
+
+      margin-bottom: 38px;
     }
 
     .section-title {
-      font-size: 34px;
-      letter-spacing: -1px;
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 40px;
+
+      font-weight: 500;
+
+      letter-spacing: -1.8px;
+
       margin-bottom: 10px;
     }
 
     .section-subtitle {
-      color: #686a71;
-      margin-bottom: 35px;
+      color: var(--text-secondary);
+
+      font-size: 15px;
     }
 
     .features {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 16px;
     }
 
     .feature {
-      background: white;
-      border: 1px solid #e5e4e0;
-      border-radius: 18px;
-      padding: 25px;
-      transition: 0.2s ease;
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius-lg);
+
+      padding: 27px;
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
     }
 
     .feature:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+      transform: translateY(-4px);
+
+      border-color: var(--border-strong);
+
+      box-shadow: var(--shadow-md);
     }
 
     .feature-icon {
-      font-size: 25px;
-      margin-bottom: 16px;
+      width: 43px;
+      height: 43px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 12px;
+
+      background: var(--gold-soft);
+
+      color: var(--gold);
+
+      font-size: 18px;
+
+      margin-bottom: 20px;
     }
 
     .feature h3 {
+      font-size: 16px;
+
+      letter-spacing: -0.3px;
+
       margin-bottom: 8px;
     }
 
     .feature p {
-      color: #6b6d73;
-      font-size: 14px;
+      color: var(--text-secondary);
+
+      font-size: 13px;
+
+      line-height: 1.7;
     }
+
+    /* =========================================================
+       ASSESSMENT
+       ========================================================= */
 
     .assessment {
       display: none;
-      max-width: 760px;
-      margin: 50px auto;
-      padding: 0 6%;
+
+      max-width: 780px;
+
+      margin: 55px auto;
+
+      padding: 0 5.5%;
     }
 
     .assessment-box {
-      background: white;
-      border: 1px solid #e4e3df;
-      border-radius: 22px;
-      padding: 32px;
-      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius-xl);
+
+      padding: 38px;
+
+      box-shadow: var(--shadow-md);
     }
 
     .assessment-box h2 {
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 32px;
+
+      font-weight: 500;
+
+      letter-spacing: -1.2px;
+
+      margin-bottom: 5px;
+    }
+
+    .assessment-helper {
+      color: var(--text-secondary);
+
+      font-size: 13px;
+
       margin-bottom: 5px;
     }
 
     .progress {
-      height: 7px;
-      background: #ecece8;
+      height: 5px;
+
+      background: var(--bg-secondary);
+
       border-radius: 99px;
-      margin: 18px 0 30px;
+
+      margin: 23px 0 33px;
+
       overflow: hidden;
     }
 
     .progress-fill {
       height: 100%;
+
       width: 10%;
-      background: #a68135;
-      transition: 0.25s;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light)
+        );
+
+      transition: width 0.3s ease;
     }
 
     .question {
-      font-size: 23px;
-      font-weight: 800;
-      margin-bottom: 22px;
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 25px;
+
+      line-height: 1.3;
+
+      font-weight: 500;
+
+      letter-spacing: -0.7px;
+
+      margin-bottom: 23px;
     }
 
     .answers {
       display: grid;
+
       gap: 10px;
     }
 
     .answer {
+      width: 100%;
+
       text-align: left;
-      padding: 15px;
-      background: #f8f8f6;
-      border: 1px solid #e4e4df;
+
+      padding: 16px 17px;
+
+      background: var(--surface-soft);
+
+      color: var(--text);
+
+      border: 1px solid var(--border);
+
       border-radius: 12px;
-      transition: 0.2s;
+
+      font-size: 13px;
+
+      transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease;
     }
 
     .answer:hover {
-      border-color: #a68135;
-      background: #fbfaf5;
+      border-color: var(--gold);
+
+      background: var(--gold-soft);
+
       transform: translateY(-1px);
     }
 
+    /* =========================================================
+       RESULTS
+       ========================================================= */
+
     .result {
       display: none;
-      max-width: 900px;
+
+      max-width: 920px;
+
       margin: 55px auto;
-      padding: 0 6%;
+
+      padding: 0 5.5%;
     }
 
     .result-box {
-      background: white;
-      border: 1px solid #e3e2de;
-      border-radius: 24px;
-      padding: 35px;
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius-xl);
+
+      padding: 40px;
+
+      box-shadow: var(--shadow-md);
     }
 
     .result-score {
-      font-size: 70px;
-      font-weight: 850;
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 76px;
+
+      font-weight: 500;
+
       letter-spacing: -4px;
-      margin-top: 8px;
+
+      line-height: 1;
+
+      margin-top: 10px;
     }
 
     .result-score small {
-      font-size: 18px;
+      font-family:
+        Inter,
+        sans-serif;
+
+      font-size: 17px;
+
       letter-spacing: 0;
-      color: #777980;
+
+      color: var(--text-muted);
     }
 
     .result-message {
-      color: #65676d;
-      margin: 8px 0 30px;
+      color: var(--text-secondary);
+
+      font-size: 14px;
+
+      max-width: 670px;
+
+      line-height: 1.7;
+
+      margin: 10px 0 31px;
+    }
+
+    .priority-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 15px;
+    }
+
+    .priority-heading h3 {
+      font-size: 15px;
+      letter-spacing: -0.2px;
     }
 
     .actions {
       display: grid;
-      gap: 12px;
+      gap: 10px;
     }
 
     .action {
-      border: 1px solid #e5e4e0;
+      border: 1px solid var(--border);
+
       border-radius: 14px;
-      padding: 18px;
+
+      padding: 17px;
+
       display: flex;
-      gap: 15px;
+
+      gap: 14px;
+
       align-items: flex-start;
-      background: #fff;
+
+      background: var(--surface-soft);
     }
 
     .action-number {
-      width: 30px;
-      height: 30px;
+      width: 31px;
+      height: 31px;
+
       border-radius: 50%;
-      background: #17181b;
-      color: white;
+
+      background: var(--button);
+
+      color: var(--button-text);
+
       display: grid;
+
       place-items: center;
-      font-size: 12px;
+
+      font-size: 11px;
+
       font-weight: 800;
+
       flex-shrink: 0;
     }
 
+    .action strong {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
     .action p {
-      color: #6b6d73;
-      font-size: 14px;
-      margin-top: 5px;
+      color: var(--text-secondary);
+
+      font-size: 12px;
+
+      line-height: 1.55;
+
+      margin-top: 4px;
     }
 
     .save-status {
-      margin-top: 18px;
-      font-size: 13px;
-      color: #686a71;
+      margin-top: 19px;
+
+      font-size: 12px;
+
+      color: var(--text-muted);
     }
+
+    /* =========================================================
+       AUTH MODAL
+       ========================================================= */
 
     .auth-overlay {
       position: fixed;
+
       inset: 0;
-      background: rgba(10, 10, 10, 0.55);
-      backdrop-filter: blur(8px);
+
+      background:
+        rgba(7, 8, 10, 0.62);
+
+      backdrop-filter: blur(12px);
+
+      -webkit-backdrop-filter: blur(12px);
+
       display: none;
+
       align-items: center;
+
       justify-content: center;
+
       padding: 20px;
+
       z-index: 100;
     }
 
     .auth-box {
       width: 100%;
+
       max-width: 430px;
-      background: white;
-      border: 1px solid #e4e3df;
-      border-radius: 22px;
-      padding: 32px;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.18);
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius-xl);
+
+      padding: 34px;
+
+      box-shadow: var(--shadow-lg);
+
       position: relative;
     }
 
     .auth-box h2 {
-      font-size: 30px;
-      letter-spacing: -1px;
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 31px;
+
+      font-weight: 500;
+
+      letter-spacing: -1.2px;
+
       margin-bottom: 8px;
     }
 
     .auth-subtitle {
-      color: #686a71;
-      font-size: 14px;
-      margin-bottom: 25px;
+      color: var(--text-secondary);
+
+      font-size: 13px;
+
+      line-height: 1.6;
+
+      margin-bottom: 24px;
     }
 
     .auth-close {
       position: absolute;
-      top: 16px;
-      right: 18px;
+
+      top: 15px;
+      right: 17px;
+
+      width: 34px;
+      height: 34px;
+
+      display: grid;
+      place-items: center;
+
       border: 0;
+
       background: transparent;
-      font-size: 28px;
-      color: #777980;
+
+      color: var(--text-muted);
+
+      border-radius: 9px;
+
+      font-size: 23px;
+
       cursor: pointer;
+    }
+
+    .auth-close:hover {
+      background: var(--bg-secondary);
+
+      color: var(--text);
     }
 
     .auth-input {
       width: 100%;
-      padding: 14px;
-      margin-bottom: 12px;
-      border: 1px solid #deddd8;
-      border-radius: 10px;
-      background: #fafaf8;
+
+      padding: 13px 14px;
+
+      margin-bottom: 10px;
+
+      border: 1px solid var(--border);
+
+      border-radius: 11px;
+
+      background: var(--surface-soft);
+
+      color: var(--text);
+
       outline: none;
+
+      font-size: 13px;
+    }
+
+    .auth-input::placeholder {
+      color: var(--text-muted);
     }
 
     .auth-input:focus {
-      border-color: #a68135;
+      border-color: var(--gold);
+
+      box-shadow:
+        0 0 0 3px var(--gold-soft);
     }
 
     .auth-submit {
       width: 100%;
+
       margin-top: 5px;
+
+      padding: 13px;
     }
 
     .auth-submit:disabled {
       opacity: 0.6;
+
       cursor: not-allowed;
     }
 
     .auth-message {
       min-height: 20px;
-      margin-top: 14px;
-      color: #686a71;
-      font-size: 13px;
+
+      margin-top: 13px;
+
+      color: var(--text-secondary);
+
+      font-size: 12px;
+
+      line-height: 1.5;
     }
 
     .auth-toggle {
       border: 0;
+
       background: transparent;
-      color: #9b7830;
+
+      color: var(--gold);
+
       font-weight: 700;
+
       cursor: pointer;
-      margin-top: 8px;
+
+      margin-top: 5px;
+
       padding: 5px 0;
+
+      font-size: 12px;
     }
 
     .account-label {
-      color: #686a71;
-      font-size: 12px;
+      color: var(--text-secondary);
+
+      font-size: 11px;
+
       max-width: 180px;
+
       overflow: hidden;
+
       text-overflow: ellipsis;
+
       white-space: nowrap;
     }
 
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
     footer {
-      border-top: 1px solid #e5e5e1;
-      padding: 35px 6%;
-      color: #777980;
+      border-top: 1px solid var(--border);
+
+      padding: 34px 6%;
+
+      color: var(--text-muted);
+
       text-align: center;
-      font-size: 13px;
+
+      font-size: 11px;
+
       margin-top: 50px;
+
+      letter-spacing: 0.2px;
     }
 
-    @media (max-width: 800px) {
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 900px) {
       .hero {
         grid-template-columns: 1fr;
-        padding-top: 65px;
+
+        gap: 45px;
+
+        padding-top: 75px;
+      }
+
+      .security-card {
+        max-width: 600px;
       }
 
       .features {
         grid-template-columns: 1fr;
       }
+    }
 
-      h1 {
-        letter-spacing: -2px;
+    @media (max-width: 650px) {
+      .navbar {
+        height: 68px;
+
+        padding: 0 4%;
       }
 
-      .navbar {
+      .theme-button {
+        width: 42px;
+
+        padding: 0;
+
+        justify-content: center;
+      }
+
+      .theme-button .theme-label,
+      .theme-button .theme-chevron {
+        display: none;
+      }
+
+      .nav-actions {
+        gap: 6px;
+      }
+
+      .nav-actions .btn {
+        padding: 9px 11px;
+
+        font-size: 11px;
+      }
+
+      .account-label {
+        display: none;
+      }
+
+      .hero {
+        padding:
+          65px 5%
+          60px;
+
+        gap: 35px;
+      }
+
+      h1 {
+        font-size: 48px;
+
+        letter-spacing: -2.7px;
+      }
+
+      .hero p {
+        font-size: 15px;
+
+        line-height: 1.65;
+      }
+
+      .security-card {
+        padding: 25px;
+      }
+
+      .section {
+        padding:
+          65px 5%;
+      }
+
+      .section-title {
+        font-size: 34px;
+      }
+
+      .assessment,
+      .result {
         padding: 0 5%;
+
+        margin-top: 35px;
       }
 
       .assessment-box,
       .result-box {
-        padding: 24px;
+        padding: 25px;
+      }
+
+      .question {
+        font-size: 22px;
+      }
+
+      .result-score {
+        font-size: 62px;
+      }
+
+      .auth-box {
+        padding: 27px;
       }
     }
 
-    @media (max-width: 500px) {
-      .nav-actions .btn {
-        padding: 9px 12px;
-        font-size: 13px;
+    @media (max-width: 420px) {
+      .logo {
+        font-size: 18px;
       }
 
-      .hero {
-        padding-left: 5%;
-        padding-right: 5%;
+      .logo-mark {
+        width: 27px;
+        height: 27px;
+      }
+
+      .nav-actions .btn-secondary {
+        display: none;
+      }
+
+      h1 {
+        font-size: 43px;
       }
 
       .hero-actions {
@@ -552,21 +1463,19 @@
       .hero-actions .btn {
         width: 100%;
       }
+    }
 
-      .question {
-        font-size: 20px;
-      }
+    /* =========================================================
+       REDUCED MOTION
+       ========================================================= */
 
-      .result-score {
-        font-size: 58px;
-      }
-
-      .account-label {
-        display: none;
-      }
-
-      .auth-box {
-        padding: 26px;
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
       }
     }
   </style>
@@ -574,13 +1483,94 @@
 
 <body>
 
+  <!-- =========================================================
+       NAVIGATION
+       ========================================================= -->
+
   <nav class="navbar">
 
     <div class="logo">
+      <div class="logo-mark">S</div>
+
       Secure<span>ly</span>
     </div>
 
     <div class="nav-actions">
+
+      <!-- THEME SELECTOR -->
+
+      <div class="theme-wrapper">
+
+        <button
+          class="theme-button"
+          id="themeButton"
+          type="button"
+          aria-label="Change theme"
+          aria-expanded="false"
+          onclick="toggleThemeMenu()"
+        >
+
+          <span
+            class="theme-icon"
+            id="themeIcon"
+          >
+            ☀
+          </span>
+
+          <span
+            class="theme-label"
+            id="themeLabel"
+          >
+            Light
+          </span>
+
+          <span class="theme-chevron">
+            ▾
+          </span>
+
+        </button>
+
+        <div
+          class="theme-menu"
+          id="themeMenu"
+        >
+
+          <button
+            class="theme-option"
+            data-theme-option="light"
+            onclick="setTheme('light')"
+            type="button"
+          >
+            <span>☀</span>
+            <span>Light</span>
+            <span class="theme-option-check">✓</span>
+          </button>
+
+          <button
+            class="theme-option"
+            data-theme-option="dark"
+            onclick="setTheme('dark')"
+            type="button"
+          >
+            <span>☾</span>
+            <span>Dark</span>
+            <span class="theme-option-check">✓</span>
+          </button>
+
+          <button
+            class="theme-option"
+            data-theme-option="system"
+            onclick="setTheme('system')"
+            type="button"
+          >
+            <span>⌘</span>
+            <span>System</span>
+            <span class="theme-option-check">✓</span>
+          </button>
+
+        </div>
+
+      </div>
 
       <button
         class="btn btn-secondary"
@@ -595,11 +1585,15 @@
   </nav>
 
 
+  <!-- =========================================================
+       HOME
+       ========================================================= -->
+
   <main id="home">
 
     <section class="hero">
 
-      <div>
+      <div class="hero-copy">
 
         <div class="eyebrow">
           Cyber readiness for modern businesses
@@ -611,8 +1605,8 @@
 
         <p>
           Securely helps small businesses understand their cybersecurity
-          readiness, identify their biggest risks, and prioritize the actions
-          that matter most.
+          readiness, identify their biggest risks, and prioritize the
+          actions that matter most.
         </p>
 
         <div class="hero-actions">
@@ -638,14 +1632,29 @@
       </div>
 
 
+      <!-- SECURITY PREVIEW CARD -->
+
       <div class="security-card">
 
-        <div class="card-label">
-          SECURITY READINESS
+        <div class="card-top">
+
+          <div class="card-label">
+            SECURITY READINESS
+          </div>
+
+          <div class="live-indicator">
+            <span class="live-dot"></span>
+            Example
+          </div>
+
         </div>
 
         <div class="score">
           72<span>/100</span>
+        </div>
+
+        <div class="score-caption">
+          Current readiness level
         </div>
 
         <div class="score-bar">
@@ -672,57 +1681,85 @@
     </section>
 
 
-    <section class="section" id="features">
+    <!-- =======================================================
+         FEATURES
+         ======================================================= -->
 
-      <h2 class="section-title">
-        Security without the jargon.
-      </h2>
+    <section
+      class="section"
+      id="features"
+    >
 
-      <p class="section-subtitle">
-        Understand your biggest gaps and what to do next.
-      </p>
+      <div class="section-heading">
+
+        <div class="eyebrow">
+          A clearer security picture
+        </div>
+
+        <h2 class="section-title">
+          Security without the jargon.
+        </h2>
+
+        <p class="section-subtitle">
+          Understand your biggest gaps and what to do next.
+        </p>
+
+      </div>
+
 
       <div class="features">
 
         <div class="feature">
-          <div class="feature-icon">🛡️</div>
+
+          <div class="feature-icon">
+            ◇
+          </div>
 
           <h3>
             Readiness Score
           </h3>
 
           <p>
-            Get a simple 0–100 score based on your business's security
-            practices.
+            Get a simple 0–100 score based on your business's
+            current security practices.
           </p>
+
         </div>
 
 
         <div class="feature">
-          <div class="feature-icon">⚠️</div>
+
+          <div class="feature-icon">
+            !
+          </div>
 
           <h3>
             Risk Priorities
           </h3>
 
           <p>
-            See which security gaps deserve attention first instead of
-            drowning in technical warnings.
+            See which security gaps deserve attention first
+            instead of drowning in technical warnings.
           </p>
+
         </div>
 
 
         <div class="feature">
-          <div class="feature-icon">✓</div>
+
+          <div class="feature-icon">
+            ✓
+          </div>
 
           <h3>
             Action Plan
           </h3>
 
           <p>
-            Turn each security gap into a practical next step your business
-            can understand.
+            Turn each security gap into a practical next step
+            your business can actually understand.
           </p>
+
         </div>
 
       </div>
@@ -732,6 +1769,10 @@
   </main>
 
 
+  <!-- =========================================================
+       ASSESSMENT
+       ========================================================= -->
+
   <section
     class="assessment"
     id="assessment"
@@ -740,12 +1781,16 @@
     <div class="assessment-box">
 
       <div class="eyebrow">
-        SECURITY ASSESSMENT
+        Security assessment
       </div>
 
       <h2>
         Let's check your security readiness.
       </h2>
+
+      <p class="assessment-helper">
+        Ten questions. No technical knowledge required.
+      </p>
 
       <div class="progress">
         <div
@@ -769,6 +1814,10 @@
   </section>
 
 
+  <!-- =========================================================
+       RESULTS
+       ========================================================= -->
+
   <section
     class="result"
     id="result"
@@ -777,7 +1826,7 @@
     <div class="result-box">
 
       <div class="eyebrow">
-        ASSESSMENT COMPLETE
+        Assessment complete
       </div>
 
       <h2>
@@ -802,9 +1851,13 @@
       ></p>
 
 
-      <h3 style="margin-bottom:15px;">
-        Priority actions
-      </h3>
+      <div class="priority-heading">
+
+        <h3>
+          Priority actions
+        </h3>
+
+      </div>
 
 
       <div
@@ -835,12 +1888,179 @@
   </section>
 
 
+  <!-- =========================================================
+       FOOTER
+       ========================================================= -->
+
   <footer>
     Securely © 2026 · Cyber readiness and security education
   </footer>
 
 
   <script>
+
+    /* =========================================================
+       THEME SYSTEM
+       ========================================================= */
+
+    const savedTheme =
+      localStorage.getItem("securely-theme") || "system";
+
+    applyTheme(savedTheme);
+
+
+    function applyTheme(theme) {
+
+      document.documentElement.setAttribute(
+        "data-theme",
+        theme
+      );
+
+      updateThemeUI(theme);
+    }
+
+
+    function setTheme(theme) {
+
+      localStorage.setItem(
+        "securely-theme",
+        theme
+      );
+
+      applyTheme(theme);
+
+      closeThemeMenu();
+    }
+
+
+    function updateThemeUI(theme) {
+
+      const icon =
+        document.getElementById("themeIcon");
+
+      const label =
+        document.getElementById("themeLabel");
+
+      if (!icon || !label) return;
+
+
+      if (theme === "dark") {
+
+        icon.textContent = "☾";
+        label.textContent = "Dark";
+
+      } else if (theme === "system") {
+
+        icon.textContent = "⌘";
+        label.textContent = "System";
+
+      } else {
+
+        icon.textContent = "☀";
+        label.textContent = "Light";
+      }
+
+
+      document
+        .querySelectorAll(".theme-option")
+        .forEach(option => {
+
+          option.classList.toggle(
+            "active",
+            option.dataset.themeOption === theme
+          );
+
+        });
+    }
+
+
+    function toggleThemeMenu() {
+
+      const menu =
+        document.getElementById("themeMenu");
+
+      const button =
+        document.getElementById("themeButton");
+
+      if (!menu || !button) return;
+
+      const isOpen =
+        menu.classList.toggle("open");
+
+      button.setAttribute(
+        "aria-expanded",
+        String(isOpen)
+      );
+    }
+
+
+    function closeThemeMenu() {
+
+      const menu =
+        document.getElementById("themeMenu");
+
+      const button =
+        document.getElementById("themeButton");
+
+      if (!menu || !button) return;
+
+      menu.classList.remove("open");
+
+      button.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+    }
+
+
+    document.addEventListener(
+      "click",
+      event => {
+
+        const wrapper =
+          document.querySelector(".theme-wrapper");
+
+        if (
+          wrapper &&
+          !wrapper.contains(event.target)
+        ) {
+
+          closeThemeMenu();
+
+        }
+
+      }
+    );
+
+
+    /*
+      When the user chooses System,
+      automatically respond if their operating-system
+      theme changes while the page is open.
+    */
+
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener(
+        "change",
+        () => {
+
+          const theme =
+            localStorage.getItem(
+              "securely-theme"
+            );
+
+          if (theme === "system") {
+            applyTheme("system");
+          }
+
+        }
+      );
+
+
+    /* =========================================================
+       ASSESSMENT QUESTIONS
+       ========================================================= */
 
     const questions = [
 
@@ -1048,85 +2268,155 @@
 
 
     let currentQuestion = 0;
+
     let totalScore = 0;
+
     let selectedAnswers = [];
 
     let currentUser = null;
+
     let authMode = "login";
 
+
+    /* =========================================================
+       START ASSESSMENT
+       ========================================================= */
 
     function startAssessment() {
 
       currentQuestion = 0;
+
       totalScore = 0;
+
       selectedAnswers = [];
 
-      document.getElementById("home").style.display = "none";
 
-      document.getElementById("assessment").style.display = "block";
+      document.getElementById(
+        "home"
+      ).style.display = "none";
 
-      document.getElementById("result").style.display = "none";
+
+      document.getElementById(
+        "assessment"
+      ).style.display = "block";
+
+
+      document.getElementById(
+        "result"
+      ).style.display = "none";
+
 
       window.scrollTo({
         top: 0,
         behavior: "smooth"
       });
 
+
       showQuestion();
     }
 
 
+    /* =========================================================
+       SHOW QUESTION
+       ========================================================= */
+
     function showQuestion() {
 
-      const q = questions[currentQuestion];
+      const q =
+        questions[currentQuestion];
 
-      document.getElementById("question").textContent =
+
+      document.getElementById(
+        "question"
+      ).textContent =
         q.question;
 
+
       const answersContainer =
-        document.getElementById("answers");
+        document.getElementById(
+          "answers"
+        );
+
 
       answersContainer.innerHTML = "";
+
 
       q.answers.forEach(answer => {
 
         const button =
-          document.createElement("button");
+          document.createElement(
+            "button"
+          );
 
-        button.className = "answer";
 
-        button.type = "button";
+        button.className =
+          "answer";
 
-        button.textContent = answer.text;
+
+        button.type =
+          "button";
+
+
+        button.textContent =
+          answer.text;
+
 
         button.onclick =
           () => chooseAnswer(answer);
 
-        answersContainer.appendChild(button);
+
+        answersContainer.appendChild(
+          button
+        );
 
       });
 
-      const progress =
-        ((currentQuestion + 1) / questions.length) * 100;
 
-      document.getElementById("progressFill").style.width =
+      const progress =
+        ((currentQuestion + 1) /
+          questions.length) *
+        100;
+
+
+      document.getElementById(
+        "progressFill"
+      ).style.width =
         progress + "%";
     }
 
 
+    /* =========================================================
+       CHOOSE ANSWER
+       ========================================================= */
+
     function chooseAnswer(answer) {
 
-      totalScore += answer.points;
+      totalScore +=
+        answer.points;
+
 
       selectedAnswers.push({
-        question: questions[currentQuestion].question,
-        answer: answer.text,
-        points: answer.points
+
+        question:
+          questions[currentQuestion]
+            .question,
+
+        answer:
+          answer.text,
+
+        points:
+          answer.points
+
       });
+
 
       currentQuestion++;
 
-      if (currentQuestion < questions.length) {
+
+      if (
+        currentQuestion <
+        questions.length
+      ) {
 
         showQuestion();
 
@@ -1138,33 +2428,61 @@
     }
 
 
+    /* =========================================================
+       AUTH UI
+       ========================================================= */
+
     function createAuthUI() {
 
       const navActions =
-        document.querySelector(".nav-actions");
+        document.querySelector(
+          ".nav-actions"
+        );
+
 
       if (!navActions) return;
 
+
       const authButton =
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
 
-      authButton.id = "authButton";
 
-      authButton.className = "btn btn-secondary";
+      authButton.id =
+        "authButton";
 
-      authButton.type = "button";
 
-      authButton.textContent = "Log in";
+      authButton.className =
+        "btn btn-secondary";
 
-      authButton.onclick = openAuthModal;
 
-      navActions.prepend(authButton);
+      authButton.type =
+        "button";
+
+
+      authButton.textContent =
+        "Log in";
+
+
+      authButton.onclick =
+        openAuthModal;
+
+
+      navActions.prepend(
+        authButton
+      );
 
 
       const modal =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
-      modal.id = "authModal";
+
+      modal.id =
+        "authModal";
+
 
       modal.innerHTML = `
 
@@ -1188,7 +2506,7 @@
             </button>
 
             <div class="eyebrow">
-              SECURELY ACCOUNT
+              Securely account
             </div>
 
             <h2 id="authTitle">
@@ -1246,20 +2564,29 @@
         </div>
       `;
 
-      document.body.appendChild(modal);
+
+      document.body.appendChild(
+        modal
+      );
     }
 
 
     function openAuthModal() {
 
       const modal =
-        document.getElementById("authModal");
+        document.getElementById(
+          "authModal"
+        );
+
 
       if (!modal) return;
 
+
       modal.querySelector(
         ".auth-overlay"
-      ).style.display = "flex";
+      ).style.display =
+        "flex";
+
 
       document.getElementById(
         "authEmail"
@@ -1272,19 +2599,29 @@
       if (
         event &&
         event.target &&
-        !event.target.classList.contains("auth-overlay")
+        !event.target.classList.contains(
+          "auth-overlay"
+        )
       ) {
+
         return;
+
       }
 
+
       const modal =
-        document.getElementById("authModal");
+        document.getElementById(
+          "authModal"
+        );
+
 
       if (modal) {
 
         modal.querySelector(
           ".auth-overlay"
-        ).style.display = "none";
+        ).style.display =
+          "none";
+
       }
     }
 
@@ -1296,33 +2633,55 @@
           ? "signup"
           : "login";
 
+
       const title =
-        document.getElementById("authTitle");
+        document.getElementById(
+          "authTitle"
+        );
+
 
       const subtitle =
-        document.getElementById("authSubtitle");
+        document.getElementById(
+          "authSubtitle"
+        );
+
 
       const submit =
-        document.getElementById("authSubmit");
+        document.getElementById(
+          "authSubmit"
+        );
+
 
       const toggle =
-        document.getElementById("authToggle");
+        document.getElementById(
+          "authToggle"
+        );
+
 
       const message =
-        document.getElementById("authMessage");
+        document.getElementById(
+          "authMessage"
+        );
+
 
       message.textContent = "";
 
-      if (authMode === "login") {
+
+      if (
+        authMode === "login"
+      ) {
 
         title.textContent =
           "Welcome back.";
 
+
         subtitle.textContent =
           "Log in to save your security assessments.";
 
+
         submit.textContent =
           "Log in";
+
 
         toggle.textContent =
           "Need an account? Sign up";
@@ -1332,11 +2691,14 @@
         title.textContent =
           "Create your Securely account.";
 
+
         subtitle.textContent =
           "Save assessments and track your security readiness.";
 
+
         submit.textContent =
           "Create account";
+
 
         toggle.textContent =
           "Already have an account? Log in";
@@ -1344,19 +2706,35 @@
     }
 
 
+    /* =========================================================
+       AUTHENTICATION
+       ========================================================= */
+
     async function handleAuth() {
 
       const email =
-        document.getElementById("authEmail").value.trim();
+        document.getElementById(
+          "authEmail"
+        ).value.trim();
+
 
       const password =
-        document.getElementById("authPassword").value;
+        document.getElementById(
+          "authPassword"
+        ).value;
+
 
       const message =
-        document.getElementById("authMessage");
+        document.getElementById(
+          "authMessage"
+        );
+
 
       const submit =
-        document.getElementById("authSubmit");
+        document.getElementById(
+          "authSubmit"
+        );
+
 
       if (!email || !password) {
 
@@ -1366,6 +2744,7 @@
         return;
       }
 
+
       if (password.length < 6) {
 
         message.textContent =
@@ -1374,14 +2753,20 @@
         return;
       }
 
-      submit.disabled = true;
+
+      submit.disabled =
+        true;
+
 
       message.textContent =
         "Connecting securely...";
 
+
       try {
 
-        if (authMode === "signup") {
+        if (
+          authMode === "signup"
+        ) {
 
           const {
             data,
@@ -1392,15 +2777,20 @@
               password
             });
 
+
           if (error) {
             throw error;
           }
 
+
           if (data.session) {
 
-            currentUser = data.user;
+            currentUser =
+              data.user;
+
 
             closeAuthModal();
+
 
             updateAuthUI();
 
@@ -1408,6 +2798,7 @@
 
             message.textContent =
               "Account created. Check your email to confirm your account, then log in.";
+
           }
 
         } else {
@@ -1421,13 +2812,18 @@
               password
             });
 
+
           if (error) {
             throw error;
           }
 
-          currentUser = data.user;
+
+          currentUser =
+            data.user;
+
 
           closeAuthModal();
+
 
           updateAuthUI();
         }
@@ -1439,13 +2835,16 @@
           error
         );
 
+
         message.textContent =
           error.message ||
           "Authentication failed. Please try again.";
 
       } finally {
 
-        submit.disabled = false;
+        submit.disabled =
+          false;
+
       }
     }
 
@@ -1456,6 +2855,7 @@
         return;
       }
 
+
       try {
 
         const {
@@ -1465,10 +2865,13 @@
         } =
           await supabaseClient.auth.getSession();
 
+
         currentUser =
           session?.user || null;
 
+
         updateAuthUI();
+
 
         supabaseClient.auth.onAuthStateChange(
           (_event, session) => {
@@ -1476,10 +2879,12 @@
             currentUser =
               session?.user || null;
 
+
             updateAuthUI();
 
           }
         );
+
 
       } catch (error) {
 
@@ -1487,6 +2892,7 @@
           "Could not load authentication session:",
           error
         );
+
       }
     }
 
@@ -1494,48 +2900,74 @@
     function updateAuthUI() {
 
       const button =
-        document.getElementById("authButton");
+        document.getElementById(
+          "authButton"
+        );
+
 
       if (!button) {
         return;
       }
 
+
       if (currentUser) {
 
-        button.textContent = "Log out";
+        button.textContent =
+          "Log out";
 
-        button.onclick = logoutUser;
+
+        button.onclick =
+          logoutUser;
+
 
         const existingLabel =
-          document.querySelector(".account-label");
+          document.querySelector(
+            ".account-label"
+          );
+
 
         if (!existingLabel) {
 
           const label =
-            document.createElement("span");
+            document.createElement(
+              "span"
+            );
 
-          label.className = "account-label";
+
+          label.className =
+            "account-label";
+
 
           label.textContent =
             currentUser.email || "";
 
+
           document.querySelector(
             ".nav-actions"
           ).prepend(label);
+
         }
 
       } else {
 
-        button.textContent = "Log in";
+        button.textContent =
+          "Log in";
 
-        button.onclick = openAuthModal;
+
+        button.onclick =
+          openAuthModal;
+
 
         const label =
-          document.querySelector(".account-label");
+          document.querySelector(
+            ".account-label"
+          );
+
 
         if (label) {
           label.remove();
         }
+
       }
     }
 
@@ -1549,13 +2981,18 @@
         } =
           await supabaseClient.auth.signOut();
 
+
         if (error) {
           throw error;
         }
 
-        currentUser = null;
+
+        currentUser =
+          null;
+
 
         updateAuthUI();
+
 
       } catch (error) {
 
@@ -1563,20 +3000,22 @@
           "Logout error:",
           error
         );
+
       }
     }
 
 
-    /*
-      ==========================================================
-      REAL SUPABASE ASSESSMENT SAVE
-      ==========================================================
-    */
+    /* =========================================================
+       REAL SUPABASE ASSESSMENT SAVE
+       ========================================================= */
 
     async function saveAssessmentToSupabase() {
 
       const status =
-        document.getElementById("saveStatus");
+        document.getElementById(
+          "saveStatus"
+        );
+
 
       if (!supabaseClient) {
 
@@ -1586,6 +3025,7 @@
         return;
       }
 
+
       if (!currentUser) {
 
         status.textContent =
@@ -1594,8 +3034,10 @@
         return;
       }
 
+
       status.textContent =
         "Saving your assessment securely...";
+
 
       try {
 
@@ -1603,7 +3045,9 @@
           1. Find the user's business.
         */
 
-        let businessId = null;
+        let businessId =
+          null;
+
 
         const {
           data: existingBusiness,
@@ -1612,13 +3056,18 @@
           await supabaseClient
             .from("businesses")
             .select("id")
-            .eq("user_id", currentUser.id)
+            .eq(
+              "user_id",
+              currentUser.id
+            )
             .limit(1)
             .maybeSingle();
+
 
         if (businessLookupError) {
           throw businessLookupError;
         }
+
 
         if (existingBusiness) {
 
@@ -1628,8 +3077,7 @@
         } else {
 
           /*
-            2. Create a business for the account
-               if one does not exist yet.
+            2. Create a business.
           */
 
           const {
@@ -1639,16 +3087,23 @@
             await supabaseClient
               .from("businesses")
               .insert({
-                user_id: currentUser.id,
-                business_name: "My Business",
-                industry: "General"
+                user_id:
+                  currentUser.id,
+
+                business_name:
+                  "My Business",
+
+                industry:
+                  "General"
               })
               .select("id")
               .single();
 
+
           if (businessCreateError) {
             throw businessCreateError;
           }
+
 
           businessId =
             newBusiness.id;
@@ -1656,19 +3111,27 @@
 
 
         /*
-          3. Create the assessment.
-
-          Supabase requires lowercase risk levels:
-          low / medium / high
+          3. Create assessment.
         */
 
-        let riskLevel = "high";
+        let riskLevel =
+          "high";
+
 
         if (totalScore >= 80) {
-          riskLevel = "low";
-        } else if (totalScore >= 60) {
-          riskLevel = "medium";
+
+          riskLevel =
+            "low";
+
+        } else if (
+          totalScore >= 60
+        ) {
+
+          riskLevel =
+            "medium";
+
         }
+
 
         const {
           data: assessment,
@@ -1677,12 +3140,20 @@
           await supabaseClient
             .from("assessments")
             .insert({
-              business_id: businessId,
-              score: totalScore,
-              risk_level: riskLevel
+
+              business_id:
+                businessId,
+
+              score:
+                totalScore,
+
+              risk_level:
+                riskLevel
+
             })
             .select("id")
             .single();
+
 
         if (assessmentError) {
           throw assessmentError;
@@ -1694,12 +3165,24 @@
         */
 
         const answerRows =
-          selectedAnswers.map((item, index) => ({
-            assessment_id: assessment.id,
-            question_id: index + 1,
-            answer: item.answer,
-            points: item.points
-          }));
+          selectedAnswers.map(
+            (item, index) => ({
+
+              assessment_id:
+                assessment.id,
+
+              question_id:
+                index + 1,
+
+              answer:
+                item.answer,
+
+              points:
+                item.points
+
+            })
+          );
+
 
         const {
           error: answersError
@@ -1708,17 +3191,14 @@
             .from("assessment_answers")
             .insert(answerRows);
 
+
         if (answersError) {
           throw answersError;
         }
 
 
         /*
-          5. Create risks based on the answers.
-
-          IMPORTANT:
-          Supabase requires lowercase severity values:
-          low / medium / high
+          5. Create risks.
         */
 
         const riskDefinitions = [
@@ -1826,33 +3306,81 @@
         ];
 
 
-        const riskRows = [];
+        const riskRows =
+          [];
 
-        selectedAnswers.forEach((answer, index) => {
 
-          if (answer.points < 10) {
+        selectedAnswers.forEach(
+          (answer, index) => {
 
-            const definition =
-              riskDefinitions[index];
+            if (
+              answer.points < 10
+            ) {
 
-            riskRows.push({
-              assessment_id: assessment.id,
-              title: definition.title,
-              description: definition.description,
+              const definition =
+                riskDefinitions[index];
 
-              severity:
-                answer.points === 0
-                  ? "high"
-                  : definition.severity,
 
-              recommendation:
-                definition.recommendation
-            });
+              const normalizedSeverity =
+                String(
+                  answer.points === 0
+                    ? "high"
+                    : definition.severity
+                )
+                  .trim()
+                  .toLowerCase();
+
+
+              const allowedSeverities =
+                [
+                  "low",
+                  "medium",
+                  "high"
+                ];
+
+
+              if (
+                !allowedSeverities.includes(
+                  normalizedSeverity
+                )
+              ) {
+
+                throw new Error(
+                  "Invalid risk severity generated: " +
+                  normalizedSeverity
+                );
+
+              }
+
+
+              riskRows.push({
+
+                assessment_id:
+                  assessment.id,
+
+                title:
+                  definition.title,
+
+                description:
+                  definition.description,
+
+                severity:
+                  normalizedSeverity,
+
+                recommendation:
+                  definition.recommendation
+
+              });
+
+            }
+
           }
-        });
+        );
 
 
-        if (riskRows.length > 0) {
+        if (
+          riskRows.length > 0
+        ) {
 
           const {
             error: risksError
@@ -1861,14 +3389,16 @@
               .from("risks")
               .insert(riskRows);
 
+
           if (risksError) {
             throw risksError;
           }
+
         }
 
 
         /*
-          6. Save the priority action plan.
+          6. Save priority actions.
         */
 
         const actionDefinitions = [
@@ -1876,40 +3406,50 @@
           {
             title:
               "Enable MFA on every important business account.",
+
             description:
               "Protect important accounts with multi-factor authentication.",
+
             priority: 1
           },
 
           {
             title:
               "Create and regularly test reliable backups.",
+
             description:
               "Make sure important data can actually be recovered when needed.",
+
             priority: 2
           },
 
           {
             title:
               "Create a simple incident-response plan.",
+
             description:
               "Document what the business should do if a security incident occurs.",
+
             priority: 3
           },
 
           {
             title:
               "Define clear rules for what employees may enter into AI tools.",
+
             description:
               "Create practical rules for protecting sensitive information when using AI.",
+
             priority: 4
           },
 
           {
             title:
               "Review employee access to sensitive information.",
+
             description:
               "Make sure employees only have the access they need.",
+
             priority: 5
           }
 
@@ -1917,13 +3457,26 @@
 
 
         const actionRows =
-          actionDefinitions.map(action => ({
-            assessment_id: assessment.id,
-            title: action.title,
-            description: action.description,
-            priority: action.priority,
-            completed: false
-          }));
+          actionDefinitions.map(
+            action => ({
+
+              assessment_id:
+                assessment.id,
+
+              title:
+                action.title,
+
+              description:
+                action.description,
+
+              priority:
+                action.priority,
+
+              completed:
+                false
+
+            })
+          );
 
 
         const {
@@ -1932,6 +3485,7 @@
           await supabaseClient
             .from("actions")
             .insert(actionRows);
+
 
         if (actionsError) {
           throw actionsError;
@@ -1945,6 +3499,7 @@
         status.textContent =
           "Assessment saved to your Securely account.";
 
+
       } catch (error) {
 
         console.error(
@@ -1952,29 +3507,45 @@
           error
         );
 
+
         status.textContent =
-          "Assessment completed, but it could not be saved yet.";
+          "Save failed: " +
+          (
+            error?.message ||
+            "Unknown database error."
+          );
+
 
         console.error(
           "Supabase details:",
-          error.message,
-          error.code,
-          error.details,
-          error.hint
+          error?.message,
+          error?.code,
+          error?.details,
+          error?.hint
         );
+
       }
+
     }
 
+
+    /* =========================================================
+       SHOW RESULT
+       ========================================================= */
 
     function showResult() {
 
       document.getElementById(
         "assessment"
-      ).style.display = "none";
+      ).style.display =
+        "none";
+
 
       document.getElementById(
         "result"
-      ).style.display = "block";
+      ).style.display =
+        "block";
+
 
       document.getElementById(
         "finalScore"
@@ -1984,12 +3555,17 @@
 
       let message;
 
-      if (totalScore >= 80) {
+
+      if (
+        totalScore >= 80
+      ) {
 
         message =
           "Your business shows a strong baseline of security readiness. Keep reviewing your practices regularly.";
 
-      } else if (totalScore >= 60) {
+      } else if (
+        totalScore >= 60
+      ) {
 
         message =
           "Your business has a reasonable foundation, but several areas could be strengthened.";
@@ -1998,6 +3574,7 @@
 
         message =
           "Your business has several important security gaps that should be prioritized.";
+
       }
 
 
@@ -2008,9 +3585,13 @@
 
 
       const actions =
-        document.getElementById("actions");
+        document.getElementById(
+          "actions"
+        );
 
-      actions.innerHTML = "";
+
+      actions.innerHTML =
+        "";
 
 
       const recommendations = [
@@ -2029,51 +3610,84 @@
 
 
       recommendations.forEach(
-        (recommendation, index) => {
+        (
+          recommendation,
+          index
+        ) => {
 
           const item =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
 
-          item.className = "action";
+
+          item.className =
+            "action";
 
 
           const number =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
+
 
           number.className =
             "action-number";
+
 
           number.textContent =
             index + 1;
 
 
           const content =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
 
 
           const title =
-            document.createElement("strong");
+            document.createElement(
+              "strong"
+            );
+
 
           title.textContent =
             recommendation;
 
 
           const description =
-            document.createElement("p");
+            document.createElement(
+              "p"
+            );
+
 
           description.textContent =
             "Recommended based on common small-business security practices.";
 
 
-          content.appendChild(title);
+          content.appendChild(
+            title
+          );
 
-          content.appendChild(description);
 
-          item.appendChild(number);
+          content.appendChild(
+            description
+          );
 
-          item.appendChild(content);
 
-          actions.appendChild(item);
+          item.appendChild(
+            number
+          );
+
+
+          item.appendChild(
+            content
+          );
+
+
+          actions.appendChild(
+            item
+          );
 
         }
       );
@@ -2086,8 +3700,13 @@
         top: 0,
         behavior: "smooth"
       });
+
     }
 
+
+    /* =========================================================
+       UTILITIES
+       ========================================================= */
 
     function scrollToFeatures() {
 
@@ -2096,8 +3715,13 @@
       ).scrollIntoView({
         behavior: "smooth"
       });
+
     }
 
+
+    /* =========================================================
+       INITIALIZE
+       ========================================================= */
 
     createAuthUI();
 
@@ -2107,3 +3731,4 @@
 
 </body>
 </html>
+```
