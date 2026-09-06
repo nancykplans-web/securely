@@ -1657,14 +1657,18 @@
 
         /*
           3. Create the assessment.
+
+          IMPORTANT:
+          Supabase requires lowercase risk levels:
+          low / medium / high
         */
 
-        let riskLevel = "High";
+        let riskLevel = "high";
 
         if (totalScore >= 80) {
-          riskLevel = "Low";
+          riskLevel = "low";
         } else if (totalScore >= 60) {
-          riskLevel = "Medium";
+          riskLevel = "medium";
         }
 
         const {
