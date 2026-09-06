@@ -1,24 +1,27 @@
+```html
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Securely | Cyber Readiness</title>
 
   <!-- Supabase -->
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    const SUPABASE_URL = "https://hcglxmygkuuyxuxaipxg.supabase.co";
+    const SUPABASE_URL =
+      "https://hcglxmygkuuyxuxaipxg.supabase.co";
+
     const SUPABASE_PUBLISHABLE_KEY =
       "sb_publishable_-OvAVJRIlXF_s8fclAvpcw_V3h43ETB";
 
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
   </script>
 
   <style>
@@ -72,6 +75,7 @@
     .nav-actions {
       display: flex;
       gap: 10px;
+      align-items: center;
     }
 
     .btn {
@@ -403,6 +407,108 @@
       color: #686a71;
     }
 
+    /*
+      ==========================================================
+      AUTH MODAL
+      ==========================================================
+    */
+
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.55);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      border: 1px solid #e4e3df;
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.18);
+      position: relative;
+    }
+
+    .auth-box h2 {
+      font-size: 30px;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      color: #686a71;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .auth-close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      border: 0;
+      background: transparent;
+      font-size: 28px;
+      color: #777980;
+      cursor: pointer;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid #deddd8;
+      border-radius: 10px;
+      background: #fafaf8;
+      outline: none;
+    }
+
+    .auth-input:focus {
+      border-color: #a68135;
+    }
+
+    .auth-submit {
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    .auth-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .auth-message {
+      min-height: 20px;
+      margin-top: 14px;
+      color: #686a71;
+      font-size: 13px;
+    }
+
+    .auth-toggle {
+      border: 0;
+      background: transparent;
+      color: #9b7830;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      padding: 5px 0;
+    }
+
+    .account-label {
+      color: #686a71;
+      font-size: 12px;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     footer {
       border-top: 1px solid #e5e5e1;
       padding: 35px 6%;
@@ -462,255 +568,313 @@
       .result-score {
         font-size: 58px;
       }
+
+      .account-label {
+        display: none;
+      }
+
+      .auth-box {
+        padding: 26px;
+      }
     }
   </style>
-
 </head>
 
 <body>
 
+  <!-- ==========================================================
+       NAVIGATION
+       ========================================================== -->
+
   <nav class="navbar">
-    <div class="logo">Secure<span>ly</span></div>
 
-```
-<div class="nav-actions">
-  <button
-    class="btn btn-secondary"
-    onclick="startAssessment()"
-  >
-    Assess my business
-  </button>
-</div>
-```
-
-  </nav>
-
-  <main id="home">
-
-```
-<section class="hero">
-  <div>
-
-    <div class="eyebrow">
-      Cyber readiness for modern businesses
+    <div class="logo">
+      Secure<span>ly</span>
     </div>
 
-    <h1>
-      Know what to fix before it becomes a problem.
-    </h1>
-
-    <p>
-      Securely helps small businesses understand their cybersecurity
-      readiness, identify their biggest risks, and prioritize the actions
-      that matter most.
-    </p>
-
-    <div class="hero-actions">
-
-      <button
-        class="btn btn-primary"
-        onclick="startAssessment()"
-      >
-        Start free assessment
-      </button>
+    <div class="nav-actions">
 
       <button
         class="btn btn-secondary"
-        onclick="scrollToFeatures()"
+        onclick="startAssessment()"
+        type="button"
       >
-        Explore Securely
+        Assess my business
       </button>
 
     </div>
 
-  </div>
+  </nav>
 
-  <div class="security-card">
 
-    <div class="card-label">
-      SECURITY READINESS
-    </div>
+  <!-- ==========================================================
+       HOME
+       ========================================================== -->
 
-    <div class="score">
-      72<span>/100</span>
-    </div>
+  <main id="home">
 
-    <div class="score-bar">
-      <div class="score-fill"></div>
-    </div>
+    <section class="hero">
 
-    <div class="risk">
-      <strong>MFA coverage</strong>
-      <span class="pill low">Good</span>
-    </div>
+      <div>
 
-    <div class="risk">
-      <strong>Backup readiness</strong>
-      <span class="pill medium">Review</span>
-    </div>
+        <div class="eyebrow">
+          Cyber readiness for modern businesses
+        </div>
 
-    <div class="risk">
-      <strong>Incident response</strong>
-      <span class="pill high">Priority</span>
-    </div>
+        <h1>
+          Know what to fix before it becomes a problem.
+        </h1>
 
-  </div>
-</section>
+        <p>
+          Securely helps small businesses understand their cybersecurity
+          readiness, identify their biggest risks, and prioritize the actions
+          that matter most.
+        </p>
 
-<section class="section" id="features">
+        <div class="hero-actions">
 
-  <h2 class="section-title">
-    Security without the jargon.
-  </h2>
+          <button
+            class="btn btn-primary"
+            onclick="startAssessment()"
+            type="button"
+          >
+            Start free assessment
+          </button>
 
-  <p class="section-subtitle">
-    Understand your biggest gaps and what to do next.
-  </p>
+          <button
+            class="btn btn-secondary"
+            onclick="scrollToFeatures()"
+            type="button"
+          >
+            Explore Securely
+          </button>
 
-  <div class="features">
+        </div>
 
-    <div class="feature">
+      </div>
 
-      <div class="feature-icon">🛡️</div>
 
-      <h3>
-        Readiness Score
-      </h3>
+      <div class="security-card">
 
-      <p>
-        Get a simple 0–100 score based on your business's security
-        practices.
+        <div class="card-label">
+          SECURITY READINESS
+        </div>
+
+        <div class="score">
+          72<span>/100</span>
+        </div>
+
+        <div class="score-bar">
+          <div class="score-fill"></div>
+        </div>
+
+        <div class="risk">
+          <strong>MFA coverage</strong>
+          <span class="pill low">Good</span>
+        </div>
+
+        <div class="risk">
+          <strong>Backup readiness</strong>
+          <span class="pill medium">Review</span>
+        </div>
+
+        <div class="risk">
+          <strong>Incident response</strong>
+          <span class="pill high">Priority</span>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="section" id="features">
+
+      <h2 class="section-title">
+        Security without the jargon.
+      </h2>
+
+      <p class="section-subtitle">
+        Understand your biggest gaps and what to do next.
       </p>
 
-    </div>
+      <div class="features">
 
-    <div class="feature">
+        <div class="feature">
 
-      <div class="feature-icon">⚠️</div>
+          <div class="feature-icon">🛡️</div>
 
-      <h3>
-        Risk Priorities
-      </h3>
+          <h3>
+            Readiness Score
+          </h3>
 
-      <p>
-        See which security gaps deserve attention first instead of
-        drowning in technical warnings.
-      </p>
+          <p>
+            Get a simple 0–100 score based on your business's security
+            practices.
+          </p>
 
-    </div>
+        </div>
 
-    <div class="feature">
 
-      <div class="feature-icon">✓</div>
+        <div class="feature">
 
-      <h3>
-        Action Plan
-      </h3>
+          <div class="feature-icon">⚠️</div>
 
-      <p>
-        Turn each security gap into a practical next step your business
-        can understand.
-      </p>
+          <h3>
+            Risk Priorities
+          </h3>
 
-    </div>
+          <p>
+            See which security gaps deserve attention first instead of
+            drowning in technical warnings.
+          </p>
 
-  </div>
+        </div>
 
-</section>
-```
+
+        <div class="feature">
+
+          <div class="feature-icon">✓</div>
+
+          <h3>
+            Action Plan
+          </h3>
+
+          <p>
+            Turn each security gap into a practical next step your business
+            can understand.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
 
   </main>
 
-  <section class="assessment" id="assessment">
 
-```
-<div class="assessment-box">
+  <!-- ==========================================================
+       ASSESSMENT
+       ========================================================== -->
 
-  <div class="eyebrow">
-    SECURITY ASSESSMENT
-  </div>
+  <section
+    class="assessment"
+    id="assessment"
+  >
 
-  <h2>
-    Let's check your security readiness.
-  </h2>
+    <div class="assessment-box">
 
-  <div class="progress">
-    <div
-      class="progress-fill"
-      id="progressFill"
-    ></div>
-  </div>
+      <div class="eyebrow">
+        SECURITY ASSESSMENT
+      </div>
 
-  <div
-    class="question"
-    id="question"
-  ></div>
+      <h2>
+        Let's check your security readiness.
+      </h2>
 
-  <div
-    class="answers"
-    id="answers"
-  ></div>
+      <div class="progress">
 
-</div>
-```
+        <div
+          class="progress-fill"
+          id="progressFill"
+        ></div>
+
+      </div>
+
+      <div
+        class="question"
+        id="question"
+      ></div>
+
+      <div
+        class="answers"
+        id="answers"
+      ></div>
+
+    </div>
 
   </section>
 
-  <section class="result" id="result">
 
-```
-<div class="result-box">
+  <!-- ==========================================================
+       RESULTS
+       ========================================================== -->
 
-  <div class="eyebrow">
-    ASSESSMENT COMPLETE
-  </div>
-
-  <h2>
-    Your Security Readiness
-  </h2>
-
-  <div class="result-score">
-    <span id="finalScore">0</span>
-    <small>/100</small>
-  </div>
-
-  <p
-    class="result-message"
-    id="resultMessage"
-  ></p>
-
-  <h3 style="margin-bottom:15px;">
-    Priority actions
-  </h3>
-
-  <div
-    class="actions"
-    id="actions"
-  ></div>
-
-  <p
-    class="save-status"
-    id="saveStatus"
+  <section
+    class="result"
+    id="result"
   >
-    Assessment results are ready.
-  </p>
 
-  <button
-    class="btn btn-primary"
-    style="margin-top:25px;"
-    onclick="location.reload()"
-  >
-    Start another assessment
-  </button>
+    <div class="result-box">
 
-</div>
-```
+      <div class="eyebrow">
+        ASSESSMENT COMPLETE
+      </div>
+
+      <h2>
+        Your Security Readiness
+      </h2>
+
+      <div class="result-score">
+
+        <span id="finalScore">
+          0
+        </span>
+
+        <small>
+          /100
+        </small>
+
+      </div>
+
+      <p
+        class="result-message"
+        id="resultMessage"
+      ></p>
+
+
+      <h3 style="margin-bottom:15px;">
+        Priority actions
+      </h3>
+
+
+      <div
+        class="actions"
+        id="actions"
+      ></div>
+
+
+      <p
+        class="save-status"
+        id="saveStatus"
+      >
+        Assessment results are ready.
+      </p>
+
+
+      <button
+        class="btn btn-primary"
+        style="margin-top:25px;"
+        onclick="location.reload()"
+        type="button"
+      >
+        Start another assessment
+      </button>
+
+    </div>
 
   </section>
+
 
   <footer>
     Securely © 2026 · Cyber readiness and security education
   </footer>
+
+
+  <!-- ==========================================================
+       JAVASCRIPT
+       ========================================================== -->
 
   <script>
 
@@ -742,6 +906,7 @@
         ]
       },
 
+
       {
         question:
           "Does your business regularly back up important data?",
@@ -761,6 +926,7 @@
           }
         ]
       },
+
 
       {
         question:
@@ -782,6 +948,7 @@
         ]
       },
 
+
       {
         question:
           "Does your business have a plan for responding to a security incident?",
@@ -801,6 +968,7 @@
           }
         ]
       },
+
 
       {
         question:
@@ -822,6 +990,7 @@
         ]
       },
 
+
       {
         question:
           "Are employees given basic cybersecurity awareness training?",
@@ -841,6 +1010,7 @@
           }
         ]
       },
+
 
       {
         question:
@@ -862,6 +1032,7 @@
         ]
       },
 
+
       {
         question:
           "Does your business have a process for removing access when someone leaves?",
@@ -882,6 +1053,7 @@
         ]
       },
 
+
       {
         question:
           "Do you have security rules for company email accounts?",
@@ -901,6 +1073,7 @@
           }
         ]
       },
+
 
       {
         question:
@@ -932,8 +1105,21 @@
     */
 
     let currentQuestion = 0;
+
     let totalScore = 0;
+
     let selectedAnswers = [];
+
+
+    /*
+      ==========================================================
+      AUTHENTICATION STATE
+      ==========================================================
+    */
+
+    let currentUser = null;
+
+    let authMode = "login";
 
 
     /*
@@ -945,14 +1131,19 @@
     function startAssessment() {
 
       currentQuestion = 0;
+
       totalScore = 0;
+
       selectedAnswers = [];
 
-      document.getElementById("home").style.display = "none";
+      document.getElementById("home").style.display =
+        "none";
 
-      document.getElementById("assessment").style.display = "block";
+      document.getElementById("assessment").style.display =
+        "block";
 
-      document.getElementById("result").style.display = "none";
+      document.getElementById("result").style.display =
+        "none";
 
       window.scrollTo({
         top: 0,
@@ -971,7 +1162,8 @@
 
     function showQuestion() {
 
-      const q = questions[currentQuestion];
+      const q =
+        questions[currentQuestion];
 
       document.getElementById("question").textContent =
         q.question;
@@ -981,22 +1173,28 @@
 
       answersContainer.innerHTML = "";
 
+
       q.answers.forEach(answer => {
 
         const button =
           document.createElement("button");
 
-        button.className = "answer";
+        button.className =
+          "answer";
 
-        button.type = "button";
+        button.type =
+          "button";
 
-        button.textContent = answer.text;
+        button.textContent =
+          answer.text;
 
-        button.onclick = () => chooseAnswer(answer);
+        button.onclick =
+          () => chooseAnswer(answer);
 
         answersContainer.appendChild(button);
 
       });
+
 
       const progress =
         ((currentQuestion + 1) / questions.length) * 100;
@@ -1014,17 +1212,28 @@
 
     function chooseAnswer(answer) {
 
-      totalScore += answer.points;
+      totalScore +=
+        answer.points;
 
       selectedAnswers.push({
-        question: questions[currentQuestion].question,
-        answer: answer.text,
-        points: answer.points
+        question:
+          questions[currentQuestion].question,
+
+        answer:
+          answer.text,
+
+        points:
+          answer.points
       });
+
 
       currentQuestion++;
 
-      if (currentQuestion < questions.length) {
+
+      if (
+        currentQuestion <
+        questions.length
+      ) {
 
         showQuestion();
 
@@ -1038,6 +1247,582 @@
 
     /*
       ==========================================================
+      CREATE AUTH UI
+      ==========================================================
+    */
+
+    function createAuthUI() {
+
+      const navActions =
+        document.querySelector(".nav-actions");
+
+      if (!navActions) return;
+
+
+      const authButton =
+        document.createElement("button");
+
+      authButton.id =
+        "authButton";
+
+      authButton.className =
+        "btn btn-secondary";
+
+      authButton.type =
+        "button";
+
+      authButton.textContent =
+        "Log in";
+
+      authButton.onclick =
+        openAuthModal;
+
+
+      navActions.prepend(
+        authButton
+      );
+
+
+      const modal =
+        document.createElement("div");
+
+      modal.id =
+        "authModal";
+
+
+      modal.innerHTML = `
+
+        <div
+          class="auth-overlay"
+          onclick="closeAuthModal(event)"
+        >
+
+          <div
+            class="auth-box"
+            onclick="event.stopPropagation()"
+          >
+
+            <button
+              class="auth-close"
+              type="button"
+              onclick="closeAuthModal()"
+              aria-label="Close"
+            >
+              ×
+            </button>
+
+
+            <div class="eyebrow">
+              SECURELY ACCOUNT
+            </div>
+
+
+            <h2 id="authTitle">
+              Welcome back.
+            </h2>
+
+
+            <p
+              class="auth-subtitle"
+              id="authSubtitle"
+            >
+              Log in to save your security assessments.
+            </p>
+
+
+            <input
+              id="authEmail"
+              class="auth-input"
+              type="email"
+              placeholder="Business email"
+              autocomplete="email"
+            />
+
+
+            <input
+              id="authPassword"
+              class="auth-input"
+              type="password"
+              placeholder="Password"
+              autocomplete="current-password"
+            />
+
+
+            <button
+              id="authSubmit"
+              class="btn btn-primary auth-submit"
+              type="button"
+              onclick="handleAuth()"
+            >
+              Log in
+            </button>
+
+
+            <p
+              id="authMessage"
+              class="auth-message"
+            ></p>
+
+
+            <button
+              id="authToggle"
+              class="auth-toggle"
+              type="button"
+              onclick="toggleAuthMode()"
+            >
+              Need an account? Sign up
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      document.body.appendChild(
+        modal
+      );
+    }
+
+
+    /*
+      ==========================================================
+      OPEN AUTH MODAL
+      ==========================================================
+    */
+
+    function openAuthModal() {
+
+      const modal =
+        document.getElementById(
+          "authModal"
+        );
+
+      if (!modal) return;
+
+
+      modal.querySelector(
+        ".auth-overlay"
+      ).style.display =
+        "flex";
+
+
+      document.getElementById(
+        "authEmail"
+      ).focus();
+    }
+
+
+    /*
+      ==========================================================
+      CLOSE AUTH MODAL
+      ==========================================================
+    */
+
+    function closeAuthModal(event) {
+
+      if (
+        event &&
+        event.target &&
+        !event.target.classList.contains(
+          "auth-overlay"
+        )
+      ) {
+        return;
+      }
+
+
+      const modal =
+        document.getElementById(
+          "authModal"
+        );
+
+      if (modal) {
+
+        modal.querySelector(
+          ".auth-overlay"
+        ).style.display =
+          "none";
+      }
+    }
+
+
+    /*
+      ==========================================================
+      TOGGLE LOGIN / SIGNUP
+      ==========================================================
+    */
+
+    function toggleAuthMode() {
+
+      authMode =
+        authMode === "login"
+          ? "signup"
+          : "login";
+
+
+      const title =
+        document.getElementById(
+          "authTitle"
+        );
+
+      const subtitle =
+        document.getElementById(
+          "authSubtitle"
+        );
+
+      const submit =
+        document.getElementById(
+          "authSubmit"
+        );
+
+      const toggle =
+        document.getElementById(
+          "authToggle"
+        );
+
+      const message =
+        document.getElementById(
+          "authMessage"
+        );
+
+
+      message.textContent = "";
+
+
+      if (authMode === "login") {
+
+        title.textContent =
+          "Welcome back.";
+
+        subtitle.textContent =
+          "Log in to save your security assessments.";
+
+        submit.textContent =
+          "Log in";
+
+        toggle.textContent =
+          "Need an account? Sign up";
+
+      } else {
+
+        title.textContent =
+          "Create your Securely account.";
+
+        subtitle.textContent =
+          "Save assessments and track your security readiness.";
+
+        submit.textContent =
+          "Create account";
+
+        toggle.textContent =
+          "Already have an account? Log in";
+      }
+    }
+
+
+    /*
+      ==========================================================
+      HANDLE LOGIN / SIGNUP
+      ==========================================================
+    */
+
+    async function handleAuth() {
+
+      const email =
+        document.getElementById(
+          "authEmail"
+        ).value.trim();
+
+
+      const password =
+        document.getElementById(
+          "authPassword"
+        ).value;
+
+
+      const message =
+        document.getElementById(
+          "authMessage"
+        );
+
+
+      const submit =
+        document.getElementById(
+          "authSubmit"
+        );
+
+
+      if (!email || !password) {
+
+        message.textContent =
+          "Enter your email and password.";
+
+        return;
+      }
+
+
+      if (password.length < 6) {
+
+        message.textContent =
+          "Password must be at least 6 characters.";
+
+        return;
+      }
+
+
+      submit.disabled = true;
+
+      message.textContent =
+        "Connecting securely...";
+
+
+      try {
+
+        if (authMode === "signup") {
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient.auth.signUp({
+              email,
+              password
+            });
+
+
+          if (error) {
+            throw error;
+          }
+
+
+          if (data.session) {
+
+            currentUser =
+              data.user;
+
+            closeAuthModal();
+
+            updateAuthUI();
+
+          } else {
+
+            message.textContent =
+              "Account created. Check your email to confirm your account, then log in.";
+          }
+
+        } else {
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient.auth.signInWithPassword({
+              email,
+              password
+            });
+
+
+          if (error) {
+            throw error;
+          }
+
+
+          currentUser =
+            data.user;
+
+          closeAuthModal();
+
+          updateAuthUI();
+        }
+
+
+      } catch (error) {
+
+        console.error(
+          "Authentication error:",
+          error
+        );
+
+
+        message.textContent =
+          error.message ||
+          "Authentication failed. Please try again.";
+
+      } finally {
+
+        submit.disabled =
+          false;
+      }
+    }
+
+
+    /*
+      ==========================================================
+      LOAD CURRENT USER
+      ==========================================================
+    */
+
+    async function loadCurrentUser() {
+
+      if (!supabaseClient) {
+        return;
+      }
+
+
+      try {
+
+        const {
+          data: {
+            session
+          }
+        } =
+          await supabaseClient.auth.getSession();
+
+
+        currentUser =
+          session?.user || null;
+
+
+        updateAuthUI();
+
+
+        supabaseClient.auth.onAuthStateChange(
+          (_event, session) => {
+
+            currentUser =
+              session?.user || null;
+
+            updateAuthUI();
+
+          }
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Could not load authentication session:",
+          error
+        );
+      }
+    }
+
+
+    /*
+      ==========================================================
+      UPDATE AUTH BUTTON
+      ==========================================================
+    */
+
+    function updateAuthUI() {
+
+      const button =
+        document.getElementById(
+          "authButton"
+        );
+
+
+      if (!button) {
+        return;
+      }
+
+
+      if (currentUser) {
+
+        button.textContent =
+          "Log out";
+
+        button.onclick =
+          logoutUser;
+
+
+        const existingLabel =
+          document.querySelector(
+            ".account-label"
+          );
+
+
+        if (!existingLabel) {
+
+          const label =
+            document.createElement(
+              "span"
+            );
+
+          label.className =
+            "account-label";
+
+          label.textContent =
+            currentUser.email || "";
+
+          document.querySelector(
+            ".nav-actions"
+          ).prepend(label);
+        }
+
+      } else {
+
+        button.textContent =
+          "Log in";
+
+        button.onclick =
+          openAuthModal;
+
+
+        const label =
+          document.querySelector(
+            ".account-label"
+          );
+
+
+        if (label) {
+          label.remove();
+        }
+      }
+    }
+
+
+    /*
+      ==========================================================
+      LOG OUT
+      ==========================================================
+    */
+
+    async function logoutUser() {
+
+      try {
+
+        const {
+          error
+        } =
+          await supabaseClient.auth.signOut();
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        currentUser =
+          null;
+
+        updateAuthUI();
+
+
+      } catch (error) {
+
+        console.error(
+          "Logout error:",
+          error
+        );
+      }
+    }
+
+
+    /*
+      ==========================================================
       SUPABASE CONNECTION TEST
       ==========================================================
     */
@@ -1045,7 +1830,10 @@
     async function saveAssessmentToSupabase() {
 
       const status =
-        document.getElementById("saveStatus");
+        document.getElementById(
+          "saveStatus"
+        );
+
 
       if (!supabaseClient) {
 
@@ -1055,21 +1843,26 @@
         return;
       }
 
+
+      if (!currentUser) {
+
+        status.textContent =
+          "Assessment completed. Log in to save your assessment.";
+
+        return;
+      }
+
+
       try {
 
-        /*
-          We perform a lightweight database request.
-
-          Important:
-          RLS can legitimately prevent reading rows.
-          That does not automatically mean Supabase is broken.
-        */
-
-        const { error } =
+        const {
+          error
+        } =
           await supabaseClient
             .from("businesses")
             .select("id")
             .limit(1);
+
 
         if (error) {
 
@@ -1078,11 +1871,6 @@
             error
           );
 
-          /*
-            If Supabase responds with an RLS/permission
-            restriction, the client itself is still reaching
-            the project.
-          */
 
           if (
             error.code === "42501" ||
@@ -1090,20 +1878,21 @@
           ) {
 
             status.textContent =
-              "Assessment completed. Securely is connected to Supabase.";
+              "Assessment completed. Your Securely account is connected.";
 
           } else {
 
             status.textContent =
-              "Assessment completed. Supabase database access needs configuration.";
-
+              "Assessment completed. Your account is connected, but database access needs configuration.";
           }
+
 
           return;
         }
 
+
         status.textContent =
-          "Assessment completed. Securely is connected to Supabase.";
+          "Assessment completed. Your Securely account is connected.";
 
       } catch (error) {
 
@@ -1112,9 +1901,9 @@
           error
         );
 
-        status.textContent =
-          "Assessment completed. Supabase connection could not be verified.";
 
+        status.textContent =
+          "Assessment completed. Your account is connected, but the database could not be verified.";
       }
     }
 
@@ -1127,13 +1916,21 @@
 
     function showResult() {
 
-      document.getElementById("assessment").style.display =
+      document.getElementById(
+        "assessment"
+      ).style.display =
         "none";
 
-      document.getElementById("result").style.display =
+
+      document.getElementById(
+        "result"
+      ).style.display =
         "block";
 
-      document.getElementById("finalScore").textContent =
+
+      document.getElementById(
+        "finalScore"
+      ).textContent =
         totalScore;
 
 
@@ -1154,22 +1951,20 @@
 
         message =
           "Your business has several important security gaps that should be prioritized.";
-
       }
 
 
-      document.getElementById("resultMessage").textContent =
+      document.getElementById(
+        "resultMessage"
+      ).textContent =
         message;
 
 
-      /*
-        ========================================================
-        RECOMMENDATIONS
-        ========================================================
-      */
-
       const actions =
-        document.getElementById("actions");
+        document.getElementById(
+          "actions"
+        );
+
 
       actions.innerHTML = "";
 
@@ -1193,55 +1988,83 @@
         (recommendation, index) => {
 
           const item =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
 
-          item.className = "action";
+
+          item.className =
+            "action";
 
 
           const number =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
+
 
           number.className =
             "action-number";
+
 
           number.textContent =
             index + 1;
 
 
           const content =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
 
 
           const title =
-            document.createElement("strong");
+            document.createElement(
+              "strong"
+            );
+
 
           title.textContent =
             recommendation;
 
 
           const description =
-            document.createElement("p");
+            document.createElement(
+              "p"
+            );
+
 
           description.textContent =
             "Recommended based on common small-business security practices.";
 
 
-          content.appendChild(title);
+          content.appendChild(
+            title
+          );
 
-          content.appendChild(description);
+          content.appendChild(
+            description
+          );
 
-          item.appendChild(number);
 
-          item.appendChild(content);
+          item.appendChild(
+            number
+          );
 
-          actions.appendChild(item);
+          item.appendChild(
+            content
+          );
+
+
+          actions.appendChild(
+            item
+          );
 
         }
       );
 
 
       /*
-        Test Supabase after the results are displayed.
+        Check the current Supabase account.
       */
 
       saveAssessmentToSupabase();
@@ -1262,13 +2085,26 @@
 
     function scrollToFeatures() {
 
-      document.getElementById("features").scrollIntoView({
+      document.getElementById(
+        "features"
+      ).scrollIntoView({
         behavior: "smooth"
       });
-
     }
+
+
+    /*
+      ==========================================================
+      INITIALIZE SECURELY
+      ==========================================================
+    */
+
+    createAuthUI();
+
+    loadCurrentUser();
 
   </script>
 
 </body>
 </html>
+```
