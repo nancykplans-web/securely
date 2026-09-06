@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,6 @@
 
   <title>Securely | Cyber Readiness</title>
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
@@ -407,12 +405,6 @@
       color: #686a71;
     }
 
-    /*
-      ==========================================================
-      AUTH MODAL
-      ==========================================================
-    */
-
     .auth-overlay {
       position: fixed;
       inset: 0;
@@ -582,10 +574,6 @@
 
 <body>
 
-  <!-- ==========================================================
-       NAVIGATION
-       ========================================================== -->
-
   <nav class="navbar">
 
     <div class="logo">
@@ -606,10 +594,6 @@
 
   </nav>
 
-
-  <!-- ==========================================================
-       HOME
-       ========================================================== -->
 
   <main id="home">
 
@@ -701,7 +685,6 @@
       <div class="features">
 
         <div class="feature">
-
           <div class="feature-icon">🛡️</div>
 
           <h3>
@@ -712,12 +695,10 @@
             Get a simple 0–100 score based on your business's security
             practices.
           </p>
-
         </div>
 
 
         <div class="feature">
-
           <div class="feature-icon">⚠️</div>
 
           <h3>
@@ -728,12 +709,10 @@
             See which security gaps deserve attention first instead of
             drowning in technical warnings.
           </p>
-
         </div>
 
 
         <div class="feature">
-
           <div class="feature-icon">✓</div>
 
           <h3>
@@ -744,7 +723,6 @@
             Turn each security gap into a practical next step your business
             can understand.
           </p>
-
         </div>
 
       </div>
@@ -753,10 +731,6 @@
 
   </main>
 
-
-  <!-- ==========================================================
-       ASSESSMENT
-       ========================================================== -->
 
   <section
     class="assessment"
@@ -774,12 +748,10 @@
       </h2>
 
       <div class="progress">
-
         <div
           class="progress-fill"
           id="progressFill"
         ></div>
-
       </div>
 
       <div
@@ -796,10 +768,6 @@
 
   </section>
 
-
-  <!-- ==========================================================
-       RESULTS
-       ========================================================== -->
 
   <section
     class="result"
@@ -872,17 +840,7 @@
   </footer>
 
 
-  <!-- ==========================================================
-       JAVASCRIPT
-       ========================================================== -->
-
   <script>
-
-    /*
-      ==========================================================
-      SECURITY ASSESSMENT QUESTIONS
-      ==========================================================
-    */
 
     const questions = [
 
@@ -906,7 +864,6 @@
         ]
       },
 
-
       {
         question:
           "Does your business regularly back up important data?",
@@ -926,7 +883,6 @@
           }
         ]
       },
-
 
       {
         question:
@@ -948,7 +904,6 @@
         ]
       },
 
-
       {
         question:
           "Does your business have a plan for responding to a security incident?",
@@ -968,7 +923,6 @@
           }
         ]
       },
-
 
       {
         question:
@@ -990,7 +944,6 @@
         ]
       },
 
-
       {
         question:
           "Are employees given basic cybersecurity awareness training?",
@@ -1010,7 +963,6 @@
           }
         ]
       },
-
 
       {
         question:
@@ -1032,7 +984,6 @@
         ]
       },
 
-
       {
         question:
           "Does your business have a process for removing access when someone leaves?",
@@ -1053,7 +1004,6 @@
         ]
       },
 
-
       {
         question:
           "Do you have security rules for company email accounts?",
@@ -1073,7 +1023,6 @@
           }
         ]
       },
-
 
       {
         question:
@@ -1098,52 +1047,25 @@
     ];
 
 
-    /*
-      ==========================================================
-      ASSESSMENT STATE
-      ==========================================================
-    */
-
     let currentQuestion = 0;
-
     let totalScore = 0;
-
     let selectedAnswers = [];
 
-
-    /*
-      ==========================================================
-      AUTHENTICATION STATE
-      ==========================================================
-    */
-
     let currentUser = null;
-
     let authMode = "login";
 
-
-    /*
-      ==========================================================
-      START ASSESSMENT
-      ==========================================================
-    */
 
     function startAssessment() {
 
       currentQuestion = 0;
-
       totalScore = 0;
-
       selectedAnswers = [];
 
-      document.getElementById("home").style.display =
-        "none";
+      document.getElementById("home").style.display = "none";
 
-      document.getElementById("assessment").style.display =
-        "block";
+      document.getElementById("assessment").style.display = "block";
 
-      document.getElementById("result").style.display =
-        "none";
+      document.getElementById("result").style.display = "none";
 
       window.scrollTo({
         top: 0,
@@ -1154,16 +1076,9 @@
     }
 
 
-    /*
-      ==========================================================
-      SHOW QUESTION
-      ==========================================================
-    */
-
     function showQuestion() {
 
-      const q =
-        questions[currentQuestion];
+      const q = questions[currentQuestion];
 
       document.getElementById("question").textContent =
         q.question;
@@ -1173,20 +1088,16 @@
 
       answersContainer.innerHTML = "";
 
-
       q.answers.forEach(answer => {
 
         const button =
           document.createElement("button");
 
-        button.className =
-          "answer";
+        button.className = "answer";
 
-        button.type =
-          "button";
+        button.type = "button";
 
-        button.textContent =
-          answer.text;
+        button.textContent = answer.text;
 
         button.onclick =
           () => chooseAnswer(answer);
@@ -1194,7 +1105,6 @@
         answersContainer.appendChild(button);
 
       });
-
 
       const progress =
         ((currentQuestion + 1) / questions.length) * 100;
@@ -1204,36 +1114,19 @@
     }
 
 
-    /*
-      ==========================================================
-      SELECT ANSWER
-      ==========================================================
-    */
-
     function chooseAnswer(answer) {
 
-      totalScore +=
-        answer.points;
+      totalScore += answer.points;
 
       selectedAnswers.push({
-        question:
-          questions[currentQuestion].question,
-
-        answer:
-          answer.text,
-
-        points:
-          answer.points
+        question: questions[currentQuestion].question,
+        answer: answer.text,
+        points: answer.points
       });
-
 
       currentQuestion++;
 
-
-      if (
-        currentQuestion <
-        questions.length
-      ) {
+      if (currentQuestion < questions.length) {
 
         showQuestion();
 
@@ -1245,12 +1138,6 @@
     }
 
 
-    /*
-      ==========================================================
-      CREATE AUTH UI
-      ==========================================================
-    */
-
     function createAuthUI() {
 
       const navActions =
@@ -1258,37 +1145,26 @@
 
       if (!navActions) return;
 
-
       const authButton =
         document.createElement("button");
 
-      authButton.id =
-        "authButton";
+      authButton.id = "authButton";
 
-      authButton.className =
-        "btn btn-secondary";
+      authButton.className = "btn btn-secondary";
 
-      authButton.type =
-        "button";
+      authButton.type = "button";
 
-      authButton.textContent =
-        "Log in";
+      authButton.textContent = "Log in";
 
-      authButton.onclick =
-        openAuthModal;
+      authButton.onclick = openAuthModal;
 
-
-      navActions.prepend(
-        authButton
-      );
+      navActions.prepend(authButton);
 
 
       const modal =
         document.createElement("div");
 
-      modal.id =
-        "authModal";
-
+      modal.id = "authModal";
 
       modal.innerHTML = `
 
@@ -1311,16 +1187,13 @@
               ×
             </button>
 
-
             <div class="eyebrow">
               SECURELY ACCOUNT
             </div>
 
-
             <h2 id="authTitle">
               Welcome back.
             </h2>
-
 
             <p
               class="auth-subtitle"
@@ -1328,7 +1201,6 @@
             >
               Log in to save your security assessments.
             </p>
-
 
             <input
               id="authEmail"
@@ -1338,7 +1210,6 @@
               autocomplete="email"
             />
 
-
             <input
               id="authPassword"
               class="auth-input"
@@ -1346,7 +1217,6 @@
               placeholder="Password"
               autocomplete="current-password"
             />
-
 
             <button
               id="authSubmit"
@@ -1357,12 +1227,10 @@
               Log in
             </button>
 
-
             <p
               id="authMessage"
               class="auth-message"
             ></p>
-
 
             <button
               id="authToggle"
@@ -1376,37 +1244,22 @@
           </div>
 
         </div>
-
       `;
 
-
-      document.body.appendChild(
-        modal
-      );
+      document.body.appendChild(modal);
     }
 
-
-    /*
-      ==========================================================
-      OPEN AUTH MODAL
-      ==========================================================
-    */
 
     function openAuthModal() {
 
       const modal =
-        document.getElementById(
-          "authModal"
-        );
+        document.getElementById("authModal");
 
       if (!modal) return;
 
-
       modal.querySelector(
         ".auth-overlay"
-      ).style.display =
-        "flex";
-
+      ).style.display = "flex";
 
       document.getElementById(
         "authEmail"
@@ -1414,45 +1267,27 @@
     }
 
 
-    /*
-      ==========================================================
-      CLOSE AUTH MODAL
-      ==========================================================
-    */
-
     function closeAuthModal(event) {
 
       if (
         event &&
         event.target &&
-        !event.target.classList.contains(
-          "auth-overlay"
-        )
+        !event.target.classList.contains("auth-overlay")
       ) {
         return;
       }
 
-
       const modal =
-        document.getElementById(
-          "authModal"
-        );
+        document.getElementById("authModal");
 
       if (modal) {
 
         modal.querySelector(
           ".auth-overlay"
-        ).style.display =
-          "none";
+        ).style.display = "none";
       }
     }
 
-
-    /*
-      ==========================================================
-      TOGGLE LOGIN / SIGNUP
-      ==========================================================
-    */
 
     function toggleAuthMode() {
 
@@ -1461,35 +1296,22 @@
           ? "signup"
           : "login";
 
-
       const title =
-        document.getElementById(
-          "authTitle"
-        );
+        document.getElementById("authTitle");
 
       const subtitle =
-        document.getElementById(
-          "authSubtitle"
-        );
+        document.getElementById("authSubtitle");
 
       const submit =
-        document.getElementById(
-          "authSubmit"
-        );
+        document.getElementById("authSubmit");
 
       const toggle =
-        document.getElementById(
-          "authToggle"
-        );
+        document.getElementById("authToggle");
 
       const message =
-        document.getElementById(
-          "authMessage"
-        );
-
+        document.getElementById("authMessage");
 
       message.textContent = "";
-
 
       if (authMode === "login") {
 
@@ -1522,37 +1344,19 @@
     }
 
 
-    /*
-      ==========================================================
-      HANDLE LOGIN / SIGNUP
-      ==========================================================
-    */
-
     async function handleAuth() {
 
       const email =
-        document.getElementById(
-          "authEmail"
-        ).value.trim();
-
+        document.getElementById("authEmail").value.trim();
 
       const password =
-        document.getElementById(
-          "authPassword"
-        ).value;
-
+        document.getElementById("authPassword").value;
 
       const message =
-        document.getElementById(
-          "authMessage"
-        );
-
+        document.getElementById("authMessage");
 
       const submit =
-        document.getElementById(
-          "authSubmit"
-        );
-
+        document.getElementById("authSubmit");
 
       if (!email || !password) {
 
@@ -1562,7 +1366,6 @@
         return;
       }
 
-
       if (password.length < 6) {
 
         message.textContent =
@@ -1571,12 +1374,10 @@
         return;
       }
 
-
       submit.disabled = true;
 
       message.textContent =
         "Connecting securely...";
-
 
       try {
 
@@ -1591,16 +1392,13 @@
               password
             });
 
-
           if (error) {
             throw error;
           }
 
-
           if (data.session) {
 
-            currentUser =
-              data.user;
+            currentUser = data.user;
 
             closeAuthModal();
 
@@ -1623,20 +1421,16 @@
               password
             });
 
-
           if (error) {
             throw error;
           }
 
-
-          currentUser =
-            data.user;
+          currentUser = data.user;
 
           closeAuthModal();
 
           updateAuthUI();
         }
-
 
       } catch (error) {
 
@@ -1645,31 +1439,22 @@
           error
         );
 
-
         message.textContent =
           error.message ||
           "Authentication failed. Please try again.";
 
       } finally {
 
-        submit.disabled =
-          false;
+        submit.disabled = false;
       }
     }
 
-
-    /*
-      ==========================================================
-      LOAD CURRENT USER
-      ==========================================================
-    */
 
     async function loadCurrentUser() {
 
       if (!supabaseClient) {
         return;
       }
-
 
       try {
 
@@ -1680,13 +1465,10 @@
         } =
           await supabaseClient.auth.getSession();
 
-
         currentUser =
           session?.user || null;
 
-
         updateAuthUI();
-
 
         supabaseClient.auth.onAuthStateChange(
           (_event, session) => {
@@ -1699,7 +1481,6 @@
           }
         );
 
-
       } catch (error) {
 
         console.error(
@@ -1710,49 +1491,30 @@
     }
 
 
-    /*
-      ==========================================================
-      UPDATE AUTH BUTTON
-      ==========================================================
-    */
-
     function updateAuthUI() {
 
       const button =
-        document.getElementById(
-          "authButton"
-        );
-
+        document.getElementById("authButton");
 
       if (!button) {
         return;
       }
 
-
       if (currentUser) {
 
-        button.textContent =
-          "Log out";
+        button.textContent = "Log out";
 
-        button.onclick =
-          logoutUser;
-
+        button.onclick = logoutUser;
 
         const existingLabel =
-          document.querySelector(
-            ".account-label"
-          );
-
+          document.querySelector(".account-label");
 
         if (!existingLabel) {
 
           const label =
-            document.createElement(
-              "span"
-            );
+            document.createElement("span");
 
-          label.className =
-            "account-label";
+          label.className = "account-label";
 
           label.textContent =
             currentUser.email || "";
@@ -1764,18 +1526,12 @@
 
       } else {
 
-        button.textContent =
-          "Log in";
+        button.textContent = "Log in";
 
-        button.onclick =
-          openAuthModal;
-
+        button.onclick = openAuthModal;
 
         const label =
-          document.querySelector(
-            ".account-label"
-          );
-
+          document.querySelector(".account-label");
 
         if (label) {
           label.remove();
@@ -1783,12 +1539,6 @@
       }
     }
 
-
-    /*
-      ==========================================================
-      LOG OUT
-      ==========================================================
-    */
 
     async function logoutUser() {
 
@@ -1799,17 +1549,13 @@
         } =
           await supabaseClient.auth.signOut();
 
-
         if (error) {
           throw error;
         }
 
-
-        currentUser =
-          null;
+        currentUser = null;
 
         updateAuthUI();
-
 
       } catch (error) {
 
@@ -1823,26 +1569,22 @@
 
     /*
       ==========================================================
-      SUPABASE CONNECTION TEST
+      REAL SUPABASE ASSESSMENT SAVE
       ==========================================================
     */
 
     async function saveAssessmentToSupabase() {
 
       const status =
-        document.getElementById(
-          "saveStatus"
-        );
-
+        document.getElementById("saveStatus");
 
       if (!supabaseClient) {
 
         status.textContent =
-          "Assessment completed. Supabase is not initialized.";
+          "Assessment completed, but Supabase is not initialized.";
 
         return;
       }
-
 
       if (!currentUser) {
 
@@ -1852,81 +1594,378 @@
         return;
       }
 
+      status.textContent =
+        "Saving your assessment securely...";
 
       try {
 
+        /*
+          1. Find the user's business.
+        */
+
+        let businessId = null;
+
         const {
-          error
+          data: existingBusiness,
+          error: businessLookupError
         } =
           await supabaseClient
             .from("businesses")
             .select("id")
-            .limit(1);
+            .eq("user_id", currentUser.id)
+            .limit(1)
+            .maybeSingle();
 
+        if (businessLookupError) {
+          throw businessLookupError;
+        }
 
-        if (error) {
+        if (existingBusiness) {
 
-          console.warn(
-            "Supabase database response:",
-            error
-          );
+          businessId =
+            existingBusiness.id;
 
+        } else {
 
-          if (
-            error.code === "42501" ||
-            error.code === "PGRST116"
-          ) {
+          /*
+            2. Create a business for the account
+               if one does not exist yet.
+          */
 
-            status.textContent =
-              "Assessment completed. Your Securely account is connected.";
+          const {
+            data: newBusiness,
+            error: businessCreateError
+          } =
+            await supabaseClient
+              .from("businesses")
+              .insert({
+                user_id: currentUser.id,
+                business_name: "My Business",
+                industry: "General"
+              })
+              .select("id")
+              .single();
 
-          } else {
-
-            status.textContent =
-              "Assessment completed. Your account is connected, but database access needs configuration.";
+          if (businessCreateError) {
+            throw businessCreateError;
           }
 
-
-          return;
+          businessId =
+            newBusiness.id;
         }
 
 
+        /*
+          3. Create the assessment.
+        */
+
+        let riskLevel = "High";
+
+        if (totalScore >= 80) {
+          riskLevel = "Low";
+        } else if (totalScore >= 60) {
+          riskLevel = "Medium";
+        }
+
+        const {
+          data: assessment,
+          error: assessmentError
+        } =
+          await supabaseClient
+            .from("assessments")
+            .insert({
+              business_id: businessId,
+              score: totalScore,
+              risk_level: riskLevel
+            })
+            .select("id")
+            .single();
+
+        if (assessmentError) {
+          throw assessmentError;
+        }
+
+
+        /*
+          4. Save every answer.
+        */
+
+        const answerRows =
+          selectedAnswers.map((item, index) => ({
+            assessment_id: assessment.id,
+            question_id: index + 1,
+            answer: item.answer,
+            points: item.points
+          }));
+
+        const {
+          error: answersError
+        } =
+          await supabaseClient
+            .from("assessment_answers")
+            .insert(answerRows);
+
+        if (answersError) {
+          throw answersError;
+        }
+
+
+        /*
+          5. Create risks based on the answers.
+        */
+
+        const riskDefinitions = [
+
+          {
+            question: 1,
+            title: "MFA coverage",
+            description:
+              "Multi-factor authentication is not enabled across all important accounts.",
+            severity: "High",
+            recommendation:
+              "Enable MFA on every important business account."
+          },
+
+          {
+            question: 2,
+            title: "Backup readiness",
+            description:
+              "Important business data may not have sufficiently tested backups.",
+            severity: "High",
+            recommendation:
+              "Create and regularly test reliable backups."
+          },
+
+          {
+            question: 3,
+            title: "Device updates",
+            description:
+              "Security updates may not be applied consistently.",
+            severity: "Medium",
+            recommendation:
+              "Create a regular process for applying security updates."
+          },
+
+          {
+            question: 4,
+            title: "Incident response",
+            description:
+              "The business does not have a documented incident-response plan.",
+            severity: "High",
+            recommendation:
+              "Create a simple incident-response plan."
+          },
+
+          {
+            question: 5,
+            title: "AI data handling",
+            description:
+              "Employees may not have clear rules for what information can be entered into AI tools.",
+            severity: "Medium",
+            recommendation:
+              "Define clear rules for what employees may enter into AI tools."
+          },
+
+          {
+            question: 6,
+            title: "Security awareness",
+            description:
+              "Cybersecurity awareness training may not happen consistently.",
+            severity: "Medium",
+            recommendation:
+              "Provide basic cybersecurity awareness training regularly."
+          },
+
+          {
+            question: 7,
+            title: "Sensitive information access",
+            description:
+              "Access to sensitive information may not be reviewed consistently.",
+            severity: "High",
+            recommendation:
+              "Review employee access to sensitive information."
+          },
+
+          {
+            question: 8,
+            title: "Employee offboarding",
+            description:
+              "Access removal may not follow a formal documented process.",
+            severity: "Medium",
+            recommendation:
+              "Create a documented process for removing access when employees leave."
+          },
+
+          {
+            question: 9,
+            title: "Email security",
+            description:
+              "Company email accounts may not have comprehensive security protections.",
+            severity: "Medium",
+            recommendation:
+              "Strengthen security rules and protections for company email."
+          },
+
+          {
+            question: 10,
+            title: "Security reviews",
+            description:
+              "Cybersecurity practices may not be reviewed regularly.",
+            severity: "Medium",
+            recommendation:
+              "Review cybersecurity practices at least annually."
+          }
+
+        ];
+
+
+        const riskRows = [];
+
+        selectedAnswers.forEach((answer, index) => {
+
+          if (answer.points < 10) {
+
+            const definition =
+              riskDefinitions[index];
+
+            riskRows.push({
+              assessment_id: assessment.id,
+              title: definition.title,
+              description: definition.description,
+              severity:
+                answer.points === 0
+                  ? "High"
+                  : definition.severity,
+              recommendation:
+                definition.recommendation
+            });
+          }
+        });
+
+
+        if (riskRows.length > 0) {
+
+          const {
+            error: risksError
+          } =
+            await supabaseClient
+              .from("risks")
+              .insert(riskRows);
+
+          if (risksError) {
+            throw risksError;
+          }
+        }
+
+
+        /*
+          6. Save the priority action plan.
+        */
+
+        const actionDefinitions = [
+
+          {
+            title:
+              "Enable MFA on every important business account.",
+            description:
+              "Protect important accounts with multi-factor authentication.",
+            priority: 1
+          },
+
+          {
+            title:
+              "Create and regularly test reliable backups.",
+            description:
+              "Make sure important data can actually be recovered when needed.",
+            priority: 2
+          },
+
+          {
+            title:
+              "Create a simple incident-response plan.",
+            description:
+              "Document what the business should do if a security incident occurs.",
+            priority: 3
+          },
+
+          {
+            title:
+              "Define clear rules for what employees may enter into AI tools.",
+            description:
+              "Create practical rules for protecting sensitive information when using AI.",
+            priority: 4
+          },
+
+          {
+            title:
+              "Review employee access to sensitive information.",
+            description:
+              "Make sure employees only have the access they need.",
+            priority: 5
+          }
+
+        ];
+
+
+        const actionRows =
+          actionDefinitions.map(action => ({
+            assessment_id: assessment.id,
+            title: action.title,
+            description: action.description,
+            priority: action.priority,
+            completed: false
+          }));
+
+
+        const {
+          error: actionsError
+        } =
+          await supabaseClient
+            .from("actions")
+            .insert(actionRows);
+
+        if (actionsError) {
+          throw actionsError;
+        }
+
+
+        /*
+          Everything saved successfully.
+        */
+
         status.textContent =
-          "Assessment completed. Your Securely account is connected.";
+          "Assessment saved to your Securely account.";
 
       } catch (error) {
 
         console.error(
-          "Supabase connection error:",
+          "Assessment save error:",
           error
         );
 
-
         status.textContent =
-          "Assessment completed. Your account is connected, but the database could not be verified.";
+          "Assessment completed, but it could not be saved yet.";
+
+        console.error(
+          "Supabase details:",
+          error.message,
+          error.code,
+          error.details,
+          error.hint
+        );
       }
     }
 
-
-    /*
-      ==========================================================
-      SHOW RESULT
-      ==========================================================
-    */
 
     function showResult() {
 
       document.getElementById(
         "assessment"
-      ).style.display =
-        "none";
-
+      ).style.display = "none";
 
       document.getElementById(
         "result"
-      ).style.display =
-        "block";
-
+      ).style.display = "block";
 
       document.getElementById(
         "finalScore"
@@ -1935,7 +1974,6 @@
 
 
       let message;
-
 
       if (totalScore >= 80) {
 
@@ -1961,10 +1999,7 @@
 
 
       const actions =
-        document.getElementById(
-          "actions"
-        );
-
+        document.getElementById("actions");
 
       actions.innerHTML = "";
 
@@ -1988,84 +2023,52 @@
         (recommendation, index) => {
 
           const item =
-            document.createElement(
-              "div"
-            );
+            document.createElement("div");
 
-
-          item.className =
-            "action";
+          item.className = "action";
 
 
           const number =
-            document.createElement(
-              "div"
-            );
-
+            document.createElement("div");
 
           number.className =
             "action-number";
-
 
           number.textContent =
             index + 1;
 
 
           const content =
-            document.createElement(
-              "div"
-            );
+            document.createElement("div");
 
 
           const title =
-            document.createElement(
-              "strong"
-            );
-
+            document.createElement("strong");
 
           title.textContent =
             recommendation;
 
 
           const description =
-            document.createElement(
-              "p"
-            );
-
+            document.createElement("p");
 
           description.textContent =
             "Recommended based on common small-business security practices.";
 
 
-          content.appendChild(
-            title
-          );
+          content.appendChild(title);
 
-          content.appendChild(
-            description
-          );
+          content.appendChild(description);
 
+          item.appendChild(number);
 
-          item.appendChild(
-            number
-          );
+          item.appendChild(content);
 
-          item.appendChild(
-            content
-          );
-
-
-          actions.appendChild(
-            item
-          );
+          actions.appendChild(item);
 
         }
       );
 
-
-      /*
-        Check the current Supabase account.
-      */
 
       saveAssessmentToSupabase();
 
@@ -2077,12 +2080,6 @@
     }
 
 
-    /*
-      ==========================================================
-      SCROLL TO FEATURES
-      ==========================================================
-    */
-
     function scrollToFeatures() {
 
       document.getElementById(
@@ -2093,12 +2090,6 @@
     }
 
 
-    /*
-      ==========================================================
-      INITIALIZE SECURELY
-      ==========================================================
-    */
-
     createAuthUI();
 
     loadCurrentUser();
@@ -2107,4 +2098,3 @@
 
 </body>
 </html>
-```
