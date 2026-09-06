@@ -1,161 +1,131 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Securely | Cyber Readiness</title>
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("azele-theme") || "system";
+      document.documentElement.dataset.theme = savedTheme;
+    })();
+  </script>
+
+  <title>AZÈLE — Cybersecurity Readiness</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script>
-    const SUPABASE_URL =
-      "https://hcglxmygkuuyxuxaipxg.supabase.co";
-
-    const SUPABASE_PUBLISHABLE_KEY =
-      "sb_publishable_-OvAVJRIlXF_s8fclAvpcw_V3h43ETB";
-
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-      );
-  </script>
-
   <style>
-    /* =========================================================
-       SECURELY — LUXURY DESIGN SYSTEM
-       ========================================================= */
-
     :root {
-      --bg: #f8f7f3;
-      --bg-secondary: #f2f0eb;
-      --surface: #ffffff;
-      --surface-soft: #fbfaf7;
+      --bg: #f7f4ee;
+      --surface: #fffdf9;
+      --surface-2: #f1ede4;
+      --surface-3: #ebe5d9;
 
-      --text: #17181b;
-      --text-secondary: #65666d;
-      --text-muted: #85868c;
+      --text: #171717;
+      --text-soft: #3f403f;
+      --muted: #77756e;
 
-      --border: #e5e2da;
-      --border-strong: #d8d4ca;
+      --border: rgba(25, 24, 21, 0.10);
+      --border-strong: rgba(25, 24, 21, 0.16);
 
-      --gold: #b08a3e;
-      --gold-light: #d4b56a;
-      --gold-soft: rgba(176, 138, 62, 0.10);
+      --gold: #ae8a45;
+      --gold-dark: #8d6e34;
+      --gold-soft: rgba(174, 138, 69, 0.12);
 
-      --button: #18191c;
-      --button-hover: #292a2e;
-      --button-text: #ffffff;
+      --success-bg: #e4efe5;
+      --success-text: #386542;
 
-      --success-bg: #e3f1e6;
-      --success-text: #356d43;
+      --warning-bg: #f4ead1;
+      --warning-text: #80631f;
 
-      --warning-bg: #f7edd2;
-      --warning-text: #88681d;
+      --danger-bg: #f2dddd;
+      --danger-text: #963838;
 
-      --danger-bg: #f7dfdf;
-      --danger-text: #a23939;
+      --shadow-sm: 0 8px 30px rgba(28, 25, 20, 0.05);
+      --shadow-md: 0 18px 60px rgba(28, 25, 20, 0.08);
 
-      --shadow-sm:
-        0 4px 18px rgba(18, 19, 22, 0.045);
+      --radius: 18px;
+      --radius-sm: 12px;
 
-      --shadow-md:
-        0 14px 45px rgba(18, 19, 22, 0.075);
-
-      --shadow-lg:
-        0 25px 80px rgba(18, 19, 22, 0.12);
-
-      --radius-sm: 10px;
-      --radius-md: 16px;
-      --radius-lg: 22px;
-      --radius-xl: 28px;
-
-      --transition:
-        background-color 0.25s ease,
-        color 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+      color-scheme: light;
     }
 
     html[data-theme="dark"] {
-      --bg: #090a0c;
-      --bg-secondary: #0e1013;
-      --surface: #121417;
-      --surface-soft: #17191d;
+      --bg: #0b0b0c;
+      --surface: #121214;
+      --surface-2: #18181a;
+      --surface-3: #202023;
 
-      --text: #f6f4ee;
-      --text-secondary: #a8a8aa;
-      --text-muted: #77787d;
+      --text: #f4f0e8;
+      --text-soft: #d1cdc4;
+      --muted: #9d9a92;
 
-      --border: #282a2f;
-      --border-strong: #36383e;
+      --border: rgba(255, 255, 255, 0.085);
+      --border-strong: rgba(255, 255, 255, 0.14);
 
-      --gold: #d0aa58;
-      --gold-light: #e1c47d;
-      --gold-soft: rgba(208, 170, 88, 0.12);
+      --gold: #c6a55e;
+      --gold-dark: #d4b66f;
+      --gold-soft: rgba(198, 165, 94, 0.13);
 
-      --button: #f5f2e9;
-      --button-hover: #ffffff;
-      --button-text: #121316;
+      --success-bg: rgba(74, 132, 83, 0.18);
+      --success-text: #a7d2ad;
 
-      --success-bg: rgba(63, 128, 78, 0.18);
-      --success-text: #88c995;
+      --warning-bg: rgba(180, 143, 54, 0.17);
+      --warning-text: #e1c47b;
 
-      --warning-bg: rgba(176, 138, 42, 0.17);
-      --warning-text: #dfbf69;
+      --danger-bg: rgba(177, 67, 67, 0.17);
+      --danger-text: #e6a3a3;
 
-      --danger-bg: rgba(174, 61, 61, 0.17);
-      --danger-text: #e48787;
+      --shadow-sm: 0 8px 30px rgba(0, 0, 0, 0.20);
+      --shadow-md: 0 18px 60px rgba(0, 0, 0, 0.30);
 
-      --shadow-sm:
-        0 5px 22px rgba(0, 0, 0, 0.20);
-
-      --shadow-md:
-        0 18px 55px rgba(0, 0, 0, 0.30);
-
-      --shadow-lg:
-        0 30px 90px rgba(0, 0, 0, 0.45);
+      color-scheme: dark;
     }
 
     @media (prefers-color-scheme: dark) {
       html[data-theme="system"] {
-        --bg: #090a0c;
-        --bg-secondary: #0e1013;
-        --surface: #121417;
-        --surface-soft: #17191d;
+        --bg: #0b0b0c;
+        --surface: #121214;
+        --surface-2: #18181a;
+        --surface-3: #202023;
 
-        --text: #f6f4ee;
-        --text-secondary: #a8a8aa;
-        --text-muted: #77787d;
+        --text: #f4f0e8;
+        --text-soft: #d1cdc4;
+        --muted: #9d9a92;
 
-        --border: #282a2f;
-        --border-strong: #36383e;
+        --border: rgba(255, 255, 255, 0.085);
+        --border-strong: rgba(255, 255, 255, 0.14);
 
-        --gold: #d0aa58;
-        --gold-light: #e1c47d;
-        --gold-soft: rgba(208, 170, 88, 0.12);
+        --gold: #c6a55e;
+        --gold-dark: #d4b66f;
+        --gold-soft: rgba(198, 165, 94, 0.13);
 
-        --button: #f5f2e9;
-        --button-hover: #ffffff;
-        --button-text: #121316;
+        --success-bg: rgba(74, 132, 83, 0.18);
+        --success-text: #a7d2ad;
 
-        --success-bg: rgba(63, 128, 78, 0.18);
-        --success-text: #88c995;
+        --warning-bg: rgba(180, 143, 54, 0.17);
+        --warning-text: #e1c47b;
 
-        --warning-bg: rgba(176, 138, 42, 0.17);
-        --warning-text: #dfbf69;
+        --danger-bg: rgba(177, 67, 67, 0.17);
+        --danger-text: #e6a3a3;
 
-        --danger-bg: rgba(174, 61, 61, 0.17);
-        --danger-text: #e48787;
+        color-scheme: dark;
+      }
+    }
+
+    @media (prefers-color-scheme: light) {
+      html[data-theme="system"] {
+        color-scheme: light;
       }
     }
 
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     html {
@@ -163,35 +133,24 @@
     }
 
     body {
-      font-family:
-        Inter,
-        ui-sans-serif,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-      background: var(--bg);
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at 80% -10%,
+          var(--gold-soft),
+          transparent 34%
+        ),
+        var(--bg);
       color: var(--text);
-      line-height: 1.55;
-
-      transition: var(--transition);
-    }
-
-    body,
-    button,
-    input,
-    select {
+      font-family: "DM Sans", sans-serif;
       transition:
         background-color 0.25s ease,
-        color 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+        color 0.25s ease;
     }
 
     button,
-    input,
-    select {
+    input {
       font: inherit;
     }
 
@@ -199,1283 +158,865 @@
       cursor: pointer;
     }
 
-    /* =========================================================
-       NAVBAR
-       ========================================================= */
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    /* NAVBAR */
 
     .navbar {
-      height: 76px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: color-mix(
+        in srgb,
+        var(--bg) 86%,
+        transparent
+      );
+      border-bottom: 1px solid var(--border);
+    }
 
+    .nav-inner {
+      min-height: 76px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-
-      padding: 0 5.5%;
-
-      border-bottom: 1px solid var(--border);
-
-      background:
-        color-mix(
-          in srgb,
-          var(--bg) 82%,
-          transparent
-        );
-
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      gap: 24px;
     }
 
     .logo {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      white-space: nowrap;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 0.015em;
+      line-height: 1;
+    }
+
+    .logo-main {
+      white-space: nowrap;
+    }
+
+    .logo-accent {
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .theme-btn {
+      width: 34px;
+      height: 32px;
+      border: 0;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      background: transparent;
+      transition: all 0.2s ease;
+    }
+
+    .theme-btn:hover {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .theme-btn.active {
+      color: var(--gold-dark);
+      background: var(--gold-soft);
+    }
+
+    .theme-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .auth-area {
       display: flex;
       align-items: center;
       gap: 10px;
-
-      font-size: 21px;
-      font-weight: 800;
-
-      letter-spacing: -0.8px;
     }
 
-    .logo-mark {
-      width: 30px;
-      height: 30px;
-
-      display: grid;
-      place-items: center;
-
-      border-radius: 9px;
-
-      background:
-        linear-gradient(
-          145deg,
-          var(--gold-light),
-          var(--gold)
-        );
-
-      color: #17181b;
-
+    .user-email {
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
       font-size: 13px;
-      font-weight: 900;
-
-      box-shadow:
-        0 5px 18px
-        rgba(176, 138, 62, 0.18);
     }
 
-    .logo span {
-      color: var(--gold);
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
+    /* BUTTONS */
 
     .btn {
       border: 1px solid transparent;
-      border-radius: 11px;
-
-      padding: 11px 17px;
-
-      font-weight: 700;
-      font-size: 13px;
-
-      letter-spacing: -0.1px;
-
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 600;
       transition:
         transform 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
     }
 
     .btn:hover {
       transform: translateY(-1px);
     }
 
-    .btn:active {
-      transform: translateY(0);
-    }
-
     .btn-primary {
-      background: var(--button);
-      color: var(--button-text);
-
-      box-shadow:
-        0 7px 20px rgba(0, 0, 0, 0.08);
+      color: #fffdf8;
+      background: var(--text);
+      border-color: var(--text);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
     }
 
     .btn-primary:hover {
-      background: var(--button-hover);
-      box-shadow:
-        0 10px 26px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+    }
+
+    .btn-gold {
+      color: #fffdf8;
+      background: var(--gold-dark);
+      border-color: var(--gold-dark);
+      box-shadow: 0 8px 24px rgba(174, 138, 69, 0.18);
     }
 
     .btn-secondary {
-      background: var(--surface);
       color: var(--text);
-
-      border-color: var(--border);
+      background: var(--surface);
+      border-color: var(--border-strong);
     }
 
     .btn-secondary:hover {
-      border-color: var(--border-strong);
-      background: var(--surface-soft);
+      background: var(--surface-2);
     }
 
-    /* =========================================================
-       THEME SELECTOR
-       ========================================================= */
-
-    .theme-wrapper {
-      position: relative;
+    .btn-danger {
+      color: var(--danger-text);
+      background: var(--danger-bg);
+      border-color: transparent;
     }
 
-    .theme-button {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      height: 42px;
-
-      padding: 0 12px;
-
-      background: var(--surface);
-      color: var(--text);
-
-      border: 1px solid var(--border);
-      border-radius: 11px;
-
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .theme-button:hover {
-      border-color: var(--border-strong);
-      background: var(--surface-soft);
-    }
-
-    .theme-icon {
-      font-size: 15px;
-      line-height: 1;
-    }
-
-    .theme-chevron {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .theme-menu {
-      position: absolute;
-
-      top: calc(100% + 9px);
-      right: 0;
-
-      width: 175px;
-
-      padding: 7px;
-
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-      border-radius: 14px;
-
-      box-shadow: var(--shadow-md);
-
-      display: none;
-
-      animation: themeMenuIn 0.16s ease;
-    }
-
-    .theme-menu.open {
-      display: block;
-    }
-
-    @keyframes themeMenuIn {
-      from {
-        opacity: 0;
-        transform: translateY(-5px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .theme-option {
-      width: 100%;
-
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      padding: 10px 11px;
-
-      border: 0;
-      border-radius: 9px;
-
-      background: transparent;
-      color: var(--text);
-
-      text-align: left;
-
-      font-size: 13px;
-      font-weight: 650;
-    }
-
-    .theme-option:hover {
-      background: var(--gold-soft);
-    }
-
-    .theme-option.active {
-      background: var(--gold-soft);
-      color: var(--gold);
-    }
-
-    .theme-option-check {
-      margin-left: auto;
-      opacity: 0;
-    }
-
-    .theme-option.active .theme-option-check {
-      opacity: 1;
-    }
-
-    /* =========================================================
-       HERO
-       ========================================================= */
+    /* HERO */
 
     .hero {
-      max-width: 1180px;
-
-      margin: auto;
-
-      padding:
-        105px 5.5%
-        90px;
-
-      display: grid;
-
-      grid-template-columns:
-        minmax(0, 1.08fr)
-        minmax(350px, 0.82fr);
-
-      gap: 70px;
-
-      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 110px 0 100px;
     }
 
-    .hero-copy {
-      max-width: 690px;
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 560px;
+      height: 560px;
+      right: -180px;
+      top: -260px;
+      background: radial-gradient(
+        circle,
+        var(--gold-soft),
+        transparent 68%
+      );
+      pointer-events: none;
     }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 9px;
-
-      color: var(--gold);
-
-      font-size: 11px;
-      font-weight: 800;
-
-      letter-spacing: 1.7px;
-
+      color: var(--gold-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-
-      margin-bottom: 18px;
+      margin-bottom: 22px;
     }
 
     .eyebrow::before {
       content: "";
-
-      width: 22px;
+      width: 28px;
       height: 1px;
-
       background: var(--gold);
     }
 
-    h1 {
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size:
-        clamp(46px, 6vw, 76px);
-
-      line-height: 0.98;
-
-      letter-spacing: -3.7px;
-
-      font-weight: 500;
-
-      margin-bottom: 27px;
-
-      max-width: 720px;
+    .hero h1 {
+      max-width: 850px;
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(58px, 8vw, 96px);
+      font-weight: 600;
+      letter-spacing: -0.045em;
+      line-height: 0.88;
     }
 
-    .hero p {
-      color: var(--text-secondary);
+    .hero h1 span {
+      color: var(--gold);
+    }
 
-      font-size: 17px;
-
-      line-height: 1.75;
-
-      max-width: 620px;
-
-      margin-bottom: 32px;
+    .hero-copy {
+      max-width: 650px;
+      margin: 28px 0 34px;
+      color: var(--text-soft);
+      font-size: 18px;
+      line-height: 1.7;
     }
 
     .hero-actions {
       display: flex;
-      gap: 11px;
       flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .hero-actions .btn {
-      padding: 13px 19px;
-    }
-
-    /* =========================================================
-       SECURITY CARD
-       ========================================================= */
-
-    .security-card {
-      position: relative;
-
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-
-      border-radius: var(--radius-xl);
-
-      padding: 31px;
-
-      box-shadow: var(--shadow-lg);
-
-      overflow: hidden;
-    }
-
-    .security-card::before {
-      content: "";
-
-      position: absolute;
-
-      width: 190px;
-      height: 190px;
-
-      top: -100px;
-      right: -80px;
-
-      background:
-        radial-gradient(
-          circle,
-          var(--gold-soft),
-          transparent 70%
-        );
-
-      pointer-events: none;
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      margin-bottom: 24px;
-    }
-
-    .card-label {
-      color: var(--text-muted);
-
-      font-size: 10px;
-      font-weight: 800;
-
-      letter-spacing: 1.4px;
-    }
-
-    .live-indicator {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-
-      color: var(--success-text);
-
-      font-size: 10px;
-      font-weight: 750;
-
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-
-    .live-dot {
-      width: 6px;
-      height: 6px;
-
-      border-radius: 50%;
-
-      background: var(--success-text);
-    }
-
-    .score {
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 68px;
-
-      font-weight: 500;
-
-      letter-spacing: -4px;
-
-      line-height: 1;
-    }
-
-    .score span {
-      font-family:
-        Inter,
-        sans-serif;
-
-      font-size: 17px;
-
-      color: var(--text-muted);
-
-      letter-spacing: 0;
-
-      margin-left: 4px;
-    }
-
-    .score-caption {
-      color: var(--text-secondary);
-
-      font-size: 12px;
-
-      margin-top: 7px;
-    }
-
-    .score-bar {
-      height: 7px;
-
-      background: var(--bg-secondary);
-
-      border-radius: 99px;
-
-      overflow: hidden;
-
-      margin: 22px 0 25px;
-    }
-
-    .score-fill {
-      height: 100%;
-
-      width: 72%;
-
-      background:
-        linear-gradient(
-          90deg,
-          var(--gold),
-          var(--gold-light)
-        );
-
-      border-radius: inherit;
-    }
-
-    .risk {
-      display: flex;
-
-      justify-content: space-between;
-      align-items: center;
-
-      padding: 14px 0;
-
-      border-top: 1px solid var(--border);
-
-      font-size: 13px;
-    }
-
-    .risk strong {
-      font-size: 13px;
-      font-weight: 650;
-    }
-
-    .pill {
-      border-radius: 99px;
-
-      padding: 5px 9px;
-
-      font-size: 10px;
-
-      font-weight: 800;
-
-      letter-spacing: 0.3px;
-    }
-
-    .high {
-      background: var(--danger-bg);
-      color: var(--danger-text);
-    }
-
-    .medium {
-      background: var(--warning-bg);
-      color: var(--warning-text);
-    }
-
-    .low {
-      background: var(--success-bg);
-      color: var(--success-text);
-    }
-
-    /* =========================================================
-       FEATURES
-       ========================================================= */
+    /* FEATURES */
 
     .section {
-      max-width: 1180px;
-
-      margin: auto;
-
-      padding:
-        82px 5.5%;
+      padding: 88px 0;
     }
 
-    .section-heading {
-      max-width: 650px;
-
+    .section-header {
+      max-width: 680px;
       margin-bottom: 38px;
     }
 
+    .section-label {
+      color: var(--gold-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
     .section-title {
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 40px;
-
-      font-weight: 500;
-
-      letter-spacing: -1.8px;
-
-      margin-bottom: 10px;
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(42px, 5vw, 64px);
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+      font-weight: 600;
     }
 
-    .section-subtitle {
-      color: var(--text-secondary);
-
-      font-size: 15px;
+    .section-description {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 16px 0 0;
     }
 
-    .features {
+    .features-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
     }
 
-    .feature {
+    .feature-card {
+      min-height: 230px;
+      padding: 28px;
       background: var(--surface);
-
       border: 1px solid var(--border);
-
-      border-radius: var(--radius-lg);
-
-      padding: 27px;
-
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
       transition:
         transform 0.25s ease,
-        box-shadow 0.25s ease,
-        border-color 0.25s ease;
+        box-shadow 0.25s ease;
     }
 
-    .feature:hover {
-      transform: translateY(-4px);
-
-      border-color: var(--border-strong);
-
+    .feature-card:hover {
+      transform: translateY(-3px);
       box-shadow: var(--shadow-md);
     }
 
-    .feature-icon {
-      width: 43px;
-      height: 43px;
-
-      display: grid;
-      place-items: center;
-
-      border-radius: 12px;
-
-      background: var(--gold-soft);
-
+    .feature-number {
       color: var(--gold);
-
-      font-size: 18px;
-
-      margin-bottom: 20px;
-    }
-
-    .feature h3 {
-      font-size: 16px;
-
-      letter-spacing: -0.3px;
-
-      margin-bottom: 8px;
-    }
-
-    .feature p {
-      color: var(--text-secondary);
-
-      font-size: 13px;
-
-      line-height: 1.7;
-    }
-
-    /* =========================================================
-       ASSESSMENT
-       ========================================================= */
-
-    .assessment {
-      display: none;
-
-      max-width: 780px;
-
-      margin: 55px auto;
-
-      padding: 0 5.5%;
-    }
-
-    .assessment-box {
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-
-      border-radius: var(--radius-xl);
-
-      padding: 38px;
-
-      box-shadow: var(--shadow-md);
-    }
-
-    .assessment-box h2 {
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 32px;
-
-      font-weight: 500;
-
-      letter-spacing: -1.2px;
-
-      margin-bottom: 5px;
-    }
-
-    .assessment-helper {
-      color: var(--text-secondary);
-
-      font-size: 13px;
-
-      margin-bottom: 5px;
-    }
-
-    .progress {
-      height: 5px;
-
-      background: var(--bg-secondary);
-
-      border-radius: 99px;
-
-      margin: 23px 0 33px;
-
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-
-      width: 10%;
-
-      background:
-        linear-gradient(
-          90deg,
-          var(--gold),
-          var(--gold-light)
-        );
-
-      transition: width 0.3s ease;
-    }
-
-    .question {
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 25px;
-
-      line-height: 1.3;
-
-      font-weight: 500;
-
-      letter-spacing: -0.7px;
-
-      margin-bottom: 23px;
-    }
-
-    .answers {
-      display: grid;
-
-      gap: 10px;
-    }
-
-    .answer {
-      width: 100%;
-
-      text-align: left;
-
-      padding: 16px 17px;
-
-      background: var(--surface-soft);
-
-      color: var(--text);
-
-      border: 1px solid var(--border);
-
-      border-radius: 12px;
-
-      font-size: 13px;
-
-      transition:
-        border-color 0.2s ease,
-        background-color 0.2s ease,
-        transform 0.2s ease;
-    }
-
-    .answer:hover {
-      border-color: var(--gold);
-
-      background: var(--gold-soft);
-
-      transform: translateY(-1px);
-    }
-
-    /* =========================================================
-       RESULTS
-       ========================================================= */
-
-    .result {
-      display: none;
-
-      max-width: 920px;
-
-      margin: 55px auto;
-
-      padding: 0 5.5%;
-    }
-
-    .result-box {
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-
-      border-radius: var(--radius-xl);
-
-      padding: 40px;
-
-      box-shadow: var(--shadow-md);
-    }
-
-    .result-score {
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 76px;
-
-      font-weight: 500;
-
-      letter-spacing: -4px;
-
-      line-height: 1;
-
-      margin-top: 10px;
-    }
-
-    .result-score small {
-      font-family:
-        Inter,
-        sans-serif;
-
-      font-size: 17px;
-
-      letter-spacing: 0;
-
-      color: var(--text-muted);
-    }
-
-    .result-message {
-      color: var(--text-secondary);
-
-      font-size: 14px;
-
-      max-width: 670px;
-
-      line-height: 1.7;
-
-      margin: 10px 0 31px;
-    }
-
-    .priority-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      margin-bottom: 15px;
-    }
-
-    .priority-heading h3 {
-      font-size: 15px;
-      letter-spacing: -0.2px;
-    }
-
-    .actions {
-      display: grid;
-      gap: 10px;
-    }
-
-    .action {
-      border: 1px solid var(--border);
-
-      border-radius: 14px;
-
-      padding: 17px;
-
-      display: flex;
-
-      gap: 14px;
-
-      align-items: flex-start;
-
-      background: var(--surface-soft);
-    }
-
-    .action-number {
-      width: 31px;
-      height: 31px;
-
-      border-radius: 50%;
-
-      background: var(--button);
-
-      color: var(--button-text);
-
-      display: grid;
-
-      place-items: center;
-
-      font-size: 11px;
-
-      font-weight: 800;
-
-      flex-shrink: 0;
-    }
-
-    .action strong {
-      font-size: 13px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 28px;
       font-weight: 700;
     }
 
-    .action p {
-      color: var(--text-secondary);
-
-      font-size: 12px;
-
-      line-height: 1.55;
-
-      margin-top: 4px;
+    .feature-card h3 {
+      margin: 30px 0 10px;
+      font-size: 18px;
     }
 
-    .save-status {
-      margin-top: 19px;
-
-      font-size: 12px;
-
-      color: var(--text-muted);
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
     }
 
-    /* =========================================================
-       AUTH MODAL
-       ========================================================= */
+    /* ASSESSMENT */
 
-    .auth-overlay {
-      position: fixed;
-
-      inset: 0;
-
-      background:
-        rgba(7, 8, 10, 0.62);
-
-      backdrop-filter: blur(12px);
-
-      -webkit-backdrop-filter: blur(12px);
-
+    #assessment-section {
       display: none;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 20px;
-
-      z-index: 100;
     }
 
-    .auth-box {
+    .assessment-shell {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .progress-wrap {
+      margin-bottom: 28px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 9px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .progress-bar {
       width: 100%;
+      height: 4px;
+      overflow: hidden;
+      background: var(--surface-3);
+      border-radius: 999px;
+    }
 
-      max-width: 430px;
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
 
+    .question-card {
+      padding: clamp(26px, 5vw, 48px);
       background: var(--surface);
-
       border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow-md);
+    }
 
-      border-radius: var(--radius-xl);
+    .question-number {
+      color: var(--gold-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
 
-      padding: 34px;
+    .question-card h2 {
+      margin: 0 0 30px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(34px, 5vw, 50px);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
 
-      box-shadow: var(--shadow-lg);
+    .answer-options {
+      display: grid;
+      gap: 10px;
+    }
 
+    .answer-option {
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 20px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      text-align: left;
+      transition: all 0.2s ease;
     }
 
-    .auth-box h2 {
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 31px;
-
-      font-weight: 500;
-
-      letter-spacing: -1.2px;
-
-      margin-bottom: 8px;
+    .answer-option:hover {
+      border-color: var(--gold);
+      background: var(--gold-soft);
+      transform: translateX(2px);
     }
 
-    .auth-subtitle {
-      color: var(--text-secondary);
-
-      font-size: 13px;
-
-      line-height: 1.6;
-
-      margin-bottom: 24px;
+    .answer-option.selected {
+      border-color: var(--gold);
+      background: var(--gold-soft);
+      box-shadow: inset 0 0 0 1px var(--gold);
     }
 
-    .auth-close {
-      position: absolute;
+    .answer-label {
+      font-size: 14px;
+      line-height: 1.5;
+    }
 
-      top: 15px;
-      right: 17px;
+    .answer-points {
+      flex-shrink: 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
 
-      width: 34px;
-      height: 34px;
+    .assessment-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+    }
 
+    /* RESULTS */
+
+    #results-section {
+      display: none;
+    }
+
+    .results-hero {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      align-items: center;
+      padding: 42px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 18px;
+    }
+
+    .score-circle {
+      width: 210px;
+      height: 210px;
+      margin: 0 auto;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-
-      border: 0;
-
-      background: transparent;
-
-      color: var(--text-muted);
-
-      border-radius: 9px;
-
-      font-size: 23px;
-
-      cursor: pointer;
+      position: relative;
+      background:
+        radial-gradient(
+          circle at center,
+          var(--surface) 58%,
+          transparent 59%
+        ),
+        conic-gradient(
+          var(--gold) var(--score-angle, 0deg),
+          var(--surface-3) 0deg
+        );
     }
 
-    .auth-close:hover {
-      background: var(--bg-secondary);
-
-      color: var(--text);
+    .score-inner {
+      text-align: center;
     }
 
-    .auth-input {
-      width: 100%;
+    .score-number {
+      display: block;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 58px;
+      line-height: 0.9;
+      font-weight: 700;
+    }
 
-      padding: 13px 14px;
+    .score-label {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
 
-      margin-bottom: 10px;
+    .results-copy .eyebrow {
+      margin-bottom: 14px;
+    }
 
+    .results-copy h2 {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(42px, 5vw, 60px);
+      line-height: 0.95;
+    }
+
+    .results-copy p {
+      max-width: 600px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .risk-badge {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .risk-low {
+      color: var(--success-text);
+      background: var(--success-bg);
+    }
+
+    .risk-medium {
+      color: var(--warning-text);
+      background: var(--warning-bg);
+    }
+
+    .risk-high {
+      color: var(--danger-text);
+      background: var(--danger-bg);
+    }
+
+    .result-card {
+      padding: 32px;
+      background: var(--surface);
       border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 18px;
+    }
 
-      border-radius: 11px;
+    .result-card h3 {
+      margin: 0 0 22px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 34px;
+      font-weight: 600;
+    }
 
-      background: var(--surface-soft);
+    .priority-list {
+      display: grid;
+      gap: 12px;
+    }
 
-      color: var(--text);
+    .priority-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 14px;
+      padding: 17px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
 
-      outline: none;
+    .priority-number {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--gold-soft);
+      color: var(--gold-dark);
+      font-size: 12px;
+      font-weight: 700;
+    }
 
+    .priority-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .priority-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .save-message {
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-soft);
+      background: var(--surface-2);
       font-size: 13px;
     }
 
-    .auth-input::placeholder {
-      color: var(--text-muted);
+    .results-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
     }
 
-    .auth-input:focus {
-      border-color: var(--gold);
+    /* AUTH MODAL */
 
-      box-shadow:
-        0 0 0 3px var(--gold-soft);
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(10px);
+    }
+
+    .modal-backdrop.open {
+      display: grid;
+    }
+
+    .auth-modal {
+      width: min(440px, 100%);
+      padding: 34px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 20px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.28);
+    }
+
+    .modal-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .modal-top h2 {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 40px;
+      line-height: 0.95;
+    }
+
+    .modal-close {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--muted);
+      background: var(--surface-2);
+      font-size: 18px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 4px;
+      margin-bottom: 20px;
+      background: var(--surface-2);
+      border-radius: 10px;
+    }
+
+    .auth-tab {
+      padding: 10px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .auth-tab.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--text-soft);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      outline: none;
+      background: var(--surface-2);
+      color: var(--text);
+      transition: border-color 0.2s ease;
+    }
+
+    .field input:focus {
+      border-color: var(--gold);
     }
 
     .auth-submit {
       width: 100%;
-
-      margin-top: 5px;
-
-      padding: 13px;
+      margin-top: 8px;
     }
 
-    .auth-submit:disabled {
-      opacity: 0.6;
-
-      cursor: not-allowed;
-    }
-
-    .auth-message {
+    .auth-status {
       min-height: 20px;
-
       margin-top: 13px;
-
-      color: var(--text-secondary);
-
+      color: var(--muted);
       font-size: 12px;
-
       line-height: 1.5;
     }
 
-    .auth-toggle {
-      border: 0;
+    /* FOOTER */
 
-      background: transparent;
-
-      color: var(--gold);
-
-      font-weight: 700;
-
-      cursor: pointer;
-
-      margin-top: 5px;
-
-      padding: 5px 0;
-
+    footer {
+      padding: 36px 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
       font-size: 12px;
     }
 
-    .account-label {
-      color: var(--text-secondary);
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
 
-      font-size: 11px;
-
-      max-width: 180px;
-
-      overflow: hidden;
-
-      text-overflow: ellipsis;
-
+    .footer-logo {
+      font-family: "Cormorant Garamond", serif;
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 700;
       white-space: nowrap;
     }
 
-    /* =========================================================
-       FOOTER
-       ========================================================= */
+    /* TOAST */
 
-    footer {
-      border-top: 1px solid var(--border);
-
-      padding: 34px 6%;
-
-      color: var(--text-muted);
-
-      text-align: center;
-
-      font-size: 11px;
-
-      margin-top: 50px;
-
-      letter-spacing: 0.2px;
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 500;
+      max-width: 380px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      color: var(--text);
+      font-size: 13px;
+      transform: translateY(30px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
     }
 
-    /* =========================================================
-       RESPONSIVE
-       ========================================================= */
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
 
-    @media (max-width: 900px) {
-      .hero {
+    /* RESPONSIVE */
+
+    @media (max-width: 850px) {
+      .features-grid {
         grid-template-columns: 1fr;
-
-        gap: 45px;
-
-        padding-top: 75px;
       }
 
-      .security-card {
-        max-width: 600px;
+      .results-hero {
+        grid-template-columns: 1fr;
+        text-align: center;
       }
 
-      .features {
-        grid-template-columns: 1fr;
+      .results-copy p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .results-copy .eyebrow {
+        justify-content: center;
       }
     }
 
     @media (max-width: 650px) {
-      .navbar {
-        height: 68px;
-
-        padding: 0 4%;
+      .container {
+        width: min(100% - 28px, 1160px);
       }
 
-      .theme-button {
-        width: 42px;
-
-        padding: 0;
-
-        justify-content: center;
+      .nav-inner {
+        min-height: 68px;
+        gap: 10px;
       }
 
-      .theme-button .theme-label,
-      .theme-button .theme-chevron {
-        display: none;
+      .logo {
+        font-size: 27px;
       }
 
-      .nav-actions {
-        gap: 6px;
-      }
-
-      .nav-actions .btn {
-        padding: 9px 11px;
-
-        font-size: 11px;
-      }
-
-      .account-label {
+      .user-email {
         display: none;
       }
 
       .hero {
-        padding:
-          65px 5%
-          60px;
-
-        gap: 35px;
+        padding: 80px 0 70px;
       }
 
-      h1 {
-        font-size: 48px;
-
-        letter-spacing: -2.7px;
+      .hero h1 {
+        font-size: 60px;
       }
 
-      .hero p {
-        font-size: 15px;
-
-        line-height: 1.65;
-      }
-
-      .security-card {
-        padding: 25px;
+      .hero-copy {
+        font-size: 16px;
       }
 
       .section {
-        padding:
-          65px 5%;
+        padding: 65px 0;
       }
 
-      .section-title {
-        font-size: 34px;
+      .question-card,
+      .result-card,
+      .results-hero {
+        padding: 24px;
       }
 
-      .assessment,
-      .result {
-        padding: 0 5%;
-
-        margin-top: 35px;
+      .score-circle {
+        width: 180px;
+        height: 180px;
       }
 
-      .assessment-box,
-      .result-box {
-        padding: 25px;
+      .score-number {
+        font-size: 50px;
       }
 
-      .question {
-        font-size: 22px;
-      }
-
-      .result-score {
-        font-size: 62px;
-      }
-
-      .auth-box {
-        padding: 27px;
-      }
-    }
-
-    @media (max-width: 420px) {
-      .logo {
-        font-size: 18px;
-      }
-
-      .logo-mark {
-        width: 27px;
-        height: 27px;
-      }
-
-      .nav-actions .btn-secondary {
+      .theme-switcher {
         display: none;
       }
 
-      h1 {
-        font-size: 43px;
+      .assessment-controls {
+        flex-direction: column-reverse;
       }
 
-      .hero-actions {
-        flex-direction: column;
-      }
-
-      .hero-actions .btn {
+      .assessment-controls .btn {
         width: 100%;
       }
-    }
 
-    /* =========================================================
-       REDUCED MOTION
-       ========================================================= */
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        transition: none !important;
-        animation: none !important;
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -1483,1655 +1024,1303 @@
 
 <body>
 
-  <!-- =========================================================
-       NAVIGATION
-       ========================================================= -->
-
+  <!-- NAVIGATION -->
   <nav class="navbar">
+    <div class="container nav-inner">
 
-    <div class="logo">
-      <div class="logo-mark">S</div>
+      <a href="#" class="logo" aria-label="AZÈLE home">
+        <span class="logo-main">AZÈL</span><span class="logo-accent">E</span>
+      </a>
 
-      Secure<span>ly</span>
-    </div>
+      <div class="nav-right">
 
-    <div class="nav-actions">
-
-      <!-- THEME SELECTOR -->
-
-      <div class="theme-wrapper">
-
-        <button
-          class="theme-button"
-          id="themeButton"
-          type="button"
-          aria-label="Change theme"
-          aria-expanded="false"
-          onclick="toggleThemeMenu()"
-        >
-
-          <span
-            class="theme-icon"
-            id="themeIcon"
-          >
-            ☀
-          </span>
-
-          <span
-            class="theme-label"
-            id="themeLabel"
-          >
-            Light
-          </span>
-
-          <span class="theme-chevron">
-            ▾
-          </span>
-
-        </button>
-
-        <div
-          class="theme-menu"
-          id="themeMenu"
-        >
-
+        <div class="theme-switcher" aria-label="Theme selection">
           <button
-            class="theme-option"
-            data-theme-option="light"
-            onclick="setTheme('light')"
-            type="button"
+            class="theme-btn"
+            data-theme-choice="light"
+            title="Light"
+            aria-label="Light theme"
           >
-            <span>☀</span>
-            <span>Light</span>
-            <span class="theme-option-check">✓</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+            </svg>
           </button>
 
           <button
-            class="theme-option"
-            data-theme-option="dark"
-            onclick="setTheme('dark')"
-            type="button"
+            class="theme-btn"
+            data-theme-choice="dark"
+            title="Dark"
+            aria-label="Dark theme"
           >
-            <span>☾</span>
-            <span>Dark</span>
-            <span class="theme-option-check">✓</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20.8 15.1A8.5 8.5 0 0 1 8.9 3.2 8.5 8.5 0 1 0 20.8 15.1Z"></path>
+            </svg>
           </button>
 
           <button
-            class="theme-option"
-            data-theme-option="system"
-            onclick="setTheme('system')"
-            type="button"
+            class="theme-btn"
+            data-theme-choice="system"
+            title="System"
+            aria-label="System theme"
           >
-            <span>⌘</span>
-            <span>System</span>
-            <span class="theme-option-check">✓</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="4" width="18" height="13" rx="2"></rect>
+              <path d="M8 21h8M12 17v4"></path>
+            </svg>
           </button>
-
         </div>
 
+        <div id="authArea" class="auth-area"></div>
+
+        <button
+          id="navAssessBtn"
+          class="btn btn-primary"
+          onclick="startAssessment()"
+        >
+          Assess my business
+        </button>
+
       </div>
-
-      <button
-        class="btn btn-secondary"
-        onclick="startAssessment()"
-        type="button"
-      >
-        Assess my business
-      </button>
-
     </div>
-
   </nav>
 
 
-  <!-- =========================================================
-       HOME
-       ========================================================= -->
+  <!-- HERO -->
+  <main>
 
-  <main id="home">
+    <section id="hero-section" class="hero">
+      <div class="container">
 
-    <section class="hero">
-
-      <div class="hero-copy">
-
-        <div class="eyebrow">
-          Cyber readiness for modern businesses
-        </div>
+        <div class="eyebrow">Cybersecurity readiness</div>
 
         <h1>
-          Know what to fix before it becomes a problem.
+          Know where your
+          <span>business</span>
+          stands.
         </h1>
 
-        <p>
-          Securely helps small businesses understand their cybersecurity
-          readiness, identify their biggest risks, and prioritize the
-          actions that matter most.
+        <p class="hero-copy">
+          AZÈLE gives small businesses a clear picture of their cybersecurity
+          readiness, identifies the risks that matter most, and turns those
+          gaps into practical next steps.
         </p>
 
         <div class="hero-actions">
-
           <button
-            class="btn btn-primary"
+            class="btn btn-gold"
             onclick="startAssessment()"
-            type="button"
           >
-            Start free assessment
+            Begin assessment
           </button>
 
           <button
             class="btn btn-secondary"
-            onclick="scrollToFeatures()"
-            type="button"
+            onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})"
           >
-            Explore Securely
+            Explore AZÈLE
           </button>
-
         </div>
 
       </div>
-
-
-      <!-- SECURITY PREVIEW CARD -->
-
-      <div class="security-card">
-
-        <div class="card-top">
-
-          <div class="card-label">
-            SECURITY READINESS
-          </div>
-
-          <div class="live-indicator">
-            <span class="live-dot"></span>
-            Example
-          </div>
-
-        </div>
-
-        <div class="score">
-          72<span>/100</span>
-        </div>
-
-        <div class="score-caption">
-          Current readiness level
-        </div>
-
-        <div class="score-bar">
-          <div class="score-fill"></div>
-        </div>
-
-        <div class="risk">
-          <strong>MFA coverage</strong>
-          <span class="pill low">Good</span>
-        </div>
-
-        <div class="risk">
-          <strong>Backup readiness</strong>
-          <span class="pill medium">Review</span>
-        </div>
-
-        <div class="risk">
-          <strong>Incident response</strong>
-          <span class="pill high">Priority</span>
-        </div>
-
-      </div>
-
     </section>
 
 
-    <!-- =======================================================
-         FEATURES
-         ======================================================= -->
+    <!-- FEATURES -->
+    <section id="features-section" class="section">
+      <div class="container">
 
-    <section
-      class="section"
-      id="features"
-    >
-
-      <div class="section-heading">
-
-        <div class="eyebrow">
-          A clearer security picture
+        <div class="section-header">
+          <div class="section-label">Built for clarity</div>
+          <h2 class="section-title">
+            Security shouldn't require a security degree.
+          </h2>
+          <p class="section-description">
+            AZÈLE turns complicated cybersecurity readiness into a simple,
+            business-friendly assessment.
+          </p>
         </div>
 
-        <h2 class="section-title">
-          Security without the jargon.
-        </h2>
+        <div class="features-grid">
 
-        <p class="section-subtitle">
-          Understand your biggest gaps and what to do next.
-        </p>
+          <article class="feature-card">
+            <div class="feature-number">01</div>
+            <h3>Assess</h3>
+            <p>
+              Answer ten practical questions covering the security controls
+              that matter most to a modern business.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-number">02</div>
+            <h3>Understand</h3>
+            <p>
+              Receive a readiness score and a clear explanation of where your
+              biggest security gaps are.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-number">03</div>
+            <h3>Act</h3>
+            <p>
+              Turn your results into prioritized actions instead of another
+              report that gets forgotten in a folder.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ASSESSMENT -->
+    <section id="assessment-section" class="section">
+      <div class="container assessment-shell">
+
+        <div class="section-header">
+          <div class="section-label">AZÈLE assessment</div>
+          <h2 class="section-title">
+            Let's measure your readiness.
+          </h2>
+          <p class="section-description">
+            Choose the answer that most accurately reflects your current
+            business practices.
+          </p>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-top">
+            <span id="progressText">Question 1 of 10</span>
+            <span id="progressPercent">10%</span>
+          </div>
+
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <div id="questionCard" class="question-card">
+
+          <div id="questionNumber" class="question-number">
+            Question 1
+          </div>
+
+          <h2 id="questionText"></h2>
+
+          <div id="answerOptions" class="answer-options"></div>
+
+          <div class="assessment-controls">
+
+            <button
+              id="previousBtn"
+              class="btn btn-secondary"
+              onclick="previousQuestion()"
+            >
+              Previous
+            </button>
+
+            <button
+              id="nextBtn"
+              class="btn btn-gold"
+              onclick="nextQuestion()"
+            >
+              Continue
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- RESULTS -->
+    <section id="results-section" class="section">
+      <div class="container">
+
+        <div id="resultsHero" class="results-hero">
+
+          <div
+            id="scoreCircle"
+            class="score-circle"
+          >
+            <div class="score-inner">
+              <span id="scoreNumber" class="score-number">0</span>
+              <span class="score-label">out of 100</span>
+            </div>
+          </div>
+
+          <div class="results-copy">
+            <div class="eyebrow">Assessment complete</div>
+
+            <h2>Your security readiness</h2>
+
+            <div id="riskBadge" class="risk-badge">
+              —
+            </div>
+
+            <p id="resultSummary"></p>
+          </div>
+
+        </div>
+
+
+        <div id="saveStatus" class="save-message">
+          Assessment results are being prepared.
+        </div>
+
+
+        <div class="result-card">
+          <h3>Priority actions</h3>
+
+          <div id="priorityList" class="priority-list"></div>
+
+          <div class="results-actions">
+
+            <button
+              class="btn btn-gold"
+              onclick="startAssessment()"
+            >
+              Start another assessment
+            </button>
+
+            <button
+              class="btn btn-secondary"
+              onclick="window.scrollTo({top:0,behavior:'smooth'})"
+            >
+              Back to top
+            </button>
+
+          </div>
+        </div>
 
       </div>
-
-
-      <div class="features">
-
-        <div class="feature">
-
-          <div class="feature-icon">
-            ◇
-          </div>
-
-          <h3>
-            Readiness Score
-          </h3>
-
-          <p>
-            Get a simple 0–100 score based on your business's
-            current security practices.
-          </p>
-
-        </div>
-
-
-        <div class="feature">
-
-          <div class="feature-icon">
-            !
-          </div>
-
-          <h3>
-            Risk Priorities
-          </h3>
-
-          <p>
-            See which security gaps deserve attention first
-            instead of drowning in technical warnings.
-          </p>
-
-        </div>
-
-
-        <div class="feature">
-
-          <div class="feature-icon">
-            ✓
-          </div>
-
-          <h3>
-            Action Plan
-          </h3>
-
-          <p>
-            Turn each security gap into a practical next step
-            your business can actually understand.
-          </p>
-
-        </div>
-
-      </div>
-
     </section>
 
   </main>
 
 
-  <!-- =========================================================
-       ASSESSMENT
-       ========================================================= -->
-
-  <section
-    class="assessment"
-    id="assessment"
-  >
-
-    <div class="assessment-box">
-
-      <div class="eyebrow">
-        Security assessment
-      </div>
-
-      <h2>
-        Let's check your security readiness.
-      </h2>
-
-      <p class="assessment-helper">
-        Ten questions. No technical knowledge required.
-      </p>
-
-      <div class="progress">
-        <div
-          class="progress-fill"
-          id="progressFill"
-        ></div>
-      </div>
-
-      <div
-        class="question"
-        id="question"
-      ></div>
-
-      <div
-        class="answers"
-        id="answers"
-      ></div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================================================
-       RESULTS
-       ========================================================= -->
-
-  <section
-    class="result"
-    id="result"
-  >
-
-    <div class="result-box">
-
-      <div class="eyebrow">
-        Assessment complete
-      </div>
-
-      <h2>
-        Your Security Readiness
-      </h2>
-
-      <div class="result-score">
-
-        <span id="finalScore">
-          0
-        </span>
-
-        <small>
-          /100
-        </small>
-
-      </div>
-
-      <p
-        class="result-message"
-        id="resultMessage"
-      ></p>
-
-
-      <div class="priority-heading">
-
-        <h3>
-          Priority actions
-        </h3>
-
-      </div>
-
-
-      <div
-        class="actions"
-        id="actions"
-      ></div>
-
-
-      <p
-        class="save-status"
-        id="saveStatus"
-      >
-        Assessment results are ready.
-      </p>
-
-
-      <button
-        class="btn btn-primary"
-        style="margin-top:25px;"
-        onclick="location.reload()"
-        type="button"
-      >
-        Start another assessment
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================================================
-       FOOTER
-       ========================================================= -->
-
+  <!-- FOOTER -->
   <footer>
-    Securely © 2026 · Cyber readiness and security education
+    <div class="container footer-inner">
+
+      <div class="footer-logo">
+        AZÈLE
+      </div>
+
+      <div>
+        AZÈLE © 2026 · Cyber readiness and security education
+      </div>
+
+    </div>
   </footer>
 
 
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="modal-backdrop">
+
+    <div class="auth-modal">
+
+      <div class="modal-top">
+
+        <div>
+          <div class="section-label">AZÈLE account</div>
+          <h2 id="authTitle">Welcome back</h2>
+        </div>
+
+        <button
+          class="modal-close"
+          onclick="closeAuthModal()"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="auth-tabs">
+
+        <button
+          id="loginTab"
+          class="auth-tab active"
+          onclick="setAuthMode('login')"
+        >
+          Log in
+        </button>
+
+        <button
+          id="signupTab"
+          class="auth-tab"
+          onclick="setAuthMode('signup')"
+        >
+          Create account
+        </button>
+
+      </div>
+
+
+      <form onsubmit="handleAuth(event)">
+
+        <div
+          id="businessNameField"
+          class="field"
+          style="display:none;"
+        >
+          <label for="businessName">
+            Business name
+          </label>
+
+          <input
+            id="businessName"
+            type="text"
+            placeholder="Your business"
+          />
+        </div>
+
+
+        <div class="field">
+          <label for="authEmail">
+            Email
+          </label>
+
+          <input
+            id="authEmail"
+            type="email"
+            required
+            autocomplete="email"
+            placeholder="you@company.com"
+          />
+        </div>
+
+
+        <div class="field">
+          <label for="authPassword">
+            Password
+          </label>
+
+          <input
+            id="authPassword"
+            type="password"
+            required
+            autocomplete="current-password"
+            placeholder="••••••••"
+          />
+        </div>
+
+
+        <button
+          id="authSubmit"
+          type="submit"
+          class="btn btn-gold auth-submit"
+        >
+          Log in
+        </button>
+
+        <div
+          id="authStatus"
+          class="auth-status"
+        ></div>
+
+      </form>
+
+    </div>
+  </div>
+
+
+  <div id="toast" class="toast"></div>
+
+
   <script>
+    /* ============================================================
+       SUPABASE
+       ============================================================ */
 
-    /* =========================================================
-       THEME SYSTEM
-       ========================================================= */
+    const SUPABASE_URL =
+      "https://YOUR-PROJECT.supabase.co";
 
-    const savedTheme =
-      localStorage.getItem("securely-theme") || "system";
+    const SUPABASE_ANON_KEY =
+      "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
-    applyTheme(savedTheme);
+    let supabaseClient = null;
 
+    try {
+      if (
+        window.supabase &&
+        SUPABASE_URL.includes("supabase.co") &&
+        !SUPABASE_URL.includes("YOUR-PROJECT")
+      ) {
+        supabaseClient =
+          window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+          );
+      }
+    } catch (error) {
+      console.error("Supabase initialization error:", error);
+    }
+
+
+    /* ============================================================
+       THEME
+       ============================================================ */
 
     function applyTheme(theme) {
+      const validThemes = [
+        "light",
+        "dark",
+        "system"
+      ];
 
-      document.documentElement.setAttribute(
-        "data-theme",
-        theme
-      );
-
-      updateThemeUI(theme);
-    }
-
-
-    function setTheme(theme) {
-
-      localStorage.setItem(
-        "securely-theme",
-        theme
-      );
-
-      applyTheme(theme);
-
-      closeThemeMenu();
-    }
-
-
-    function updateThemeUI(theme) {
-
-      const icon =
-        document.getElementById("themeIcon");
-
-      const label =
-        document.getElementById("themeLabel");
-
-      if (!icon || !label) return;
-
-
-      if (theme === "dark") {
-
-        icon.textContent = "☾";
-        label.textContent = "Dark";
-
-      } else if (theme === "system") {
-
-        icon.textContent = "⌘";
-        label.textContent = "System";
-
-      } else {
-
-        icon.textContent = "☀";
-        label.textContent = "Light";
+      if (!validThemes.includes(theme)) {
+        theme = "system";
       }
 
+      document.documentElement.dataset.theme = theme;
+
+      localStorage.setItem(
+        "azele-theme",
+        theme
+      );
 
       document
-        .querySelectorAll(".theme-option")
-        .forEach(option => {
-
-          option.classList.toggle(
+        .querySelectorAll("[data-theme-choice]")
+        .forEach((button) => {
+          button.classList.toggle(
             "active",
-            option.dataset.themeOption === theme
+            button.dataset.themeChoice === theme
           );
-
         });
     }
 
 
-    function toggleThemeMenu() {
-
-      const menu =
-        document.getElementById("themeMenu");
-
-      const button =
-        document.getElementById("themeButton");
-
-      if (!menu || !button) return;
-
-      const isOpen =
-        menu.classList.toggle("open");
-
-      button.setAttribute(
-        "aria-expanded",
-        String(isOpen)
-      );
-    }
+    document
+      .querySelectorAll("[data-theme-choice]")
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          applyTheme(
+            button.dataset.themeChoice
+          );
+        });
+      });
 
 
-    function closeThemeMenu() {
-
-      const menu =
-        document.getElementById("themeMenu");
-
-      const button =
-        document.getElementById("themeButton");
-
-      if (!menu || !button) return;
-
-      menu.classList.remove("open");
-
-      button.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-    }
-
-
-    document.addEventListener(
-      "click",
-      event => {
-
-        const wrapper =
-          document.querySelector(".theme-wrapper");
-
-        if (
-          wrapper &&
-          !wrapper.contains(event.target)
-        ) {
-
-          closeThemeMenu();
-
-        }
-
-      }
+    applyTheme(
+      localStorage.getItem("azele-theme") || "system"
     );
 
 
-    /*
-      When the user chooses System,
-      automatically respond if their operating-system
-      theme changes while the page is open.
-    */
-
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener(
-        "change",
-        () => {
-
-          const theme =
-            localStorage.getItem(
-              "securely-theme"
-            );
-
-          if (theme === "system") {
-            applyTheme("system");
-          }
-
-        }
-      );
-
-
-    /* =========================================================
-       ASSESSMENT QUESTIONS
-       ========================================================= */
+    /* ============================================================
+       QUESTIONS
+       ============================================================ */
 
     const questions = [
-
       {
-        question:
-          "Does your business use multi-factor authentication (MFA) on important accounts?",
-
+        id: 1,
+        text: "Does your business use multi-factor authentication (MFA)?",
         answers: [
           {
-            text: "Yes, on all important accounts",
+            label: "Yes, across important accounts",
             points: 10
           },
           {
-            text: "Only on some accounts",
+            label: "Only for some accounts",
             points: 5
           },
           {
-            text: "No",
+            label: "No",
             points: 0
           }
         ]
       },
-
       {
-        question:
-          "Does your business regularly back up important data?",
-
+        id: 2,
+        text: "Does your business maintain reliable backups?",
         answers: [
           {
-            text: "Yes, with tested backups",
+            label: "Yes, and we test them regularly",
             points: 10
           },
           {
-            text: "We have backups but rarely test them",
+            label: "We have backups but rarely test them",
             points: 5
           },
           {
-            text: "No reliable backup system",
+            label: "No reliable backup process",
             points: 0
           }
         ]
       },
-
       {
-        question:
-          "Are business devices regularly updated with security updates?",
-
+        id: 3,
+        text: "Are business devices regularly updated?",
         answers: [
           {
-            text: "Yes, updates are managed regularly",
+            label: "Yes, automatically or on a defined schedule",
             points: 10
           },
           {
-            text: "Usually",
+            label: "Usually, but not consistently",
             points: 5
           },
           {
-            text: "Not consistently",
+            label: "No defined process",
             points: 0
           }
         ]
       },
-
       {
-        question:
-          "Does your business have a plan for responding to a security incident?",
-
+        id: 4,
+        text: "Does your business have an incident-response plan?",
         answers: [
           {
-            text: "Yes, documented and reviewed",
+            label: "Yes, documented and understood",
             points: 10
           },
           {
-            text: "We have an informal process",
+            label: "We have an informal plan",
             points: 5
           },
           {
-            text: "No",
+            label: "No",
             points: 0
           }
         ]
       },
-
       {
-        question:
-          "Does your business have rules for what employees can enter into AI tools?",
-
+        id: 5,
+        text: "Does your business have rules for what employees may enter into AI tools?",
         answers: [
           {
-            text: "Yes, we have clear guidelines",
+            label: "Yes, with clear guidelines",
             points: 10
           },
           {
-            text: "Some informal guidelines",
+            label: "Some informal guidelines",
             points: 5
           },
           {
-            text: "No",
+            label: "No rules",
             points: 0
           }
         ]
       },
-
       {
-        question:
-          "Are employees given basic cybersecurity awareness training?",
-
+        id: 6,
+        text: "Do employees receive cybersecurity awareness training?",
         answers: [
           {
-            text: "Yes, regularly",
+            label: "Yes, regularly",
             points: 10
           },
           {
-            text: "Occasionally",
+            label: "Occasionally",
             points: 5
           },
           {
-            text: "No",
+            label: "No",
             points: 0
           }
         ]
       },
-
       {
-        question:
-          "Does your business control who has access to sensitive information?",
-
+        id: 7,
+        text: "Is access to sensitive information limited to people who need it?",
         answers: [
           {
-            text: "Yes, access is reviewed regularly",
+            label: "Yes, access is reviewed",
             points: 10
           },
           {
-            text: "Some access controls exist",
+            label: "Mostly, but reviews are inconsistent",
             points: 5
           },
           {
-            text: "Not really",
+            label: "No defined access controls",
             points: 0
           }
         ]
       },
-
       {
-        question:
-          "Does your business have a process for removing access when someone leaves?",
-
+        id: 8,
+        text: "Is employee access removed promptly when someone leaves?",
         answers: [
           {
-            text: "Yes, it is documented",
+            label: "Yes, through a defined offboarding process",
             points: 10
           },
           {
-            text: "Usually",
+            label: "Usually",
             points: 5
           },
           {
-            text: "No formal process",
+            label: "No defined process",
             points: 0
           }
         ]
       },
-
       {
-        question:
-          "Do you have security rules for company email accounts?",
-
+        id: 9,
+        text: "Does your business have strong email security practices?",
         answers: [
           {
-            text: "Yes",
+            label: "Yes, including filtering and account protections",
             points: 10
           },
           {
-            text: "Some protections",
+            label: "Some protections",
             points: 5
           },
           {
-            text: "No",
+            label: "No defined protections",
             points: 0
           }
         ]
       },
-
       {
-        question:
-          "Do you regularly review your business's cybersecurity practices?",
-
+        id: 10,
+        text: "Does your business regularly review its cybersecurity readiness?",
         answers: [
           {
-            text: "Yes, at least annually",
+            label: "Yes, on a defined schedule",
             points: 10
           },
           {
-            text: "Occasionally",
+            label: "Occasionally",
             points: 5
           },
           {
-            text: "No",
+            label: "No",
             points: 0
           }
         ]
       }
-
     ];
 
 
+    /* ============================================================
+       RISK DEFINITIONS
+       ============================================================ */
+
+    const riskDefinitions = {
+      1: {
+        title: "Enable multi-factor authentication",
+        description:
+          "Important accounts should use MFA to reduce the risk of unauthorized access.",
+        severity: "high",
+        recommendation:
+          "Enable MFA for email, administrative accounts, cloud services, and other important systems."
+      },
+
+      2: {
+        title: "Create reliable backups",
+        description:
+          "Backups help your business recover from accidental deletion, outages, ransomware, or other incidents.",
+        severity: "high",
+        recommendation:
+          "Create automated backups and test restoration regularly."
+      },
+
+      3: {
+        title: "Strengthen device update practices",
+        description:
+          "Outdated software can leave known security weaknesses unpatched.",
+        severity: "medium",
+        recommendation:
+          "Turn on automatic updates where possible and establish a regular review process."
+      },
+
+      4: {
+        title: "Create an incident-response plan",
+        description:
+          "Without a response plan, businesses can lose valuable time during a security incident.",
+        severity: "high",
+        recommendation:
+          "Document who to contact, what systems to isolate, and what steps employees should take."
+      },
+
+      5: {
+        title: "Define AI data rules",
+        description:
+          "Employees may accidentally expose confidential information when using AI tools.",
+        severity: "high",
+        recommendation:
+          "Define clear rules for what employees may and may not enter into AI systems."
+      },
+
+      6: {
+        title: "Improve security awareness training",
+        description:
+          "Employees are an important part of a business's security defenses.",
+        severity: "medium",
+        recommendation:
+          "Provide regular training covering phishing, passwords, MFA, suspicious links, and reporting."
+      },
+
+      7: {
+        title: "Review sensitive-data access",
+        description:
+          "Employees should only have access to information required for their work.",
+        severity: "high",
+        recommendation:
+          "Review permissions and remove unnecessary access."
+      },
+
+      8: {
+        title: "Strengthen employee offboarding",
+        description:
+          "Former employees should no longer have access to business systems.",
+        severity: "high",
+        recommendation:
+          "Create a documented process for disabling accounts and recovering business devices."
+      },
+
+      9: {
+        title: "Improve email security",
+        description:
+          "Email remains a common entry point for phishing and account compromise.",
+        severity: "medium",
+        recommendation:
+          "Use strong authentication, spam filtering, and employee phishing awareness."
+      },
+
+      10: {
+        title: "Schedule regular security reviews",
+        description:
+          "Cybersecurity readiness changes as businesses add people, software, and systems.",
+        severity: "medium",
+        recommendation:
+          "Review security controls on a regular schedule and update policies when the business changes."
+      }
+    };
+
+
+    const actionDefinitions = [
+      {
+        title: "Enable MFA",
+        description:
+          "Protect important accounts with multi-factor authentication.",
+        priority: "high"
+      },
+      {
+        title: "Create reliable backups",
+        description:
+          "Maintain backups and test that your business can actually restore them.",
+        priority: "high"
+      },
+      {
+        title: "Create an incident-response plan",
+        description:
+          "Document the steps your team should take during a security incident.",
+        priority: "high"
+      },
+      {
+        title: "Define AI data rules",
+        description:
+          "Set clear rules for what employees can enter into AI tools.",
+        priority: "high"
+      },
+      {
+        title: "Review employee access",
+        description:
+          "Make sure sensitive information is only accessible to people who need it.",
+        priority: "high"
+      }
+    ];
+
+
+    /* ============================================================
+       APP STATE
+       ============================================================ */
+
     let currentQuestion = 0;
 
-    let totalScore = 0;
-
-    let selectedAnswers = [];
-
-    let currentUser = null;
+    let answers = Array(
+      questions.length
+    ).fill(null);
 
     let authMode = "login";
 
+    let currentUser = null;
 
-    /* =========================================================
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    function showToast(message) {
+      const toast =
+        document.getElementById("toast");
+
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(
+        window.__toastTimer
+      );
+
+      window.__toastTimer =
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3200);
+    }
+
+
+    function getRiskLevel(score) {
+      if (score >= 75) {
+        return "low";
+      }
+
+      if (score >= 50) {
+        return "medium";
+      }
+
+      return "high";
+    }
+
+
+    function getRiskLabel(level) {
+      if (level === "low") {
+        return "Low risk";
+      }
+
+      if (level === "medium") {
+        return "Moderate risk";
+      }
+
+      return "High risk";
+    }
+
+
+    /* ============================================================
        START ASSESSMENT
-       ========================================================= */
+       ============================================================ */
 
     function startAssessment() {
-
       currentQuestion = 0;
 
-      totalScore = 0;
-
-      selectedAnswers = [];
-
+      answers = Array(
+        questions.length
+      ).fill(null);
 
       document.getElementById(
-        "home"
+        "hero-section"
       ).style.display = "none";
 
+      document.getElementById(
+        "features-section"
+      ).style.display = "none";
 
       document.getElementById(
-        "assessment"
+        "results-section"
+      ).style.display = "none";
+
+      document.getElementById(
+        "assessment-section"
       ).style.display = "block";
-
-
-      document.getElementById(
-        "result"
-      ).style.display = "none";
-
 
       window.scrollTo({
         top: 0,
         behavior: "smooth"
       });
 
-
-      showQuestion();
+      renderQuestion();
     }
 
 
-    /* =========================================================
-       SHOW QUESTION
-       ========================================================= */
+    /* ============================================================
+       RENDER QUESTION
+       ============================================================ */
 
-    function showQuestion() {
-
-      const q =
+    function renderQuestion() {
+      const question =
         questions[currentQuestion];
 
+      const questionNumber =
+        currentQuestion + 1;
 
       document.getElementById(
-        "question"
+        "questionNumber"
       ).textContent =
-        q.question;
+        `Question ${questionNumber}`;
 
+      document.getElementById(
+        "questionText"
+      ).textContent =
+        question.text;
 
-      const answersContainer =
+      const options =
         document.getElementById(
-          "answers"
+          "answerOptions"
         );
 
+      options.innerHTML = "";
 
-      answersContainer.innerHTML = "";
+      question.answers.forEach(
+        (answer, index) => {
 
+          const button =
+            document.createElement("button");
 
-      q.answers.forEach(answer => {
+          button.type = "button";
+          button.className =
+            "answer-option";
 
-        const button =
-          document.createElement(
-            "button"
+          if (
+            answers[currentQuestion] &&
+            answers[currentQuestion].index === index
+          ) {
+            button.classList.add(
+              "selected"
+            );
+          }
+
+          button.innerHTML = `
+            <span class="answer-label">
+              ${escapeHtml(answer.label)}
+            </span>
+
+            <span class="answer-points">
+              ${answer.points}/10
+            </span>
+          `;
+
+          button.addEventListener(
+            "click",
+            () => {
+              answers[currentQuestion] = {
+                index,
+                points: answer.points,
+                label: answer.label
+              };
+
+              renderQuestion();
+            }
           );
 
-
-        button.className =
-          "answer";
-
-
-        button.type =
-          "button";
+          options.appendChild(button);
+        }
+      );
 
 
-        button.textContent =
-          answer.text;
-
-
-        button.onclick =
-          () => chooseAnswer(answer);
-
-
-        answersContainer.appendChild(
-          button
+      const percent =
+        Math.round(
+          (questionNumber / questions.length) *
+          100
         );
 
-      });
+      document.getElementById(
+        "progressText"
+      ).textContent =
+        `Question ${questionNumber} of ${questions.length}`;
 
-
-      const progress =
-        ((currentQuestion + 1) /
-          questions.length) *
-        100;
-
+      document.getElementById(
+        "progressPercent"
+      ).textContent =
+        `${percent}%`;
 
       document.getElementById(
         "progressFill"
       ).style.width =
-        progress + "%";
+        `${percent}%`;
+
+
+      const previousBtn =
+        document.getElementById(
+          "previousBtn"
+        );
+
+      previousBtn.style.visibility =
+        currentQuestion === 0
+          ? "hidden"
+          : "visible";
+
+
+      const nextBtn =
+        document.getElementById(
+          "nextBtn"
+        );
+
+      nextBtn.textContent =
+        currentQuestion === questions.length - 1
+          ? "Complete assessment"
+          : "Continue";
     }
 
 
-    /* =========================================================
-       CHOOSE ANSWER
-       ========================================================= */
+    /* ============================================================
+       NEXT / PREVIOUS
+       ============================================================ */
 
-    function chooseAnswer(answer) {
-
-      totalScore +=
-        answer.points;
-
-
-      selectedAnswers.push({
-
-        question:
-          questions[currentQuestion]
-            .question,
-
-        answer:
-          answer.text,
-
-        points:
-          answer.points
-
-      });
-
-
-      currentQuestion++;
-
+    function nextQuestion() {
+      if (!answers[currentQuestion]) {
+        showToast(
+          "Please select an answer before continuing."
+        );
+        return;
+      }
 
       if (
         currentQuestion <
-        questions.length
+        questions.length - 1
       ) {
+        currentQuestion++;
+        renderQuestion();
 
-        showQuestion();
+        window.scrollTo({
+          top: document.getElementById(
+            "assessment-section"
+          ).offsetTop - 90,
+          behavior: "smooth"
+        });
 
-      } else {
+        return;
+      }
 
-        showResult();
+      completeAssessment();
+    }
 
+
+    function previousQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
       }
     }
 
 
-    /* =========================================================
-       AUTH UI
-       ========================================================= */
+    /* ============================================================
+       COMPLETE ASSESSMENT
+       ============================================================ */
 
-    function createAuthUI() {
-
-      const navActions =
-        document.querySelector(
-          ".nav-actions"
+    async function completeAssessment() {
+      const totalPoints =
+        answers.reduce(
+          (sum, answer) =>
+            sum +
+            (answer
+              ? answer.points
+              : 0),
+          0
         );
 
-
-      if (!navActions) return;
-
-
-      const authButton =
-        document.createElement(
-          "button"
+      const score =
+        Math.round(
+          (totalPoints /
+            (questions.length * 10)) *
+          100
         );
 
+      const riskLevel =
+        getRiskLevel(score);
 
-      authButton.id =
-        "authButton";
-
-
-      authButton.className =
-        "btn btn-secondary";
-
-
-      authButton.type =
-        "button";
-
-
-      authButton.textContent =
-        "Log in";
-
-
-      authButton.onclick =
-        openAuthModal;
-
-
-      navActions.prepend(
-        authButton
+      showResults(
+        score,
+        riskLevel
       );
 
-
-      const modal =
-        document.createElement(
-          "div"
-        );
-
-
-      modal.id =
-        "authModal";
-
-
-      modal.innerHTML = `
-
-        <div
-          class="auth-overlay"
-          onclick="closeAuthModal(event)"
-        >
-
-          <div
-            class="auth-box"
-            onclick="event.stopPropagation()"
-          >
-
-            <button
-              class="auth-close"
-              type="button"
-              onclick="closeAuthModal()"
-              aria-label="Close"
-            >
-              ×
-            </button>
-
-            <div class="eyebrow">
-              Securely account
-            </div>
-
-            <h2 id="authTitle">
-              Welcome back.
-            </h2>
-
-            <p
-              class="auth-subtitle"
-              id="authSubtitle"
-            >
-              Log in to save your security assessments.
-            </p>
-
-            <input
-              id="authEmail"
-              class="auth-input"
-              type="email"
-              placeholder="Business email"
-              autocomplete="email"
-            />
-
-            <input
-              id="authPassword"
-              class="auth-input"
-              type="password"
-              placeholder="Password"
-              autocomplete="current-password"
-            />
-
-            <button
-              id="authSubmit"
-              class="btn btn-primary auth-submit"
-              type="button"
-              onclick="handleAuth()"
-            >
-              Log in
-            </button>
-
-            <p
-              id="authMessage"
-              class="auth-message"
-            ></p>
-
-            <button
-              id="authToggle"
-              class="auth-toggle"
-              type="button"
-              onclick="toggleAuthMode()"
-            >
-              Need an account? Sign up
-            </button>
-
-          </div>
-
-        </div>
-      `;
-
-
-      document.body.appendChild(
-        modal
+      await saveAssessment(
+        score,
+        riskLevel
       );
     }
 
 
-    function openAuthModal() {
+    /* ============================================================
+       RESULTS
+       ============================================================ */
 
-      const modal =
+    function showResults(
+      score,
+      riskLevel
+    ) {
+      document.getElementById(
+        "assessment-section"
+      ).style.display = "none";
+
+      document.getElementById(
+        "results-section"
+      ).style.display = "block";
+
+      document.getElementById(
+        "scoreNumber"
+      ).textContent = score;
+
+      const scoreCircle =
         document.getElementById(
-          "authModal"
+          "scoreCircle"
         );
 
+      scoreCircle.style.setProperty(
+        "--score-angle",
+        `${score * 3.6}deg`
+      );
 
-      if (!modal) return;
+
+      const badge =
+        document.getElementById(
+          "riskBadge"
+        );
+
+      badge.className =
+        `risk-badge risk-${riskLevel}`;
+
+      badge.textContent =
+        getRiskLabel(riskLevel);
 
 
-      modal.querySelector(
-        ".auth-overlay"
-      ).style.display =
-        "flex";
+      let summary =
+        "Your business has several important security gaps that should be prioritized.";
+
+      if (score >= 75) {
+        summary =
+          "Your business demonstrates a strong security foundation, with a few areas that can still be strengthened.";
+      } else if (score >= 50) {
+        summary =
+          "Your business has a reasonable foundation, but several important security gaps should be prioritized.";
+      }
+
+      document.getElementById(
+        "resultSummary"
+      ).textContent = summary;
+
+
+      renderPriorityActions();
 
 
       document.getElementById(
-        "authEmail"
-      ).focus();
+        "saveStatus"
+      ).textContent =
+        currentUser
+          ? "Saving assessment to your AZÈLE account..."
+          : "Assessment completed. Log in to save your assessment to your AZÈLE account.";
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
     }
 
 
-    function closeAuthModal(event) {
-
-      if (
-        event &&
-        event.target &&
-        !event.target.classList.contains(
-          "auth-overlay"
-        )
-      ) {
-
-        return;
-
-      }
-
-
-      const modal =
+    function renderPriorityActions() {
+      const container =
         document.getElementById(
-          "authModal"
+          "priorityList"
         );
 
+      container.innerHTML = "";
 
-      if (modal) {
+      actionDefinitions.forEach(
+        (action, index) => {
 
-        modal.querySelector(
-          ".auth-overlay"
-        ).style.display =
-          "none";
+          const item =
+            document.createElement("div");
 
-      }
-    }
+          item.className =
+            "priority-item";
 
+          item.innerHTML = `
+            <div class="priority-number">
+              ${index + 1}
+            </div>
 
-    function toggleAuthMode() {
+            <div>
+              <strong>
+                ${escapeHtml(action.title)}
+              </strong>
 
-      authMode =
-        authMode === "login"
-          ? "signup"
-          : "login";
+              <p>
+                ${escapeHtml(action.description)}
+              </p>
+            </div>
+          `;
 
-
-      const title =
-        document.getElementById(
-          "authTitle"
-        );
-
-
-      const subtitle =
-        document.getElementById(
-          "authSubtitle"
-        );
-
-
-      const submit =
-        document.getElementById(
-          "authSubmit"
-        );
-
-
-      const toggle =
-        document.getElementById(
-          "authToggle"
-        );
-
-
-      const message =
-        document.getElementById(
-          "authMessage"
-        );
-
-
-      message.textContent = "";
-
-
-      if (
-        authMode === "login"
-      ) {
-
-        title.textContent =
-          "Welcome back.";
-
-
-        subtitle.textContent =
-          "Log in to save your security assessments.";
-
-
-        submit.textContent =
-          "Log in";
-
-
-        toggle.textContent =
-          "Need an account? Sign up";
-
-      } else {
-
-        title.textContent =
-          "Create your Securely account.";
-
-
-        subtitle.textContent =
-          "Save assessments and track your security readiness.";
-
-
-        submit.textContent =
-          "Create account";
-
-
-        toggle.textContent =
-          "Already have an account? Log in";
-      }
-    }
-
-
-    /* =========================================================
-       AUTHENTICATION
-       ========================================================= */
-
-    async function handleAuth() {
-
-      const email =
-        document.getElementById(
-          "authEmail"
-        ).value.trim();
-
-
-      const password =
-        document.getElementById(
-          "authPassword"
-        ).value;
-
-
-      const message =
-        document.getElementById(
-          "authMessage"
-        );
-
-
-      const submit =
-        document.getElementById(
-          "authSubmit"
-        );
-
-
-      if (!email || !password) {
-
-        message.textContent =
-          "Enter your email and password.";
-
-        return;
-      }
-
-
-      if (password.length < 6) {
-
-        message.textContent =
-          "Password must be at least 6 characters.";
-
-        return;
-      }
-
-
-      submit.disabled =
-        true;
-
-
-      message.textContent =
-        "Connecting securely...";
-
-
-      try {
-
-        if (
-          authMode === "signup"
-        ) {
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth.signUp({
-              email,
-              password
-            });
-
-
-          if (error) {
-            throw error;
-          }
-
-
-          if (data.session) {
-
-            currentUser =
-              data.user;
-
-
-            closeAuthModal();
-
-
-            updateAuthUI();
-
-          } else {
-
-            message.textContent =
-              "Account created. Check your email to confirm your account, then log in.";
-
-          }
-
-        } else {
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth.signInWithPassword({
-              email,
-              password
-            });
-
-
-          if (error) {
-            throw error;
-          }
-
-
-          currentUser =
-            data.user;
-
-
-          closeAuthModal();
-
-
-          updateAuthUI();
+          container.appendChild(item);
         }
-
-      } catch (error) {
-
-        console.error(
-          "Authentication error:",
-          error
-        );
-
-
-        message.textContent =
-          error.message ||
-          "Authentication failed. Please try again.";
-
-      } finally {
-
-        submit.disabled =
-          false;
-
-      }
+      );
     }
 
 
-    async function loadCurrentUser() {
+    /* ============================================================
+       SUPABASE SAVE
+       ============================================================ */
 
+    async function saveAssessment(
+      score,
+      riskLevel
+    ) {
       if (!supabaseClient) {
-        return;
-      }
-
-
-      try {
-
-        const {
-          data: {
-            session
-          }
-        } =
-          await supabaseClient.auth.getSession();
-
-
-        currentUser =
-          session?.user || null;
-
-
-        updateAuthUI();
-
-
-        supabaseClient.auth.onAuthStateChange(
-          (_event, session) => {
-
-            currentUser =
-              session?.user || null;
-
-
-            updateAuthUI();
-
-          }
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "Could not load authentication session:",
-          error
-        );
-
-      }
-    }
-
-
-    function updateAuthUI() {
-
-      const button =
-        document.getElementById(
-          "authButton"
-        );
-
-
-      if (!button) {
-        return;
-      }
-
-
-      if (currentUser) {
-
-        button.textContent =
-          "Log out";
-
-
-        button.onclick =
-          logoutUser;
-
-
-        const existingLabel =
-          document.querySelector(
-            ".account-label"
-          );
-
-
-        if (!existingLabel) {
-
-          const label =
-            document.createElement(
-              "span"
-            );
-
-
-          label.className =
-            "account-label";
-
-
-          label.textContent =
-            currentUser.email || "";
-
-
-          document.querySelector(
-            ".nav-actions"
-          ).prepend(label);
-
-        }
-
-      } else {
-
-        button.textContent =
-          "Log in";
-
-
-        button.onclick =
-          openAuthModal;
-
-
-        const label =
-          document.querySelector(
-            ".account-label"
-          );
-
-
-        if (label) {
-          label.remove();
-        }
-
-      }
-    }
-
-
-    async function logoutUser() {
-
-      try {
-
-        const {
-          error
-        } =
-          await supabaseClient.auth.signOut();
-
-
-        if (error) {
-          throw error;
-        }
-
-
-        currentUser =
-          null;
-
-
-        updateAuthUI();
-
-
-      } catch (error) {
-
-        console.error(
-          "Logout error:",
-          error
-        );
-
-      }
-    }
-
-
-    /* =========================================================
-       REAL SUPABASE ASSESSMENT SAVE
-       ========================================================= */
-
-    async function saveAssessmentToSupabase() {
-
-      const status =
         document.getElementById(
           "saveStatus"
-        );
-
-
-      if (!supabaseClient) {
-
-        status.textContent =
-          "Assessment completed, but Supabase is not initialized.";
+        ).textContent =
+          "Assessment completed. Supabase is not configured in this copy yet.";
 
         return;
       }
-
 
       if (!currentUser) {
-
-        status.textContent =
-          "Assessment completed. Log in to save your assessment.";
+        document.getElementById(
+          "saveStatus"
+        ).textContent =
+          "Assessment completed. Log in to save this assessment to your AZÈLE account.";
 
         return;
       }
-
-
-      status.textContent =
-        "Saving your assessment securely...";
 
 
       try {
 
-        /*
-          1. Find the user's business.
-        */
+        document.getElementById(
+          "saveStatus"
+        ).textContent =
+          "Saving assessment to your AZÈLE account...";
 
-        let businessId =
-          null;
+
+        /* --------------------------------------------------------
+           BUSINESS
+           -------------------------------------------------------- */
+
+        let businessName =
+          localStorage.getItem(
+            "azele-business-name"
+          ) ||
+          "My Business";
+
+        let industry =
+          localStorage.getItem(
+            "azele-industry"
+          ) ||
+          "General";
 
 
         const {
-          data: existingBusiness,
-          error: businessLookupError
+          data: business,
+          error: businessError
         } =
           await supabaseClient
             .from("businesses")
-            .select("id")
-            .eq(
-              "user_id",
-              currentUser.id
-            )
-            .limit(1)
-            .maybeSingle();
+            .insert({
+              user_id:
+                currentUser.id,
+              business_name:
+                businessName,
+              industry:
+                industry
+            })
+            .select()
+            .single();
 
 
-        if (businessLookupError) {
-          throw businessLookupError;
+        if (businessError) {
+          throw businessError;
         }
 
 
-        if (existingBusiness) {
-
-          businessId =
-            existingBusiness.id;
-
-        } else {
-
-          /*
-            2. Create a business.
-          */
-
-          const {
-            data: newBusiness,
-            error: businessCreateError
-          } =
-            await supabaseClient
-              .from("businesses")
-              .insert({
-                user_id:
-                  currentUser.id,
-
-                business_name:
-                  "My Business",
-
-                industry:
-                  "General"
-              })
-              .select("id")
-              .single();
-
-
-          if (businessCreateError) {
-            throw businessCreateError;
-          }
-
-
-          businessId =
-            newBusiness.id;
-        }
-
-
-        /*
-          3. Create assessment.
-        */
-
-        let riskLevel =
-          "high";
-
-
-        if (totalScore >= 80) {
-
-          riskLevel =
-            "low";
-
-        } else if (
-          totalScore >= 60
-        ) {
-
-          riskLevel =
-            "medium";
-
-        }
-
+        /* --------------------------------------------------------
+           ASSESSMENT
+           -------------------------------------------------------- */
 
         const {
           data: assessment,
@@ -3140,18 +2329,18 @@
           await supabaseClient
             .from("assessments")
             .insert({
-
               business_id:
-                businessId,
-
+                business.id,
               score:
-                totalScore,
-
+                score,
               risk_level:
-                riskLevel
-
+                String(riskLevel)
+                  .trim()
+                  .toLowerCase(),
+              completed_at:
+                new Date().toISOString()
             })
-            .select("id")
+            .select()
             .single();
 
 
@@ -3160,26 +2349,28 @@
         }
 
 
-        /*
-          4. Save every answer.
-        */
+        /* --------------------------------------------------------
+           ANSWERS
+           -------------------------------------------------------- */
 
         const answerRows =
-          selectedAnswers.map(
-            (item, index) => ({
-
+          answers.map(
+            (answer, index) => ({
               assessment_id:
                 assessment.id,
 
               question_id:
-                index + 1,
+                questions[index].id,
 
               answer:
-                item.answer,
+                answer
+                  ? answer.label
+                  : "",
 
               points:
-                item.points
-
+                answer
+                  ? answer.points
+                  : 0
             })
           );
 
@@ -3188,7 +2379,9 @@
           error: answersError
         } =
           await supabaseClient
-            .from("assessment_answers")
+            .from(
+              "assessment_answers"
+            )
             .insert(answerRows);
 
 
@@ -3197,190 +2390,84 @@
         }
 
 
-        /*
-          5. Create risks.
-        */
+        /* --------------------------------------------------------
+           RISKS
+           -------------------------------------------------------- */
 
-        const riskDefinitions = [
-
-          {
-            question: 1,
-            title: "MFA coverage",
-            description:
-              "Multi-factor authentication is not enabled across all important accounts.",
-            severity: "high",
-            recommendation:
-              "Enable MFA on every important business account."
-          },
-
-          {
-            question: 2,
-            title: "Backup readiness",
-            description:
-              "Important business data may not have sufficiently tested backups.",
-            severity: "high",
-            recommendation:
-              "Create and regularly test reliable backups."
-          },
-
-          {
-            question: 3,
-            title: "Device updates",
-            description:
-              "Security updates may not be applied consistently.",
-            severity: "medium",
-            recommendation:
-              "Create a regular process for applying security updates."
-          },
-
-          {
-            question: 4,
-            title: "Incident response",
-            description:
-              "The business does not have a documented incident-response plan.",
-            severity: "high",
-            recommendation:
-              "Create a simple incident-response plan."
-          },
-
-          {
-            question: 5,
-            title: "AI data handling",
-            description:
-              "Employees may not have clear rules for what information can be entered into AI tools.",
-            severity: "medium",
-            recommendation:
-              "Define clear rules for what employees may enter into AI tools."
-          },
-
-          {
-            question: 6,
-            title: "Security awareness",
-            description:
-              "Cybersecurity awareness training may not happen consistently.",
-            severity: "medium",
-            recommendation:
-              "Provide basic cybersecurity awareness training regularly."
-          },
-
-          {
-            question: 7,
-            title: "Sensitive information access",
-            description:
-              "Access to sensitive information may not be reviewed consistently.",
-            severity: "high",
-            recommendation:
-              "Review employee access to sensitive information."
-          },
-
-          {
-            question: 8,
-            title: "Employee offboarding",
-            description:
-              "Access removal may not follow a formal documented process.",
-            severity: "medium",
-            recommendation:
-              "Create a documented process for removing access when employees leave."
-          },
-
-          {
-            question: 9,
-            title: "Email security",
-            description:
-              "Company email accounts may not have comprehensive security protections.",
-            severity: "medium",
-            recommendation:
-              "Strengthen security rules and protections for company email."
-          },
-
-          {
-            question: 10,
-            title: "Security reviews",
-            description:
-              "Cybersecurity practices may not be reviewed regularly.",
-            severity: "medium",
-            recommendation:
-              "Review cybersecurity practices at least annually."
-          }
-
-        ];
+        const riskRows = [];
 
 
-        const riskRows =
-          [];
-
-
-        selectedAnswers.forEach(
+        answers.forEach(
           (answer, index) => {
 
             if (
-              answer.points < 10
+              !answer ||
+              answer.points >= 10
             ) {
-
-              const definition =
-                riskDefinitions[index];
-
-
-              const normalizedSeverity =
-                String(
-                  answer.points === 0
-                    ? "high"
-                    : definition.severity
-                )
-                  .trim()
-                  .toLowerCase();
-
-
-              const allowedSeverities =
-                [
-                  "low",
-                  "medium",
-                  "high"
-                ];
-
-
-              if (
-                !allowedSeverities.includes(
-                  normalizedSeverity
-                )
-              ) {
-
-                throw new Error(
-                  "Invalid risk severity generated: " +
-                  normalizedSeverity
-                );
-
-              }
-
-
-              riskRows.push({
-
-                assessment_id:
-                  assessment.id,
-
-                title:
-                  definition.title,
-
-                description:
-                  definition.description,
-
-                severity:
-                  normalizedSeverity,
-
-                recommendation:
-                  definition.recommendation
-
-              });
-
+              return;
             }
 
+            const definition =
+              riskDefinitions[
+                questions[index].id
+              ];
+
+            if (!definition) {
+              return;
+            }
+
+
+            const normalizedSeverity =
+              String(
+                answer.points === 0
+                  ? "high"
+                  : definition.severity
+              )
+                .trim()
+                .toLowerCase();
+
+
+            const allowedSeverities =
+              [
+                "low",
+                "medium",
+                "high"
+              ];
+
+
+            if (
+              !allowedSeverities.includes(
+                normalizedSeverity
+              )
+            ) {
+              throw new Error(
+                "Invalid risk severity generated: " +
+                normalizedSeverity
+              );
+            }
+
+
+            riskRows.push({
+              assessment_id:
+                assessment.id,
+
+              title:
+                definition.title,
+
+              description:
+                definition.description,
+
+              severity:
+                normalizedSeverity,
+
+              recommendation:
+                definition.recommendation
+            });
           }
         );
 
 
-        if (
-          riskRows.length > 0
-        ) {
+        if (riskRows.length > 0) {
 
           const {
             error: risksError
@@ -3389,77 +2476,19 @@
               .from("risks")
               .insert(riskRows);
 
-
           if (risksError) {
             throw risksError;
           }
-
         }
 
 
-        /*
-          6. Save priority actions.
-        */
-
-        const actionDefinitions = [
-
-          {
-            title:
-              "Enable MFA on every important business account.",
-
-            description:
-              "Protect important accounts with multi-factor authentication.",
-
-            priority: 1
-          },
-
-          {
-            title:
-              "Create and regularly test reliable backups.",
-
-            description:
-              "Make sure important data can actually be recovered when needed.",
-
-            priority: 2
-          },
-
-          {
-            title:
-              "Create a simple incident-response plan.",
-
-            description:
-              "Document what the business should do if a security incident occurs.",
-
-            priority: 3
-          },
-
-          {
-            title:
-              "Define clear rules for what employees may enter into AI tools.",
-
-            description:
-              "Create practical rules for protecting sensitive information when using AI.",
-
-            priority: 4
-          },
-
-          {
-            title:
-              "Review employee access to sensitive information.",
-
-            description:
-              "Make sure employees only have the access they need.",
-
-            priority: 5
-          }
-
-        ];
-
+        /* --------------------------------------------------------
+           ACTIONS
+           -------------------------------------------------------- */
 
         const actionRows =
           actionDefinitions.map(
-            action => ({
-
+            (action) => ({
               assessment_id:
                 assessment.id,
 
@@ -3470,11 +2499,14 @@
                 action.description,
 
               priority:
-                action.priority,
+                String(
+                  action.priority
+                )
+                  .trim()
+                  .toLowerCase(),
 
               completed:
                 false
-
             })
           );
 
@@ -3492,13 +2524,14 @@
         }
 
 
-        /*
-          Everything saved successfully.
-        */
+        document.getElementById(
+          "saveStatus"
+        ).textContent =
+          "Assessment saved to your AZÈLE account.";
 
-        status.textContent =
-          "Assessment saved to your Securely account.";
-
+        showToast(
+          "Assessment saved successfully."
+        );
 
       } catch (error) {
 
@@ -3506,15 +2539,6 @@
           "Assessment save error:",
           error
         );
-
-
-        status.textContent =
-          "Save failed: " +
-          (
-            error?.message ||
-            "Unknown database error."
-          );
-
 
         console.error(
           "Supabase details:",
@@ -3524,211 +2548,405 @@
           error?.hint
         );
 
-      }
 
+        document.getElementById(
+          "saveStatus"
+        ).textContent =
+          "Save failed: " +
+          (
+            error?.message ||
+            "Unknown database error."
+          );
+      }
     }
 
 
-    /* =========================================================
-       SHOW RESULT
-       ========================================================= */
+    /* ============================================================
+       AUTH
+       ============================================================ */
 
-    function showResult() {
+    function openAuthModal(
+      mode = "login"
+    ) {
+      setAuthMode(mode);
 
-      document.getElementById(
-        "assessment"
-      ).style.display =
-        "none";
-
-
-      document.getElementById(
-        "result"
-      ).style.display =
-        "block";
+      document
+        .getElementById("authModal")
+        .classList.add("open");
+    }
 
 
-      document.getElementById(
-        "finalScore"
-      ).textContent =
-        totalScore;
-
-
-      let message;
-
-
-      if (
-        totalScore >= 80
-      ) {
-
-        message =
-          "Your business shows a strong baseline of security readiness. Keep reviewing your practices regularly.";
-
-      } else if (
-        totalScore >= 60
-      ) {
-
-        message =
-          "Your business has a reasonable foundation, but several areas could be strengthened.";
-
-      } else {
-
-        message =
-          "Your business has several important security gaps that should be prioritized.";
-
-      }
-
+    function closeAuthModal() {
+      document
+        .getElementById("authModal")
+        .classList.remove("open");
 
       document.getElementById(
-        "resultMessage"
-      ).textContent =
-        message;
+        "authStatus"
+      ).textContent = "";
+    }
 
 
-      const actions =
+    function setAuthMode(mode) {
+      authMode = mode;
+
+      const loginTab =
         document.getElementById(
-          "actions"
+          "loginTab"
+        );
+
+      const signupTab =
+        document.getElementById(
+          "signupTab"
+        );
+
+      const businessField =
+        document.getElementById(
+          "businessNameField"
+        );
+
+      const title =
+        document.getElementById(
+          "authTitle"
+        );
+
+      const submit =
+        document.getElementById(
+          "authSubmit"
         );
 
 
-      actions.innerHTML =
-        "";
+      loginTab.classList.toggle(
+        "active",
+        mode === "login"
+      );
+
+      signupTab.classList.toggle(
+        "active",
+        mode === "signup"
+      );
 
 
-      const recommendations = [
+      if (mode === "signup") {
 
-        "Enable MFA on every important business account.",
+        title.textContent =
+          "Create your account";
 
-        "Create and regularly test reliable backups.",
+        submit.textContent =
+          "Create account";
 
-        "Create a simple incident-response plan.",
+        businessField.style.display =
+          "block";
 
-        "Define clear rules for what employees may enter into AI tools.",
+      } else {
 
-        "Review employee access to sensitive information."
+        title.textContent =
+          "Welcome back";
 
-      ];
+        submit.textContent =
+          "Log in";
+
+        businessField.style.display =
+          "none";
+      }
+    }
 
 
-      recommendations.forEach(
-        (
-          recommendation,
-          index
-        ) => {
+    async function handleAuth(event) {
+      event.preventDefault();
 
-          const item =
-            document.createElement(
-              "div"
+      const status =
+        document.getElementById(
+          "authStatus"
+        );
+
+      const email =
+        document.getElementById(
+          "authEmail"
+        ).value.trim();
+
+      const password =
+        document.getElementById(
+          "authPassword"
+        ).value;
+
+      const businessName =
+        document.getElementById(
+          "businessName"
+        ).value.trim();
+
+
+      if (!supabaseClient) {
+        status.textContent =
+          "Supabase is not configured in this copy.";
+
+        return;
+      }
+
+
+      status.textContent =
+        authMode === "signup"
+          ? "Creating your account..."
+          : "Logging you in...";
+
+
+      try {
+
+        if (authMode === "signup") {
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient.auth
+              .signUp({
+                email,
+                password
+              });
+
+
+          if (error) {
+            throw error;
+          }
+
+
+          if (businessName) {
+            localStorage.setItem(
+              "azele-business-name",
+              businessName
             );
+          }
 
 
-          item.className =
-            "action";
+          if (data.user) {
+            status.textContent =
+              "Account created successfully.";
+          } else {
+            status.textContent =
+              "Check your email to confirm your account.";
+          }
+
+        } else {
+
+          const {
+            error
+          } =
+            await supabaseClient.auth
+              .signInWithPassword({
+                email,
+                password
+              });
 
 
-          const number =
-            document.createElement(
-              "div"
-            );
+          if (error) {
+            throw error;
+          }
 
 
-          number.className =
-            "action-number";
+          status.textContent =
+            "Logged in successfully.";
+
+          closeAuthModal();
+        }
 
 
-          number.textContent =
-            index + 1;
+        await loadCurrentUser();
+
+      } catch (error) {
+
+        console.error(
+          "Authentication error:",
+          error
+        );
+
+        status.textContent =
+          error?.message ||
+          "Authentication failed.";
+      }
+    }
 
 
-          const content =
-            document.createElement(
-              "div"
-            );
+    async function loadCurrentUser() {
+      if (!supabaseClient) {
+        updateAuthUI(null);
+        return;
+      }
 
 
-          const title =
-            document.createElement(
-              "strong"
-            );
+      try {
+
+        const {
+          data
+        } =
+          await supabaseClient.auth
+            .getUser();
+
+        currentUser =
+          data?.user || null;
+
+        updateAuthUI(
+          currentUser
+        );
+
+      } catch (error) {
+
+        console.error(
+          "User loading error:",
+          error
+        );
+
+        currentUser = null;
+
+        updateAuthUI(null);
+      }
+    }
 
 
-          title.textContent =
-            recommendation;
+    function updateAuthUI(user) {
+      const area =
+        document.getElementById(
+          "authArea"
+        );
+
+      if (!user) {
+
+        area.innerHTML = `
+          <button
+            class="btn btn-secondary"
+            onclick="openAuthModal('login')"
+          >
+            Log in
+          </button>
+        `;
+
+        return;
+      }
 
 
-          const description =
-            document.createElement(
-              "p"
-            );
+      area.innerHTML = `
+        <span class="user-email">
+          ${escapeHtml(user.email || "")}
+        </span>
+
+        <button
+          class="btn btn-secondary"
+          onclick="logoutUser()"
+        >
+          Log out
+        </button>
+      `;
+    }
 
 
-          description.textContent =
-            "Recommended based on common small-business security practices.";
+    async function logoutUser() {
+
+      if (!supabaseClient) {
+        return;
+      }
 
 
-          content.appendChild(
-            title
-          );
+      try {
+
+        await supabaseClient.auth.signOut();
+
+        currentUser = null;
+
+        updateAuthUI(null);
+
+        showToast(
+          "You have been logged out."
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Logout error:",
+          error
+        );
+      }
+    }
 
 
-          content.appendChild(
-            description
-          );
+    /* ============================================================
+       ESCAPE HTML
+       ============================================================ */
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
 
-          item.appendChild(
-            number
-          );
+    /* ============================================================
+       MODAL BEHAVIOR
+       ============================================================ */
 
+    document
+      .getElementById("authModal")
+      .addEventListener(
+        "click",
+        function (event) {
 
-          item.appendChild(
-            content
-          );
-
-
-          actions.appendChild(
-            item
-          );
+          if (
+            event.target ===
+            this
+          ) {
+            closeAuthModal();
+          }
 
         }
       );
 
 
-      saveAssessmentToSupabase();
+    document.addEventListener(
+      "keydown",
+      function (event) {
+
+        if (
+          event.key === "Escape"
+        ) {
+          closeAuthModal();
+        }
+
+      }
+    );
 
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
+    /* ============================================================
+       AUTH STATE LISTENER
+       ============================================================ */
+
+    if (supabaseClient) {
+
+      supabaseClient.auth.onAuthStateChange(
+        (_event, session) => {
+
+          currentUser =
+            session?.user || null;
+
+          updateAuthUI(
+            currentUser
+          );
+
+        }
+      );
 
     }
 
 
-    /* =========================================================
-       UTILITIES
-       ========================================================= */
-
-    function scrollToFeatures() {
-
-      document.getElementById(
-        "features"
-      ).scrollIntoView({
-        behavior: "smooth"
-      });
-
-    }
-
-
-    /* =========================================================
+    /* ============================================================
        INITIALIZE
-       ========================================================= */
-
-    createAuthUI();
+       ============================================================ */
 
     loadCurrentUser();
+
+    updateAuthUI(null);
 
   </script>
 
 </body>
 </html>
-```
