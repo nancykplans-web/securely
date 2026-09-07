@@ -175,6 +175,33 @@
       gap: 10px;
     }
 
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-link {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 9px 11px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: .2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .nav-link.active {
+      color: var(--gold-dark);
+      background: var(--gold-soft);
+    }
+
     /* THEME */
 
     .theme-switcher {
@@ -318,6 +345,402 @@
       margin: 0;
       color: var(--muted);
       line-height: 1.7;
+    }
+
+    /* DASHBOARD */
+
+    .dashboard-section {
+      padding: 55px 0 80px;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .dashboard-header h1 {
+      margin: 10px 0 8px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(48px,6vw,70px);
+      line-height: .95;
+      letter-spacing: -.025em;
+    }
+
+    .dashboard-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .dashboard-header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .stat-card {
+      position: relative;
+      padding: 23px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: 0 12px 35px rgba(0,0,0,.035);
+      overflow: hidden;
+    }
+
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      right: -35px;
+      bottom: -35px;
+      border-radius: 50%;
+      background: var(--gold-soft);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 43px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-sub {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dashboard-main-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+    }
+
+    .dashboard-card {
+      padding: 25px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      box-shadow: 0 12px 40px rgba(0,0,0,.035);
+    }
+
+    .dashboard-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .dashboard-card-header h3 {
+      margin: 0 0 5px;
+      font-size: 18px;
+    }
+
+    .dashboard-card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .dashboard-score-layout {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .dashboard-score-circle {
+      width: 145px;
+      height: 145px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(
+          circle at center,
+          var(--surface) 58%,
+          transparent 59%
+        ),
+        conic-gradient(
+          var(--gold) var(--dashboard-score),
+          var(--surface-2) 0
+        );
+    }
+
+    .dashboard-score-number {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 45px;
+      font-weight: 700;
+    }
+
+    .dashboard-score-copy h2 {
+      margin: 0 0 8px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 35px;
+    }
+
+    .dashboard-score-copy p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .dashboard-progress {
+      margin-top: 18px;
+    }
+
+    .dashboard-progress-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .dashboard-progress-track {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: var(--surface-2);
+    }
+
+    .dashboard-progress-fill {
+      height: 100%;
+      width: 0;
+      background: var(--gold);
+      border-radius: inherit;
+      transition: width .4s ease;
+    }
+
+    .risk-summary-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .risk-summary-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-2);
+    }
+
+    .risk-summary-item strong {
+      font-size: 13px;
+    }
+
+    .risk-summary-item span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .dashboard-two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .action-progress-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: var(--surface-2);
+      margin-bottom: 16px;
+    }
+
+    .action-progress-summary strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .action-progress-summary span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .action-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .dashboard-action {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: start;
+      gap: 12px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .dashboard-action:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .action-check {
+      width: 20px;
+      height: 20px;
+      margin-top: 1px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    .dashboard-action-title {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .dashboard-action.completed .dashboard-action-title {
+      text-decoration: line-through;
+      opacity: .55;
+    }
+
+    .dashboard-action-description {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .history-list {
+      display: grid;
+    }
+
+    .history-item {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .history-item:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .history-date {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .history-score {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .dashboard-empty {
+      padding: 28px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .dashboard-empty strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .business-profile {
+      display: grid;
+      gap: 13px;
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .profile-row:last-child {
+      border-bottom: 0;
+    }
+
+    .profile-row span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .profile-row strong {
+      text-align: right;
+      font-size: 13px;
+      max-width: 65%;
+      overflow-wrap: anywhere;
+    }
+
+    .dashboard-loading {
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* BADGES */
+
+    .badge {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .badge.high {
+      color: var(--danger);
+      background: rgba(180,75,75,.11);
+    }
+
+    .badge.medium {
+      color: var(--warning);
+      background: rgba(167,120,36,.11);
+    }
+
+    .badge.low {
+      color: var(--success);
+      background: rgba(71,120,90,.11);
     }
 
     /* FEATURES */
@@ -804,32 +1227,6 @@
       line-height: 1.6;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 5px 8px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 7px;
-    }
-
-    .badge.high {
-      color: var(--danger);
-      background: rgba(180,75,75,.11);
-    }
-
-    .badge.medium {
-      color: var(--warning);
-      background: rgba(167,120,36,.11);
-    }
-
-    .badge.low {
-      color: var(--success);
-      background: rgba(71,120,90,.11);
-    }
-
     /* AUTH */
 
     .auth-user {
@@ -991,6 +1388,21 @@
 
     /* RESPONSIVE */
 
+    @media (max-width:1000px) {
+      .dashboard-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .dashboard-main-grid,
+      .dashboard-two-column {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
     @media (max-width:850px) {
       .feature-grid,
       .tools-grid,
@@ -1016,6 +1428,33 @@
 
       .auth-email {
         display: none;
+      }
+
+      .dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .dashboard-score-layout {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .dashboard-score-circle {
+        margin: 0 auto;
+      }
+
+      .dashboard-score-copy {
+        text-align: center;
+      }
+
+      .history-item {
+        grid-template-columns: 1fr auto;
+      }
+
+      .history-item .btn {
+        grid-column: 1 / -1;
+        width: 100%;
       }
     }
 
@@ -1076,6 +1515,45 @@
       .message {
         max-width: 90%;
       }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stat-card {
+        padding: 17px;
+      }
+
+      .stat-value {
+        font-size: 34px;
+      }
+
+      .dashboard-section {
+        padding-top: 35px;
+      }
+
+      .dashboard-header h1 {
+        font-size: 50px;
+      }
+
+      .dashboard-action {
+        grid-template-columns: auto 1fr;
+      }
+
+      .dashboard-action .badge {
+        grid-column: 2;
+      }
+
+      .profile-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .profile-row strong {
+        text-align: left;
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -1084,8 +1562,6 @@
 
   <!-- ============================================================
        AZÈLE MARKDOWN-FENCE PROTECTION
-       Removes accidental ```html / ``` text if a deployment layer
-       injects Markdown fences into the rendered DOM.
        ============================================================ -->
 
   <script>
@@ -1159,6 +1635,35 @@
       </a>
 
       <div class="nav-actions">
+
+        <div
+          class="nav-links"
+          id="navLinks"
+        >
+
+          <button
+            class="nav-link hidden"
+            id="dashboardNavBtn"
+            onclick="showDashboard()"
+          >
+            Dashboard
+          </button>
+
+          <button
+            class="nav-link"
+            onclick="scrollToSection('assistantSection')"
+          >
+            Assistant
+          </button>
+
+          <button
+            class="nav-link"
+            onclick="scrollToSection('toolsSection')"
+          >
+            Tools
+          </button>
+
+        </div>
 
         <div
           class="theme-switcher"
@@ -1534,7 +2039,10 @@
 
     <!-- SECURITY TOOLS -->
 
-    <section class="section">
+    <section
+      class="section"
+      id="toolsSection"
+    >
       <div class="container">
 
         <div class="section-header">
@@ -1625,6 +2133,407 @@
     </section>
 
   </main>
+
+  <!-- DASHBOARD -->
+
+  <section
+    class="dashboard-section hidden"
+    id="dashboardSection"
+  >
+    <div class="container">
+
+      <div class="dashboard-header">
+
+        <div>
+          <span class="eyebrow">
+            AZÈLE workspace
+          </span>
+
+          <h1>
+            Your security overview.
+          </h1>
+
+          <p id="dashboardWelcome">
+            Monitor your readiness, risks, and next actions.
+          </p>
+        </div>
+
+        <div class="dashboard-header-actions">
+
+          <button
+            class="btn"
+            onclick="refreshDashboard()"
+          >
+            Refresh
+          </button>
+
+          <button
+            class="btn btn-gold"
+            onclick="startAssessment()"
+          >
+            New assessment
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- STATS -->
+
+      <div
+        class="dashboard-grid"
+        id="dashboardStats"
+      >
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            Readiness score
+          </div>
+
+          <div
+            class="stat-value"
+            id="dashboardScoreStat"
+          >
+            —
+          </div>
+
+          <div
+            class="stat-sub"
+            id="dashboardScoreSub"
+          >
+            No assessment yet
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            Risk level
+          </div>
+
+          <div
+            class="stat-value"
+            id="dashboardRiskStat"
+          >
+            —
+          </div>
+
+          <div class="stat-sub">
+            Current security exposure
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            Open actions
+          </div>
+
+          <div
+            class="stat-value"
+            id="dashboardOpenActionsStat"
+          >
+            —
+          </div>
+
+          <div class="stat-sub">
+            Recommended next steps
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            Assessments
+          </div>
+
+          <div
+            class="stat-value"
+            id="dashboardAssessmentCountStat"
+          >
+            —
+          </div>
+
+          <div class="stat-sub">
+            Saved to your account
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- MAIN DASHBOARD -->
+
+      <div class="dashboard-main-grid">
+
+        <!-- SCORE -->
+
+        <div class="dashboard-card">
+
+          <div class="dashboard-card-header">
+
+            <div>
+              <h3>
+                Security readiness
+              </h3>
+
+              <p>
+                Your latest assessment at a glance.
+              </p>
+            </div>
+
+          </div>
+
+          <div
+            id="dashboardScoreArea"
+            class="dashboard-score-layout"
+          >
+
+            <div
+              class="dashboard-score-circle"
+              id="dashboardScoreCircle"
+              style="--dashboard-score:0%;"
+            >
+
+              <div class="dashboard-score-number">
+                <span id="dashboardScoreNumber">
+                  —
+                </span>
+              </div>
+
+            </div>
+
+            <div class="dashboard-score-copy">
+
+              <h2 id="dashboardScoreLabel">
+                No assessment yet
+              </h2>
+
+              <p id="dashboardScoreDescription">
+                Complete your first AZÈLE assessment to establish your baseline security readiness score.
+              </p>
+
+              <button
+                class="btn btn-gold"
+                onclick="startAssessment()"
+              >
+                Start assessment
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RISKS -->
+
+        <div class="dashboard-card">
+
+          <div class="dashboard-card-header">
+
+            <div>
+              <h3>
+                Priority risks
+              </h3>
+
+              <p>
+                Areas that deserve the most attention.
+              </p>
+            </div>
+
+          </div>
+
+          <div
+            class="risk-summary-list"
+            id="dashboardRiskList"
+          >
+
+            <div class="dashboard-empty">
+              <strong>
+                No risks yet
+              </strong>
+
+              Complete an assessment to identify your highest-priority security gaps.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ACTIONS + HISTORY -->
+
+      <div class="dashboard-two-column">
+
+        <div class="dashboard-card">
+
+          <div class="dashboard-card-header">
+
+            <div>
+              <h3>
+                Action Center
+              </h3>
+
+              <p>
+                Complete the most important recommendations.
+              </p>
+            </div>
+
+          </div>
+
+          <div
+            class="action-progress-summary"
+            id="dashboardActionProgress"
+          >
+
+            <div>
+              <strong>
+                Action progress
+              </strong>
+
+              <span id="actionProgressText">
+                No actions yet
+              </span>
+            </div>
+
+            <strong id="actionProgressPercent">
+              0%
+            </strong>
+
+          </div>
+
+          <div class="dashboard-progress">
+            <div class="dashboard-progress-track">
+              <div
+                class="dashboard-progress-fill"
+                id="actionProgressBar"
+              ></div>
+            </div>
+          </div>
+
+          <div
+            class="action-list"
+            id="dashboardActionList"
+            style="margin-top:20px;"
+          >
+
+            <div class="dashboard-empty">
+              <strong>
+                Your action list is empty
+              </strong>
+
+              Complete an assessment to generate personalized recommendations.
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- HISTORY -->
+
+        <div class="dashboard-card">
+
+          <div class="dashboard-card-header">
+
+            <div>
+              <h3>
+                Assessment history
+              </h3>
+
+              <p>
+                Track how your readiness changes over time.
+              </p>
+            </div>
+
+          </div>
+
+          <div
+            class="history-list"
+            id="dashboardHistoryList"
+          >
+
+            <div class="dashboard-empty">
+              <strong>
+                No assessment history
+              </strong>
+
+              Your completed assessments will appear here.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- BUSINESS PROFILE -->
+
+      <div
+        class="dashboard-card"
+        style="margin-top:18px;"
+      >
+
+        <div class="dashboard-card-header">
+
+          <div>
+            <h3>
+              Business profile
+            </h3>
+
+            <p>
+              Your AZÈLE account information.
+            </p>
+          </div>
+
+        </div>
+
+        <div
+          class="business-profile"
+          id="dashboardBusinessProfile"
+        >
+
+          <div class="profile-row">
+            <span>
+              Business
+            </span>
+
+            <strong id="dashboardBusinessName">
+              —
+            </strong>
+          </div>
+
+          <div class="profile-row">
+            <span>
+              Industry
+            </span>
+
+            <strong id="dashboardBusinessIndustry">
+              —
+            </strong>
+          </div>
+
+          <div class="profile-row">
+            <span>
+              Account
+            </span>
+
+            <strong id="dashboardBusinessEmail">
+              —
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
 
   <!-- ASSESSMENT -->
 
@@ -1764,6 +2673,14 @@
             onclick="startAssessment()"
           >
             Run another assessment
+          </button>
+
+          <button
+            class="btn"
+            onclick="showDashboard()"
+            style="margin-left:8px;"
+          >
+            Dashboard
           </button>
 
           <button
@@ -2006,11 +2923,6 @@
           "AZÈLE: Supabase initialized successfully."
         );
 
-        console.info(
-          "AZÈLE: Connected project:",
-          SUPABASE_URL
-        );
-
         return true;
 
       } catch (error) {
@@ -2063,6 +2975,27 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+    /* DATE */
+
+    function formatDate(dateValue) {
+      if (!dateValue) {
+        return "Unknown date";
+      }
+
+      try {
+        return new Intl.DateTimeFormat(
+          undefined,
+          {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+          }
+        ).format(new Date(dateValue));
+      } catch (error) {
+        return "Unknown date";
+      }
     }
 
     /* SCROLL */
@@ -2121,15 +3054,20 @@
         });
     }
 
-    /* HOME */
+    /* VIEW MANAGEMENT */
 
-    function goHome() {
+    function hideAllMainViews() {
       const home = $("homeContent");
+      const dashboard = $("dashboardSection");
       const assessment = $("assessmentSection");
       const results = $("resultsSection");
 
       if (home) {
-        home.classList.remove("hidden");
+        home.classList.add("hidden");
+      }
+
+      if (dashboard) {
+        dashboard.classList.add("hidden");
       }
 
       if (assessment) {
@@ -2139,11 +3077,1285 @@
       if (results) {
         results.classList.add("hidden");
       }
+    }
+
+    function goHome() {
+      hideAllMainViews();
+
+      const home = $("homeContent");
+
+      if (home) {
+        home.classList.remove("hidden");
+      }
+
+      document
+        .querySelectorAll(".nav-link")
+        .forEach((button) => {
+          button.classList.remove("active");
+        });
 
       window.scrollTo({
         top: 0,
         behavior: "smooth"
       });
+    }
+
+    /* DASHBOARD */
+
+    function showDashboard(shouldScroll = true) {
+      if (!currentUser) {
+        openAuthModal("login");
+
+        showToast(
+          "Sign in to access your AZÈLE dashboard.",
+          "error"
+        );
+
+        return;
+      }
+
+      hideAllMainViews();
+
+      const dashboard =
+        $("dashboardSection");
+
+      if (dashboard) {
+        dashboard.classList.remove("hidden");
+      }
+
+      document
+        .querySelectorAll(".nav-link")
+        .forEach((button) => {
+          button.classList.remove("active");
+        });
+
+      const dashboardButton =
+        $("dashboardNavBtn");
+
+      if (dashboardButton) {
+        dashboardButton.classList.add("active");
+      }
+
+      if (shouldScroll) {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      }
+
+      loadDashboard();
+    }
+
+    function resetDashboardUI() {
+      const scoreStat =
+        $("dashboardScoreStat");
+
+      const riskStat =
+        $("dashboardRiskStat");
+
+      const openActionsStat =
+        $("dashboardOpenActionsStat");
+
+      const countStat =
+        $("dashboardAssessmentCountStat");
+
+      const scoreNumber =
+        $("dashboardScoreNumber");
+
+      const scoreLabel =
+        $("dashboardScoreLabel");
+
+      const scoreDescription =
+        $("dashboardScoreDescription");
+
+      const scoreCircle =
+        $("dashboardScoreCircle");
+
+      const riskList =
+        $("dashboardRiskList");
+
+      const actionList =
+        $("dashboardActionList");
+
+      const historyList =
+        $("dashboardHistoryList");
+
+      const actionText =
+        $("actionProgressText");
+
+      const actionPercent =
+        $("actionProgressPercent");
+
+      const actionBar =
+        $("actionProgressBar");
+
+      if (scoreStat) {
+        scoreStat.textContent = "—";
+      }
+
+      if (riskStat) {
+        riskStat.textContent = "—";
+      }
+
+      if (openActionsStat) {
+        openActionsStat.textContent = "—";
+      }
+
+      if (countStat) {
+        countStat.textContent = "—";
+      }
+
+      if (scoreNumber) {
+        scoreNumber.textContent = "—";
+      }
+
+      if (scoreLabel) {
+        scoreLabel.textContent = "No assessment yet";
+      }
+
+      if (scoreDescription) {
+        scoreDescription.textContent =
+          "Complete your first AZÈLE assessment to establish your baseline security readiness score.";
+      }
+
+      if (scoreCircle) {
+        scoreCircle.style.setProperty(
+          "--dashboard-score",
+          "0%"
+        );
+      }
+
+      if (riskList) {
+        riskList.innerHTML = `
+          <div class="dashboard-empty">
+            <strong>No risks yet</strong>
+            Complete an assessment to identify your highest-priority security gaps.
+          </div>
+        `;
+      }
+
+      if (actionList) {
+        actionList.innerHTML = `
+          <div class="dashboard-empty">
+            <strong>Your action list is empty</strong>
+            Complete an assessment to generate personalized recommendations.
+          </div>
+        `;
+      }
+
+      if (historyList) {
+        historyList.innerHTML = `
+          <div class="dashboard-empty">
+            <strong>No assessment history</strong>
+            Your completed assessments will appear here.
+          </div>
+        `;
+      }
+
+      if (actionText) {
+        actionText.textContent = "No actions yet";
+      }
+
+      if (actionPercent) {
+        actionPercent.textContent = "0%";
+      }
+
+      if (actionBar) {
+        actionBar.style.width = "0%";
+      }
+    }
+
+    async function getBusinessForUser(userId) {
+      if (
+        !supabaseClient ||
+        !userId
+      ) {
+        return null;
+      }
+
+      try {
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from("businesses")
+            .select("id, business_name, industry, created_at")
+            .eq("user_id", userId)
+            .order("created_at", {
+              ascending: true
+            })
+            .limit(1)
+            .maybeSingle();
+
+        if (error) {
+          console.warn(
+            "AZÈLE business fetch failed:",
+            error
+          );
+
+          return null;
+        }
+
+        return data || null;
+
+      } catch (error) {
+        console.warn(
+          "AZÈLE business fetch exception:",
+          error
+        );
+
+        return null;
+      }
+    }
+
+    async function loadDashboard() {
+      if (!currentUser) {
+        resetDashboardUI();
+        return;
+      }
+
+      if (!supabaseClient) {
+        loadLocalDashboard();
+        return;
+      }
+
+      try {
+        const dashboardWelcome =
+          $("dashboardWelcome");
+
+        const business =
+          await getBusinessForUser(
+            currentUser.id
+          );
+
+        const businessName =
+          business?.business_name ||
+          currentUser.user_metadata?.business_name ||
+          currentUser.email?.split("@")[0] ||
+          "Your business";
+
+        if (dashboardWelcome) {
+          dashboardWelcome.textContent =
+            `Here is the current security picture for ${businessName}.`;
+        }
+
+        updateBusinessProfile(
+          business,
+          businessName
+        );
+
+        if (!business?.id) {
+          resetDashboardUI();
+          return;
+        }
+
+        const {
+          data: assessments,
+          error: assessmentError
+        } =
+          await supabaseClient
+            .from("assessments")
+            .select(
+              "id, business_id, score, risk_level, completed_at"
+            )
+            .eq("business_id", business.id)
+            .order("completed_at", {
+              ascending: false
+            });
+
+        if (assessmentError) {
+          throw assessmentError;
+        }
+
+        const assessmentRows =
+          assessments || [];
+
+        const latest =
+          assessmentRows[0] || null;
+
+        let latestRisks = [];
+        let allActions = [];
+
+        if (latest?.id) {
+
+          const {
+            data: risks,
+            error: risksError
+          } =
+            await supabaseClient
+              .from("risks")
+              .select(
+                "id, assessment_id, title, description, severity, recommendation, created_at"
+              )
+              .eq(
+                "assessment_id",
+                latest.id
+              )
+              .order("created_at", {
+                ascending: true
+              });
+
+          if (risksError) {
+            console.warn(
+              "AZÈLE risks fetch failed:",
+              risksError
+            );
+          } else {
+            latestRisks =
+              risks || [];
+          }
+        }
+
+        const {
+          data: actions,
+          error: actionsError
+        } =
+          await supabaseClient
+            .from("actions")
+            .select(
+              "id, assessment_id, title, description, priority, completed, created_at"
+            )
+            .order("created_at", {
+              ascending: false
+            });
+
+        if (actionsError) {
+          console.warn(
+            "AZÈLE actions fetch failed:",
+            actionsError
+          );
+        } else {
+          allActions =
+            (actions || []).filter(
+              (action) =>
+                assessmentRows.some(
+                  (assessment) =>
+                    assessment.id ===
+                    action.assessment_id
+                )
+            );
+        }
+
+        renderDashboardData({
+          business,
+          businessName,
+          assessments: assessmentRows,
+          latest,
+          risks: latestRisks,
+          actions: allActions
+        });
+
+      } catch (error) {
+
+        console.error(
+          "AZÈLE dashboard load failed:",
+          error
+        );
+
+        showToast(
+          "Your dashboard could not load completely. Check your Supabase policies if data is missing.",
+          "error"
+        );
+
+        loadLocalDashboard();
+      }
+    }
+
+    function updateBusinessProfile(
+      business,
+      businessName
+    ) {
+      const name =
+        $("dashboardBusinessName");
+
+      const industry =
+        $("dashboardBusinessIndustry");
+
+      const email =
+        $("dashboardBusinessEmail");
+
+      if (name) {
+        name.textContent =
+          businessName || "My Business";
+      }
+
+      if (industry) {
+        industry.textContent =
+          business?.industry ||
+          "General";
+      }
+
+      if (email) {
+        email.textContent =
+          currentUser?.email ||
+          "Signed in";
+      }
+    }
+
+    function renderDashboardData(data) {
+      const {
+        business,
+        businessName,
+        assessments,
+        latest,
+        risks,
+        actions
+      } = data;
+
+      updateBusinessProfile(
+        business,
+        businessName
+      );
+
+      const scoreStat =
+        $("dashboardScoreStat");
+
+      const riskStat =
+        $("dashboardRiskStat");
+
+      const openActionsStat =
+        $("dashboardOpenActionsStat");
+
+      const countStat =
+        $("dashboardAssessmentCountStat");
+
+      const scoreNumber =
+        $("dashboardScoreNumber");
+
+      const scoreLabel =
+        $("dashboardScoreLabel");
+
+      const scoreDescription =
+        $("dashboardScoreDescription");
+
+      const scoreCircle =
+        $("dashboardScoreCircle");
+
+      const scoreSub =
+        $("dashboardScoreSub");
+
+      if (countStat) {
+        countStat.textContent =
+          assessments.length;
+      }
+
+      if (!latest) {
+        resetDashboardUI();
+
+        if (countStat) {
+          countStat.textContent =
+            assessments.length;
+        }
+
+        updateBusinessProfile(
+          business,
+          businessName
+        );
+
+        return;
+      }
+
+      const score =
+        Number(latest.score || 0);
+
+      const scoreInfo =
+        getScoreInfo(score);
+
+      const riskLevel =
+        String(
+          latest.risk_level || "high"
+        ).toLowerCase();
+
+      const openActions =
+        actions.filter(
+          (action) =>
+            !Boolean(action.completed)
+        );
+
+      if (scoreStat) {
+        scoreStat.textContent =
+          `${score}`;
+      }
+
+      if (scoreSub) {
+        scoreSub.textContent =
+          `Latest assessment · ${formatDate(latest.completed_at)}`;
+      }
+
+      if (riskStat) {
+        riskStat.textContent =
+          getRiskLabel(riskLevel);
+      }
+
+      if (openActionsStat) {
+        openActionsStat.textContent =
+          openActions.length;
+      }
+
+      if (scoreNumber) {
+        scoreNumber.textContent =
+          score;
+      }
+
+      if (scoreLabel) {
+        scoreLabel.textContent =
+          scoreInfo.label;
+      }
+
+      if (scoreDescription) {
+        scoreDescription.textContent =
+          scoreInfo.description;
+      }
+
+      if (scoreCircle) {
+        scoreCircle.style.setProperty(
+          "--dashboard-score",
+          `${score}%`
+        );
+      }
+
+      renderDashboardRisks(
+        risks
+      );
+
+      renderDashboardActions(
+        actions
+      );
+
+      renderDashboardHistory(
+        assessments
+      );
+
+      updateActionProgress(
+        actions
+      );
+    }
+
+    function renderDashboardRisks(risks) {
+      const container =
+        $("dashboardRiskList");
+
+      if (!container) {
+        return;
+      }
+
+      if (!risks.length) {
+        container.innerHTML = `
+          <div class="dashboard-empty">
+            <strong>No major risks identified</strong>
+            Your latest assessment did not identify meaningful security gaps.
+          </div>
+        `;
+
+        return;
+      }
+
+      container.innerHTML =
+        risks
+          .slice(0, 6)
+          .map(
+            (risk) => `
+              <div class="risk-summary-item">
+
+                <div>
+                  <strong>
+                    ${escapeHtml(risk.title)}
+                  </strong>
+
+                  <span>
+                    ${escapeHtml(
+                      risk.description || ""
+                    )}
+                  </span>
+                </div>
+
+                <span
+                  class="badge ${escapeHtml(
+                    String(
+                      risk.severity || "low"
+                    ).toLowerCase()
+                  )}"
+                >
+                  ${escapeHtml(
+                    getRiskLabel(
+                      String(
+                        risk.severity || "low"
+                      ).toLowerCase()
+                    )
+                  )}
+                </span>
+
+              </div>
+            `
+          )
+          .join("");
+    }
+
+    function renderDashboardActions(actions) {
+      const container =
+        $("dashboardActionList");
+
+      if (!container) {
+        return;
+      }
+
+      if (!actions.length) {
+        container.innerHTML = `
+          <div class="dashboard-empty">
+            <strong>Your action list is empty</strong>
+            Complete an assessment to generate personalized recommendations.
+          </div>
+        `;
+
+        return;
+      }
+
+      container.innerHTML =
+        actions
+          .slice(0, 8)
+          .map(
+            (action) => {
+
+              const completed =
+                Boolean(action.completed);
+
+              const priority =
+                String(
+                  action.priority || "low"
+                ).toLowerCase();
+
+              return `
+                <div
+                  class="dashboard-action ${
+                    completed
+                      ? "completed"
+                      : ""
+                  }"
+                >
+
+                  <input
+                    class="action-check"
+                    type="checkbox"
+                    ${
+                      completed
+                        ? "checked"
+                        : ""
+                    }
+                    aria-label="Complete action"
+                    onchange="toggleDashboardAction(
+                      '${escapeHtml(action.id)}',
+                      this.checked
+                    )"
+                  />
+
+                  <div>
+
+                    <div class="dashboard-action-title">
+                      ${escapeHtml(
+                        action.title
+                      )}
+                    </div>
+
+                    <div class="dashboard-action-description">
+                      ${escapeHtml(
+                        action.description || ""
+                      )}
+                    </div>
+
+                  </div>
+
+                  <span class="badge ${escapeHtml(priority)}">
+                    ${escapeHtml(
+                      getRiskLabel(priority)
+                    )}
+                  </span>
+
+                </div>
+              `;
+            }
+          )
+          .join("");
+    }
+
+    function renderDashboardHistory(assessments) {
+      const container =
+        $("dashboardHistoryList");
+
+      if (!container) {
+        return;
+      }
+
+      if (!assessments.length) {
+        container.innerHTML = `
+          <div class="dashboard-empty">
+            <strong>No assessment history</strong>
+            Your completed assessments will appear here.
+          </div>
+        `;
+
+        return;
+      }
+
+      container.innerHTML =
+        assessments
+          .slice(0, 8)
+          .map(
+            (assessment) => {
+
+              const score =
+                Number(
+                  assessment.score || 0
+                );
+
+              const level =
+                String(
+                  assessment.risk_level || "high"
+                ).toLowerCase();
+
+              return `
+                <div class="history-item">
+
+                  <div>
+
+                    <strong>
+                      Security assessment
+                    </strong>
+
+                    <div class="history-date">
+                      ${escapeHtml(
+                        formatDate(
+                          assessment.completed_at
+                        )
+                      )}
+                    </div>
+
+                  </div>
+
+                  <div>
+                    <div class="history-score">
+                      ${escapeHtml(score)}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span class="badge ${escapeHtml(level)}">
+                      ${escapeHtml(
+                        getRiskLabel(level)
+                      )}
+                    </span>
+                  </div>
+
+                  <button
+                    class="btn btn-small"
+                    onclick="viewAssessmentHistory('${escapeHtml(assessment.id)}')"
+                  >
+                    View results
+                  </button>
+
+                </div>
+              `;
+            }
+          )
+          .join("");
+    }
+
+    function updateActionProgress(actions) {
+      const text =
+        $("actionProgressText");
+
+      const percent =
+        $("actionProgressPercent");
+
+      const bar =
+        $("actionProgressBar");
+
+      const openActionsStat =
+        $("dashboardOpenActionsStat");
+
+      if (!actions.length) {
+
+        if (text) {
+          text.textContent =
+            "No actions yet";
+        }
+
+        if (percent) {
+          percent.textContent =
+            "0%";
+        }
+
+        if (bar) {
+          bar.style.width =
+            "0%";
+        }
+
+        return;
+      }
+
+      const completed =
+        actions.filter(
+          (action) =>
+            Boolean(action.completed)
+        ).length;
+
+      const percentage =
+        Math.round(
+          (completed / actions.length) * 100
+        );
+
+      if (text) {
+        text.textContent =
+          `${completed} of ${actions.length} completed`;
+      }
+
+      if (percent) {
+        percent.textContent =
+          `${percentage}%`;
+      }
+
+      if (bar) {
+        bar.style.width =
+          `${percentage}%`;
+      }
+
+      if (openActionsStat) {
+        openActionsStat.textContent =
+          actions.length - completed;
+      }
+    }
+
+    async function toggleDashboardAction(
+      actionId,
+      completed
+    ) {
+      if (!actionId) {
+        return;
+      }
+
+      if (!supabaseClient) {
+        showToast(
+          "Action updates require your Supabase connection.",
+          "error"
+        );
+
+        return;
+      }
+
+      try {
+
+        const {
+          error
+        } =
+          await supabaseClient
+            .from("actions")
+            .update({
+              completed:
+                Boolean(completed)
+            })
+            .eq(
+              "id",
+              actionId
+            );
+
+        if (error) {
+          throw error;
+        }
+
+        showToast(
+          completed
+            ? "Action marked complete."
+            : "Action moved back to open."
+        );
+
+        await loadDashboard();
+
+      } catch (error) {
+
+        console.error(
+          "AZÈLE action update failed:",
+          error
+        );
+
+        showToast(
+          "Could not update that action. Check your Supabase UPDATE policy.",
+          "error"
+        );
+
+        await loadDashboard();
+      }
+    }
+
+    async function viewAssessmentHistory(
+      assessmentId
+    ) {
+      if (
+        !assessmentId ||
+        !supabaseClient
+      ) {
+        return;
+      }
+
+      try {
+
+        const {
+          data: assessment,
+          error: assessmentError
+        } =
+          await supabaseClient
+            .from("assessments")
+            .select(
+              "id, score, risk_level, completed_at"
+            )
+            .eq(
+              "id",
+              assessmentId
+            )
+            .maybeSingle();
+
+        if (assessmentError) {
+          throw assessmentError;
+        }
+
+        if (!assessment) {
+          showToast(
+            "That assessment could not be found.",
+            "error"
+          );
+
+          return;
+        }
+
+        const {
+          data: risks,
+          error: risksError
+        } =
+          await supabaseClient
+            .from("risks")
+            .select(
+              "title, description, severity, recommendation"
+            )
+            .eq(
+              "assessment_id",
+              assessmentId
+            );
+
+        if (risksError) {
+          throw risksError;
+        }
+
+        const {
+          data: actions,
+          error: actionsError
+        } =
+          await supabaseClient
+            .from("actions")
+            .select(
+              "title, description, priority, completed"
+            )
+            .eq(
+              "assessment_id",
+              assessmentId
+            );
+
+        if (actionsError) {
+          throw actionsError;
+        }
+
+        renderStoredAssessmentResults(
+          assessment,
+          risks || [],
+          actions || []
+        );
+
+      } catch (error) {
+
+        console.error(
+          "AZÈLE historical assessment load failed:",
+          error
+        );
+
+        showToast(
+          "Could not load that assessment.",
+          "error"
+        );
+      }
+    }
+
+    function renderStoredAssessmentResults(
+      assessment,
+      risks,
+      actions
+    ) {
+      const score =
+        Number(
+          assessment.score || 0
+        );
+
+      const scoreInfo =
+        getScoreInfo(score);
+
+      const level =
+        String(
+          assessment.risk_level || "high"
+        ).toLowerCase();
+
+      hideAllMainViews();
+
+      const results =
+        $("resultsSection");
+
+      if (results) {
+        results.classList.remove("hidden");
+      }
+
+      const scoreNumber =
+        $("scoreNumber");
+
+      const scoreLabel =
+        $("scoreLabel");
+
+      const scoreDescription =
+        $("scoreDescription");
+
+      const scoreCircle =
+        $("scoreCircle");
+
+      const risksContainer =
+        $("risksContainer");
+
+      const actionsContainer =
+        $("actionsContainer");
+
+      if (scoreNumber) {
+        scoreNumber.textContent =
+          score;
+      }
+
+      if (scoreLabel) {
+        scoreLabel.textContent =
+          scoreInfo.label;
+      }
+
+      if (scoreDescription) {
+        scoreDescription.textContent =
+          `${scoreInfo.description} Assessment completed ${formatDate(assessment.completed_at)}.`;
+      }
+
+      if (scoreCircle) {
+        scoreCircle.style.setProperty(
+          "--score",
+          `${score}%`
+        );
+      }
+
+      if (risksContainer) {
+
+        if (!risks.length) {
+
+          risksContainer.innerHTML = `
+            <div class="risk-item">
+              <strong>
+                No major risks identified
+              </strong>
+
+              <p>
+                This assessment did not identify any meaningful gaps.
+              </p>
+            </div>
+          `;
+
+        } else {
+
+          risksContainer.innerHTML =
+            risks
+              .map(
+                (risk) => `
+                  <div class="risk-item">
+
+                    <span class="badge ${escapeHtml(
+                      String(
+                        risk.severity || level
+                      ).toLowerCase()
+                    )}">
+                      ${escapeHtml(
+                        getRiskLabel(
+                          String(
+                            risk.severity || level
+                          ).toLowerCase()
+                        )
+                      )}
+                    </span>
+
+                    <strong>
+                      ${escapeHtml(
+                        risk.title
+                      )}
+                    </strong>
+
+                    <p>
+                      ${escapeHtml(
+                        risk.description || ""
+                      )}
+                    </p>
+
+                  </div>
+                `
+              )
+              .join("");
+        }
+      }
+
+      if (actionsContainer) {
+
+        if (!actions.length) {
+
+          actionsContainer.innerHTML = `
+            <div class="action-item">
+              <strong>
+                No actions required
+              </strong>
+
+              <p>
+                Continue maintaining your existing controls.
+              </p>
+            </div>
+          `;
+
+        } else {
+
+          actionsContainer.innerHTML =
+            actions
+              .map(
+                (action) => `
+                  <div class="action-item">
+
+                    <span class="badge ${escapeHtml(
+                      String(
+                        action.priority || "low"
+                      ).toLowerCase()
+                    )}">
+                      ${escapeHtml(
+                        getRiskLabel(
+                          String(
+                            action.priority || "low"
+                          ).toLowerCase()
+                        )
+                      )}
+                      priority
+                    </span>
+
+                    <strong>
+                      ${escapeHtml(
+                        action.title
+                      )}
+                    </strong>
+
+                    <p>
+                      ${escapeHtml(
+                        action.description || ""
+                      )}
+                    </p>
+
+                  </div>
+                `
+              )
+              .join("");
+        }
+      }
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    async function refreshDashboard() {
+      if (!currentUser) {
+        openAuthModal("login");
+        return;
+      }
+
+      showToast(
+        "Refreshing your AZÈLE workspace..."
+      );
+
+      await loadDashboard();
+
+      showToast(
+        "Dashboard refreshed."
+      );
+    }
+
+    function loadLocalDashboard() {
+      try {
+
+        const history =
+          JSON.parse(
+            localStorage.getItem(
+              "azele-assessments"
+            ) || "[]"
+          );
+
+        if (!history.length) {
+          resetDashboardUI();
+          return;
+        }
+
+        const latest =
+          history[0];
+
+        const assessments =
+          history.map(
+            (item, index) => ({
+              id:
+                `local-${index}`,
+              score:
+                item.score,
+              risk_level:
+                item.score >= 85
+                  ? "low"
+                  : item.score >= 65
+                    ? "medium"
+                    : "high",
+              completed_at:
+                item.completedAt
+            })
+          );
+
+        const actions =
+          latest.actions || [];
+
+        const risks =
+          latest.risks || [];
+
+        const businessName =
+          currentUser?.user_metadata?.business_name ||
+          currentUser?.email?.split("@")[0] ||
+          "My Business";
+
+        renderDashboardData({
+          business: null,
+          businessName,
+          assessments,
+          latest: assessments[0],
+          risks,
+          actions
+        });
+
+        showToast(
+          "Showing locally saved assessment data."
+        );
+
+      } catch (error) {
+
+        console.warn(
+          "AZÈLE local dashboard failed:",
+          error
+        );
+
+        resetDashboardUI();
+      }
     }
 
     /* QUESTIONS */
@@ -2481,21 +4693,20 @@
     function startAssessment() {
       resetAssessment();
 
-      const home = $("homeContent");
-      const assessment = $("assessmentSection");
-      const results = $("resultsSection");
+      hideAllMainViews();
 
-      if (home) {
-        home.classList.add("hidden");
-      }
-
-      if (results) {
-        results.classList.add("hidden");
-      }
+      const assessment =
+        $("assessmentSection");
 
       if (assessment) {
         assessment.classList.remove("hidden");
       }
+
+      document
+        .querySelectorAll(".nav-link")
+        .forEach((button) => {
+          button.classList.remove("active");
+        });
 
       renderQuestion();
 
@@ -2838,7 +5049,7 @@
 
     /* COMPLETE */
 
-    function completeAssessment() {
+    async function completeAssessment() {
       const score =
         calculateScore();
 
@@ -2851,22 +5062,10 @@
       const actions =
         buildActions(risks);
 
-      const home =
-        $("homeContent");
-
-      const assessment =
-        $("assessmentSection");
+      hideAllMainViews();
 
       const results =
         $("resultsSection");
-
-      if (home) {
-        home.classList.add("hidden");
-      }
-
-      if (assessment) {
-        assessment.classList.add("hidden");
-      }
 
       if (results) {
         results.classList.remove("hidden");
@@ -2986,7 +5185,7 @@
             .join("");
       }
 
-      saveAssessment({
+      await saveAssessment({
         score,
         risks,
         actions
@@ -3044,6 +5243,9 @@
             .from("businesses")
             .select("id")
             .eq("user_id", user.id)
+            .order("created_at", {
+              ascending: true
+            })
             .limit(1)
             .maybeSingle();
 
@@ -3244,6 +5446,12 @@
         showToast(
           "Assessment saved to your AZÈLE account."
         );
+
+        if (currentUser) {
+          setTimeout(() => {
+            loadDashboard();
+          }, 200);
+        }
 
       } catch (error) {
 
@@ -3554,6 +5762,10 @@
 
               closeAuthModal();
 
+              setTimeout(() => {
+                showDashboard();
+              }, 200);
+
             } else {
 
               showToast(
@@ -3594,6 +5806,12 @@
           );
 
           closeAuthModal();
+
+          setTimeout(() => {
+            if (currentUser) {
+              showDashboard();
+            }
+          }, 200);
         }
 
       } catch (error) {
@@ -3649,6 +5867,8 @@
 
         updateAuthUI();
 
+        goHome();
+
         return;
       }
 
@@ -3672,6 +5892,8 @@
           "You have been signed out."
         );
 
+        goHome();
+
       } catch (error) {
 
         console.error(
@@ -3690,6 +5912,9 @@
 
       const authArea =
         $("authArea");
+
+      const dashboardButton =
+        $("dashboardNavBtn");
 
       if (!authArea) {
         return;
@@ -3718,6 +5943,12 @@
           </div>
         `;
 
+        if (dashboardButton) {
+          dashboardButton.classList.remove(
+            "hidden"
+          );
+        }
+
       } else {
 
         authArea.innerHTML = `
@@ -3728,6 +5959,12 @@
             Sign in
           </button>
         `;
+
+        if (dashboardButton) {
+          dashboardButton.classList.add(
+            "hidden"
+          );
+        }
       }
     }
 
@@ -4343,6 +6580,27 @@
               session?.user || null;
 
             updateAuthUI();
+
+            if (currentUser) {
+
+              setTimeout(() => {
+                loadDashboard();
+              }, 0);
+
+            } else {
+
+              const dashboard =
+                $("dashboardSection");
+
+              if (
+                dashboard &&
+                !dashboard.classList.contains(
+                  "hidden"
+                )
+              ) {
+                goHome();
+              }
+            }
           }
         );
 
@@ -4375,6 +6633,10 @@
           setupAuthListener();
 
           await loadCurrentUser();
+
+          if (currentUser) {
+            showDashboard(false);
+          }
 
         } else {
 
@@ -4438,6 +6700,18 @@
 
     window.goHome =
       goHome;
+
+    window.showDashboard =
+      showDashboard;
+
+    window.refreshDashboard =
+      refreshDashboard;
+
+    window.toggleDashboardAction =
+      toggleDashboardAction;
+
+    window.viewAssessmentHistory =
+      viewAssessmentHistory;
 
     window.setTheme =
       setTheme;
