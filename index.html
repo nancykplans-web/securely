@@ -1082,6 +1082,69 @@
 
 <body>
 
+  <!-- ============================================================
+       AZÈLE MARKDOWN-FENCE PROTECTION
+       Removes accidental ```html / ``` text if a deployment layer
+       injects Markdown fences into the rendered DOM.
+       ============================================================ -->
+
+  <script>
+    (function removeMarkdownFences() {
+      function cleanMarkdownFences() {
+        try {
+          const walker = document.createTreeWalker(
+            document.documentElement,
+            NodeFilter.SHOW_TEXT
+          );
+
+          const nodes = [];
+          let node;
+
+          while ((node = walker.nextNode())) {
+            nodes.push(node);
+          }
+
+          nodes.forEach((textNode) => {
+            const original = textNode.nodeValue;
+
+            if (!original) {
+              return;
+            }
+
+            const cleaned = original
+              .replace(/```html/gi, "")
+              .replace(/```/g, "");
+
+            if (cleaned !== original) {
+              textNode.nodeValue = cleaned;
+            }
+          });
+        } catch (error) {
+          console.warn(
+            "AZÈLE Markdown-fence cleanup skipped:",
+            error
+          );
+        }
+      }
+
+      cleanMarkdownFences();
+
+      const observer =
+        new MutationObserver(() => {
+          cleanMarkdownFences();
+        });
+
+      observer.observe(
+        document.documentElement,
+        {
+          subtree: true,
+          childList: true,
+          characterData: true
+        }
+      );
+    })();
+  </script>
+
   <!-- NAVBAR -->
 
   <nav class="navbar">
@@ -3742,15 +3805,10 @@
           "Start with the fundamentals:\n\n" +
 
           "1. Enable MFA on important accounts.\n" +
-
           "2. Use unique passwords and a password manager.\n" +
-
           "3. Keep devices and software updated.\n" +
-
           "4. Maintain reliable backups.\n" +
-
           "5. Train employees to recognize phishing.\n" +
-
           "6. Review who has access to sensitive systems.\n\n" +
 
           "Those controls cover a surprisingly large portion of everyday business security."
