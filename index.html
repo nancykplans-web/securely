@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +9,7 @@
       try {
         const savedTheme =
           localStorage.getItem("azele-theme") || "system";
+
         document.documentElement.dataset.theme = savedTheme;
       } catch (error) {
         document.documentElement.dataset.theme = "system";
@@ -27,6 +27,7 @@
     rel="stylesheet"
   />
 
+  <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -100,12 +101,18 @@
       transition: background .25s ease, color .25s ease;
     }
 
-    button,input,textarea {
+    button,
+    input,
+    textarea {
       font: inherit;
     }
 
     button {
       cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
     }
 
     a {
@@ -211,12 +218,17 @@
       transition:
         transform .2s ease,
         box-shadow .2s ease,
-        border-color .2s ease;
+        border-color .2s ease,
+        opacity .2s ease;
     }
 
-    .btn:hover {
+    .btn:hover:not(:disabled) {
       transform: translateY(-1px);
       box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    }
+
+    .btn:disabled {
+      opacity: .45;
     }
 
     .btn-primary {
@@ -259,7 +271,7 @@
     .hero h1 {
       max-width: 900px;
       margin: 24px auto 18px;
-      font-family: "Cormorant Garamond",serif;
+      font-family: "Cormorant Garamond", serif;
       font-size: clamp(54px,8vw,94px);
       line-height: .91;
       letter-spacing: -.035em;
@@ -297,7 +309,7 @@
 
     .section-header h2 {
       margin: 10px 0 12px;
-      font-family: "Cormorant Garamond",serif;
+      font-family: "Cormorant Garamond", serif;
       font-size: 54px;
       line-height: 1;
     }
@@ -382,7 +394,11 @@
       position: relative;
       padding: 32px;
       min-height: 295px;
-      background: linear-gradient(145deg,var(--surface),var(--surface-2));
+      background: linear-gradient(
+        145deg,
+        var(--surface),
+        var(--surface-2)
+      );
       border: 1px solid var(--border);
       border-radius: 20px;
       box-shadow: 0 15px 45px rgba(0,0,0,.045);
@@ -414,7 +430,7 @@
 
     .testimonial-quote {
       margin: 28px 0;
-      font-family: "Cormorant Garamond",serif;
+      font-family: "Cormorant Garamond", serif;
       font-size: 25px;
       line-height: 1.35;
       color: var(--text);
@@ -569,7 +585,7 @@
 
     .tool-card h3 {
       margin: 0 0 8px;
-      font-family: "Cormorant Garamond",serif;
+      font-family: "Cormorant Garamond", serif;
       font-size: 34px;
     }
 
@@ -656,7 +672,7 @@
 
     .question-card h2 {
       margin: 12px 0 25px;
-      font-family: "Cormorant Garamond",serif;
+      font-family: "Cormorant Garamond", serif;
       font-size: 39px;
       line-height: 1.1;
     }
@@ -716,19 +732,26 @@
       display: grid;
       place-items: center;
       background:
-        radial-gradient(circle at center,var(--surface) 58%,transparent 59%),
-        conic-gradient(var(--gold) var(--score),var(--surface-2) 0);
+        radial-gradient(
+          circle at center,
+          var(--surface) 58%,
+          transparent 59%
+        ),
+        conic-gradient(
+          var(--gold) var(--score),
+          var(--surface-2) 0
+        );
     }
 
     .score-number {
-      font-family: "Cormorant Garamond",serif;
+      font-family: "Cormorant Garamond", serif;
       font-size: 55px;
       font-weight: 700;
     }
 
     .score-content h2 {
       margin: 0 0 8px;
-      font-family: "Cormorant Garamond",serif;
+      font-family: "Cormorant Garamond", serif;
       font-size: 44px;
     }
 
@@ -858,7 +881,7 @@
 
     .modal h2 {
       margin: 0;
-      font-family: "Cormorant Garamond",serif;
+      font-family: "Cormorant Garamond", serif;
       font-size: 38px;
     }
 
@@ -1040,6 +1063,18 @@
 
       .testimonial-card {
         min-height: auto;
+      }
+
+      .assistant-input {
+        flex-direction: column;
+      }
+
+      .assistant-input .btn {
+        width: 100%;
+      }
+
+      .message {
+        max-width: 90%;
       }
     }
   </style>
@@ -1646,6 +1681,7 @@
         <div
           class="score-circle"
           id="scoreCircle"
+          style="--score:0%;"
         >
           <div class="score-number">
             <span id="scoreNumber">0</span>
@@ -1763,6 +1799,7 @@
             id="businessName"
             type="text"
             placeholder="Your business"
+            autocomplete="organization"
           />
 
         </div>
@@ -1777,6 +1814,7 @@
             id="authEmail"
             type="email"
             placeholder="you@company.com"
+            autocomplete="email"
             required
           />
 
@@ -1793,6 +1831,7 @@
             type="password"
             placeholder="Your password"
             minlength="6"
+            autocomplete="current-password"
             required
           />
 
@@ -1831,6 +1870,8 @@
   <div
     class="toast"
     id="toast"
+    role="status"
+    aria-live="polite"
   ></div>
 
   <!-- JAVASCRIPT -->
@@ -1839,7 +1880,7 @@
     "use strict";
 
     /* ============================================================
-       SUPABASE
+       AZÈLE SUPABASE CONFIGURATION
        ============================================================ */
 
     const SUPABASE_URL =
@@ -1851,37 +1892,60 @@
     let supabaseClient = null;
 
     function isSupabaseConfigured() {
-      return (
+      return Boolean(
         typeof SUPABASE_URL === "string" &&
-        typeof SUPABASE_PUBLISHABLE_KEY === "string" &&
+        SUPABASE_URL.startsWith("https://") &&
         SUPABASE_URL.includes(".supabase.co") &&
         !SUPABASE_URL.includes("YOUR-PROJECT") &&
-        SUPABASE_PUBLISHABLE_KEY.trim() !== "" &&
+
+        typeof SUPABASE_PUBLISHABLE_KEY === "string" &&
+        SUPABASE_PUBLISHABLE_KEY.startsWith("sb_publishable_") &&
         !SUPABASE_PUBLISHABLE_KEY.includes("YOUR_SUPABASE")
       );
     }
 
     function initializeSupabase() {
       try {
+        if (!isSupabaseConfigured()) {
+          console.error(
+            "AZÈLE: Supabase configuration is invalid."
+          );
+
+          return false;
+        }
+
         if (
-          !isSupabaseConfigured() ||
           !window.supabase ||
           typeof window.supabase.createClient !== "function"
         ) {
-          console.info(
-            "AZÈLE: Supabase is not configured."
+          console.error(
+            "AZÈLE: Supabase JavaScript library did not load."
           );
+
           return false;
         }
 
         supabaseClient =
           window.supabase.createClient(
             SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
+            SUPABASE_PUBLISHABLE_KEY,
+            {
+              auth: {
+                autoRefreshToken: true,
+                persistSession: true,
+                detectSessionInUrl: true,
+                flowType: "pkce"
+              }
+            }
           );
 
         console.info(
-          "AZÈLE: Supabase initialized."
+          "AZÈLE: Supabase initialized successfully."
+        );
+
+        console.info(
+          "AZÈLE: Connected project:",
+          SUPABASE_URL
         );
 
         return true;
@@ -1893,6 +1957,7 @@
         );
 
         supabaseClient = null;
+
         return false;
       }
     }
@@ -1905,31 +1970,36 @@
 
     /* TOAST */
 
-    function showToast(message,type="") {
+    function showToast(message, type = "") {
       const toast = $("toast");
 
-      if (!toast) return;
+      if (!toast) {
+        return;
+      }
 
-      toast.textContent = message;
-      toast.className = "toast show " + type;
+      toast.textContent = String(message || "");
+
+      toast.className =
+        "toast show" +
+        (type ? " " + type : "");
 
       clearTimeout(window.azeleToastTimer);
 
       window.azeleToastTimer =
         setTimeout(() => {
           toast.classList.remove("show");
-        },3500);
+        }, 3500);
     }
 
     /* ESCAPE */
 
     function escapeHtml(value) {
       return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
     /* SCROLL */
@@ -1937,11 +2007,13 @@
     function scrollToSection(id) {
       const element = $(id);
 
-      if (!element) return;
+      if (!element) {
+        return;
+      }
 
       element.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
+        behavior: "smooth",
+        block: "start"
       });
     }
 
@@ -1949,7 +2021,7 @@
 
     function setTheme(theme) {
       if (
-        !["light","dark","system"].includes(theme)
+        !["light", "dark", "system"].includes(theme)
       ) {
         theme = "system";
       }
@@ -1965,7 +2037,9 @@
         );
       }
 
-      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.theme =
+        theme;
+
       updateThemeButtons();
     }
 
@@ -2004,8 +2078,8 @@
       }
 
       window.scrollTo({
-        top:0,
-        behavior:"smooth"
+        top: 0,
+        behavior: "smooth"
       });
     }
 
@@ -2013,231 +2087,231 @@
 
     const questions = [
       {
-        id:"passwords",
+        id: "passwords",
         question:
           "How does your business manage employee passwords?",
-        answers:[
+        answers: [
           {
             text:
               "We use strong unique passwords and a password manager.",
-            points:0
+            points: 0
           },
           {
             text:
               "Most passwords are strong, but we do not use a manager consistently.",
-            points:5
+            points: 5
           },
           {
             text:
               "Employees reuse passwords or use simple passwords.",
-            points:10
+            points: 10
           }
         ]
       },
 
       {
-        id:"mfa",
+        id: "mfa",
         question:
           "How widely is multi-factor authentication enabled?",
-        answers:[
+        answers: [
           {
             text:
               "MFA is enabled across important business accounts.",
-            points:0
+            points: 0
           },
           {
             text:
               "MFA is enabled on some accounts.",
-            points:5
+            points: 5
           },
           {
             text:
               "We rarely or never use MFA.",
-            points:10
+            points: 10
           }
         ]
       },
 
       {
-        id:"backups",
+        id: "backups",
         question:
           "How does your business handle backups?",
-        answers:[
+        answers: [
           {
             text:
               "We maintain regular tested backups.",
-            points:0
+            points: 0
           },
           {
             text:
               "We have backups but rarely test them.",
-            points:5
+            points: 5
           },
           {
             text:
               "We do not have a reliable backup process.",
-            points:10
+            points: 10
           }
         ]
       },
 
       {
-        id:"updates",
+        id: "updates",
         question:
           "How are software and device updates handled?",
-        answers:[
+        answers: [
           {
             text:
               "Updates are installed regularly and automatically where possible.",
-            points:0
+            points: 0
           },
           {
             text:
               "Updates are performed occasionally.",
-            points:5
+            points: 5
           },
           {
             text:
               "Updates are often delayed or ignored.",
-            points:10
+            points: 10
           }
         ]
       },
 
       {
-        id:"phishing",
+        id: "phishing",
         question:
           "How prepared is your team to recognize phishing?",
-        answers:[
+        answers: [
           {
             text:
               "Employees receive regular security awareness guidance.",
-            points:0
+            points: 0
           },
           {
             text:
               "Employees know some common warning signs.",
-            points:5
+            points: 5
           },
           {
             text:
               "We have little or no phishing awareness training.",
-            points:10
+            points: 10
           }
         ]
       },
 
       {
-        id:"access",
+        id: "access",
         question:
           "How is employee access to business systems managed?",
-        answers:[
+        answers: [
           {
             text:
               "Access is based on role and reviewed regularly.",
-            points:0
+            points: 0
           },
           {
             text:
               "Access is mostly managed manually.",
-            points:5
+            points: 5
           },
           {
             text:
               "Employees often have access they no longer need.",
-            points:10
+            points: 10
           }
         ]
       },
 
       {
-        id:"devices",
+        id: "devices",
         question:
           "How are business devices protected?",
-        answers:[
+        answers: [
           {
             text:
               "Devices use security software, encryption, and screen locks.",
-            points:0
+            points: 0
           },
           {
             text:
               "Most devices have basic security protections.",
-            points:5
+            points: 5
           },
           {
             text:
               "Device protection is inconsistent.",
-            points:10
+            points: 10
           }
         ]
       },
 
       {
-        id:"wifi",
+        id: "wifi",
         question:
           "How is your business Wi-Fi secured?",
-        answers:[
+        answers: [
           {
             text:
               "We use strong encryption, unique credentials, and separated guest access.",
-            points:0
+            points: 0
           },
           {
             text:
               "Our Wi-Fi has a strong password but limited additional controls.",
-            points:5
+            points: 5
           },
           {
             text:
               "We use shared or default Wi-Fi credentials.",
-            points:10
+            points: 10
           }
         ]
       },
 
       {
-        id:"incident",
+        id: "incident",
         question:
           "Do you have a plan for responding to a security incident?",
-        answers:[
+        answers: [
           {
             text:
               "Yes, we have documented steps and know who is responsible.",
-            points:0
+            points: 0
           },
           {
             text:
               "We have an informal plan.",
-            points:5
+            points: 5
           },
           {
             text:
               "We have no incident response plan.",
-            points:10
+            points: 10
           }
         ]
       },
 
       {
-        id:"privacy",
+        id: "privacy",
         question:
           "How does your business protect sensitive customer information?",
-        answers:[
+        answers: [
           {
             text:
               "Sensitive data is limited, protected, and access is controlled.",
-            points:0
+            points: 0
           },
           {
             text:
               "We have some protections but they are inconsistent.",
-            points:5
+            points: 5
           },
           {
             text:
               "Sensitive information is widely accessible or poorly controlled.",
-            points:10
+            points: 10
           }
         ]
       }
@@ -2246,80 +2320,80 @@
     /* RISKS */
 
     const riskDefinitions = {
-      passwords:{
-        title:"Password security",
+      passwords: {
+        title: "Password security",
         description:
           "Weak or reused passwords can expose multiple business accounts at once.",
         recommendation:
           "Use unique passwords and a reputable password manager."
       },
 
-      mfa:{
-        title:"Multi-factor authentication",
+      mfa: {
+        title: "Multi-factor authentication",
         description:
           "Accounts without MFA have less protection if a password is compromised.",
         recommendation:
           "Enable MFA on email, financial, administrative, and cloud accounts first."
       },
 
-      backups:{
-        title:"Backup resilience",
+      backups: {
+        title: "Backup resilience",
         description:
           "Unreliable backups can make recovery from data loss significantly harder.",
         recommendation:
           "Create regular backups and periodically verify that recovery actually works."
       },
 
-      updates:{
-        title:"Software updates",
+      updates: {
+        title: "Software updates",
         description:
           "Delayed security updates can leave known vulnerabilities exposed.",
         recommendation:
           "Enable automatic updates where practical and establish a patch routine."
       },
 
-      phishing:{
-        title:"Phishing awareness",
+      phishing: {
+        title: "Phishing awareness",
         description:
           "Social engineering can bypass technical controls by targeting people directly.",
         recommendation:
           "Teach employees how to recognize suspicious links, attachments, and requests."
       },
 
-      access:{
-        title:"Access control",
+      access: {
+        title: "Access control",
         description:
           "Excessive permissions increase the impact of compromised accounts.",
         recommendation:
           "Review user access regularly and remove permissions that are no longer needed."
       },
 
-      devices:{
-        title:"Device protection",
+      devices: {
+        title: "Device protection",
         description:
           "Unprotected devices can expose business data and accounts.",
         recommendation:
           "Use screen locks, security software, encryption, and timely updates."
       },
 
-      wifi:{
-        title:"Network security",
+      wifi: {
+        title: "Network security",
         description:
           "Poorly secured Wi-Fi can create an unnecessary entry point into business systems.",
         recommendation:
           "Use strong unique credentials and separate guest access."
       },
 
-      incident:{
-        title:"Incident response",
+      incident: {
+        title: "Incident response",
         description:
           "Without a response plan, teams can lose valuable time during a security event.",
         recommendation:
           "Create a simple written incident response checklist and assign responsibility."
       },
 
-      privacy:{
-        title:"Data privacy",
+      privacy: {
+        title: "Data privacy",
         description:
           "Unnecessary access to sensitive information increases privacy and security risk.",
         recommendation:
@@ -2336,6 +2410,7 @@
 
     function resetAssessment() {
       currentQuestion = 0;
+
       answers =
         new Array(questions.length).fill(null);
     }
@@ -2362,8 +2437,8 @@
       renderQuestion();
 
       window.scrollTo({
-        top:0,
-        behavior:"smooth"
+        top: 0,
+        behavior: "smooth"
       });
     }
 
@@ -2371,7 +2446,9 @@
       const question =
         questions[currentQuestion];
 
-      if (!question) return;
+      if (!question) {
+        return;
+      }
 
       const questionNumber =
         $("questionNumber");
@@ -2405,12 +2482,13 @@
         console.error(
           "AZÈLE assessment elements are missing."
         );
+
         return;
       }
 
       questionNumber.textContent =
         "Question " +
-        String(currentQuestion + 1).padStart(2,"0");
+        String(currentQuestion + 1).padStart(2, "0");
 
       questionText.textContent =
         question.question;
@@ -2437,44 +2515,54 @@
 
       answerList.innerHTML = "";
 
-      question.answers.forEach((answer,index) => {
-        const button =
-          document.createElement("button");
+      question.answers.forEach(
+        (answer, index) => {
 
-        button.type = "button";
-        button.className = "answer-btn";
+          const button =
+            document.createElement("button");
 
-        if (
-          answers[currentQuestion] === index
-        ) {
-          button.classList.add("selected");
-        }
+          button.type = "button";
 
-        button.textContent =
-          answer.text;
+          button.className =
+            "answer-btn";
 
-        button.addEventListener(
-          "click",
-          () => {
-            answers[currentQuestion] = index;
-            renderQuestion();
+          if (
+            answers[currentQuestion] === index
+          ) {
+            button.classList.add("selected");
           }
-        );
 
-        answerList.appendChild(button);
-      });
+          button.textContent =
+            answer.text;
+
+          button.addEventListener(
+            "click",
+            () => {
+              answers[currentQuestion] =
+                index;
+
+              renderQuestion();
+            }
+          );
+
+          answerList.appendChild(button);
+        }
+      );
 
       if (previousBtn) {
         previousBtn.disabled =
           currentQuestion === 0;
 
         previousBtn.style.opacity =
-          currentQuestion === 0 ? ".45" : "1";
+          currentQuestion === 0
+            ? ".45"
+            : "1";
       }
 
       if (nextBtn) {
         nextBtn.textContent =
-          currentQuestion === questions.length - 1
+          currentQuestion ===
+          questions.length - 1
             ? "Complete assessment"
             : "Next";
       }
@@ -2488,19 +2576,21 @@
           "Please select an answer before continuing.",
           "error"
         );
+
         return;
       }
 
       if (
-        currentQuestion < questions.length - 1
+        currentQuestion <
+        questions.length - 1
       ) {
         currentQuestion++;
 
         renderQuestion();
 
         window.scrollTo({
-          top:0,
-          behavior:"smooth"
+          top: 0,
+          behavior: "smooth"
         });
 
         return;
@@ -2519,8 +2609,8 @@
       renderQuestion();
 
       window.scrollTo({
-        top:0,
-        behavior:"smooth"
+        top: 0,
+        behavior: "smooth"
       });
     }
 
@@ -2529,7 +2619,8 @@
     function calculateScore() {
       const totalPoints =
         answers.reduce(
-          (total,answerIndex,index) => {
+          (total, answerIndex, index) => {
+
             if (answerIndex === null) {
               return total;
             }
@@ -2567,9 +2658,9 @@
 
     function getRiskLabel(level) {
       const labels = {
-        high:"High",
-        medium:"Medium",
-        low:"Low"
+        high: "High",
+        medium: "Medium",
+        low: "Low"
       };
 
       return labels[level] || "Unknown";
@@ -2578,7 +2669,7 @@
     function getScoreInfo(score) {
       if (score >= 85) {
         return {
-          label:"Strong readiness",
+          label: "Strong readiness",
           description:
             "Your business demonstrates a strong foundation. Focus on maintaining your controls and closing any remaining gaps."
         };
@@ -2586,7 +2677,7 @@
 
       if (score >= 65) {
         return {
-          label:"Moderate readiness",
+          label: "Moderate readiness",
           description:
             "You have several useful protections in place, but there are still meaningful areas where security can be improved."
         };
@@ -2594,14 +2685,14 @@
 
       if (score >= 40) {
         return {
-          label:"Needs improvement",
+          label: "Needs improvement",
           description:
             "Your assessment identified several areas that deserve attention. Prioritizing the highest-risk gaps can substantially improve your security posture."
         };
       }
 
       return {
-        label:"High exposure",
+        label: "High exposure",
         description:
           "Your results indicate significant security gaps. Start with the highest-priority actions and build from there."
       };
@@ -2611,7 +2702,8 @@
 
     function buildRisks() {
       return questions
-        .map((question,index) => {
+        .map((question, index) => {
+
           const answerIndex =
             answers[index];
 
@@ -2620,7 +2712,9 @@
           }
 
           const points =
-            question.answers[answerIndex].points;
+            question
+              .answers[answerIndex]
+              .points;
 
           if (points === 0) {
             return null;
@@ -2635,12 +2729,16 @@
 
           return {
             ...definition,
-            severity:getRiskLevel(points),
+            severity:
+              getRiskLevel(points),
             points
           };
         })
         .filter(Boolean)
-        .sort((a,b) => b.points - a.points);
+        .sort(
+          (a, b) =>
+            b.points - a.points
+        );
     }
 
     function buildActions(risks) {
@@ -2648,22 +2746,31 @@
 
       risks.forEach((risk) => {
         actions.push({
-          title:risk.recommendation,
-          description:risk.description,
-          priority:risk.severity
+          title:
+            risk.recommendation,
+
+          description:
+            risk.description,
+
+          priority:
+            risk.severity
         });
       });
 
       if (actions.length === 0) {
         actions.push({
-          title:"Maintain your current controls",
+          title:
+            "Maintain your current controls",
+
           description:
             "Continue reviewing security practices regularly and keep important systems updated.",
-          priority:"low"
+
+          priority:
+            "low"
         });
       }
 
-      return actions.slice(0,6);
+      return actions.slice(0, 6);
     }
 
     /* COMPLETE */
@@ -2743,25 +2850,33 @@
       }
 
       if (risksContainer) {
+
         if (risks.length === 0) {
+
           risksContainer.innerHTML = `
             <div class="risk-item">
               <strong>
                 No major risks identified
               </strong>
+
               <p>
                 Your answers did not identify any high-impact gaps.
               </p>
             </div>
           `;
+
         } else {
+
           risksContainer.innerHTML =
             risks
               .map(
                 (risk) => `
                   <div class="risk-item">
+
                     <span class="badge ${escapeHtml(risk.severity)}">
-                      ${escapeHtml(getRiskLabel(risk.severity))}
+                      ${escapeHtml(
+                        getRiskLabel(risk.severity)
+                      )}
                     </span>
 
                     <strong>
@@ -2771,6 +2886,7 @@
                     <p>
                       ${escapeHtml(risk.description)}
                     </p>
+
                   </div>
                 `
               )
@@ -2779,6 +2895,7 @@
       }
 
       if (actionsContainer) {
+
         actionsContainer.innerHTML =
           actions
             .map(
@@ -2786,7 +2903,9 @@
                 <div class="action-item">
 
                   <span class="badge ${escapeHtml(action.priority)}">
-                    ${escapeHtml(getRiskLabel(action.priority))}
+                    ${escapeHtml(
+                      getRiskLabel(action.priority)
+                    )}
                     priority
                   </span>
 
@@ -2811,23 +2930,28 @@
       });
 
       window.scrollTo({
-        top:0,
-        behavior:"smooth"
+        top: 0,
+        behavior: "smooth"
       });
     }
 
     /* SAVE ASSESSMENT */
 
     async function saveAssessment(result) {
-      if (!supabaseClient || !result) {
+
+      if (
+        !supabaseClient ||
+        !result
+      ) {
         saveLocalAssessment(result);
         return;
       }
 
       try {
+
         const {
-          data:authData,
-          error:authError
+          data: authData,
+          error: authError
         } =
           await supabaseClient.auth.getUser();
 
@@ -2850,29 +2974,42 @@
         let businessId = null;
 
         const {
-          data:existingBusiness
+          data: existingBusiness,
+          error: businessLookupError
         } =
           await supabaseClient
             .from("businesses")
             .select("id")
-            .eq("user_id",user.id)
+            .eq("user_id", user.id)
             .limit(1)
             .maybeSingle();
 
+        if (businessLookupError) {
+          console.warn(
+            "AZÈLE business lookup failed:",
+            businessLookupError
+          );
+        }
+
         if (existingBusiness?.id) {
+
           businessId =
             existingBusiness.id;
+
         } else {
+
           const {
-            data:business,
+            data: business,
             error
           } =
             await supabaseClient
               .from("businesses")
               .insert({
-                user_id:user.id,
-                business_name:businessName,
-                industry:"General"
+                user_id: user.id,
+                business_name:
+                  businessName,
+                industry:
+                  "General"
               })
               .select("id")
               .single();
@@ -2886,14 +3023,18 @@
         }
 
         const {
-          data:assessment,
-          error:assessmentError
+          data: assessment,
+          error: assessmentError
         } =
           await supabaseClient
             .from("assessments")
             .insert({
-              business_id:businessId,
-              score:result.score,
+              business_id:
+                businessId,
+
+              score:
+                result.score,
+
               risk_level:
                 result.score >= 85
                   ? "low"
@@ -2910,32 +3051,46 @@
 
         const answerRows =
           questions.map(
-            (question,index) => {
+            (question, index) => {
+
               const answerIndex =
                 answers[index];
 
               return {
-                assessment_id:assessment.id,
-                question_id:question.id,
+                assessment_id:
+                  assessment.id,
+
+                question_id:
+                  question.id,
+
                 answer:
                   answerIndex === null
                     ? ""
-                    : question.answers[answerIndex].text,
+                    : question
+                        .answers[answerIndex]
+                        .text,
+
                 points:
                   answerIndex === null
                     ? 0
-                    : question.answers[answerIndex].points
+                    : question
+                        .answers[answerIndex]
+                        .points
               };
             }
           );
 
         if (answerRows.length) {
-          const { error } =
+
+          const {
+            error
+          } =
             await supabaseClient
               .from("assessment_answers")
               .insert(answerRows);
 
           if (error) {
+
             console.warn(
               "Could not save assessment answers:",
               error
@@ -2944,23 +3099,38 @@
         }
 
         if (result.risks.length) {
+
           const riskRows =
             result.risks.map(
               (risk) => ({
-                assessment_id:assessment.id,
-                title:risk.title,
-                description:risk.description,
-                severity:risk.severity,
-                recommendation:risk.recommendation
+                assessment_id:
+                  assessment.id,
+
+                title:
+                  risk.title,
+
+                description:
+                  risk.description,
+
+                severity:
+                  String(
+                    risk.severity || "low"
+                  ).toLowerCase(),
+
+                recommendation:
+                  risk.recommendation
               })
             );
 
-          const { error } =
+          const {
+            error
+          } =
             await supabaseClient
               .from("risks")
               .insert(riskRows);
 
           if (error) {
+
             console.warn(
               "Could not save risks:",
               error
@@ -2969,23 +3139,38 @@
         }
 
         if (result.actions.length) {
+
           const actionRows =
             result.actions.map(
               (action) => ({
-                assessment_id:assessment.id,
-                title:action.title,
-                description:action.description,
-                priority:action.priority,
-                completed:false
+                assessment_id:
+                  assessment.id,
+
+                title:
+                  action.title,
+
+                description:
+                  action.description,
+
+                priority:
+                  String(
+                    action.priority || "low"
+                  ).toLowerCase(),
+
+                completed:
+                  false
               })
             );
 
-          const { error } =
+          const {
+            error
+          } =
             await supabaseClient
               .from("actions")
               .insert(actionRows);
 
           if (error) {
+
             console.warn(
               "Could not save actions:",
               error
@@ -2998,19 +3183,31 @@
         );
 
       } catch (error) {
+
         console.error(
           "AZÈLE assessment save failed:",
           error
         );
 
         saveLocalAssessment(result);
+
+        showToast(
+          "Assessment completed. It was saved locally because the database save failed.",
+          "error"
+        );
       }
     }
 
     /* LOCAL FALLBACK */
 
     function saveLocalAssessment(result) {
+
+      if (!result) {
+        return;
+      }
+
       try {
+
         const history =
           JSON.parse(
             localStorage.getItem(
@@ -3020,18 +3217,21 @@
 
         history.unshift({
           ...result,
+
           completedAt:
             new Date().toISOString()
         });
 
         localStorage.setItem(
           "azele-assessments",
+
           JSON.stringify(
-            history.slice(0,20)
+            history.slice(0, 20)
           )
         );
 
       } catch (error) {
+
         console.warn(
           "AZÈLE could not save local assessment.",
           error
@@ -3042,10 +3242,15 @@
     /* AUTH */
 
     let authMode = "login";
+
     let currentUser = null;
 
-    function openAuthModal(mode="login") {
-      authMode = mode;
+    function openAuthModal(mode = "login") {
+
+      authMode =
+        mode === "signup"
+          ? "signup"
+          : "login";
 
       const modal =
         $("authModal");
@@ -3057,9 +3262,21 @@
       updateAuthModal();
 
       modal.classList.add("open");
+
+      setTimeout(() => {
+
+        const email =
+          $("authEmail");
+
+        if (email) {
+          email.focus();
+        }
+
+      }, 50);
     }
 
     function closeAuthModal() {
+
       const modal =
         $("authModal");
 
@@ -3069,15 +3286,24 @@
     }
 
     function toggleAuthMode() {
+
       authMode =
         authMode === "login"
           ? "signup"
           : "login";
 
       updateAuthModal();
+
+      const password =
+        $("authPassword");
+
+      if (password) {
+        password.value = "";
+      }
     }
 
     function updateAuthModal() {
+
       const title =
         $("authTitle");
 
@@ -3093,7 +3319,11 @@
       const businessGroup =
         $("businessNameGroup");
 
+      const password =
+        $("authPassword");
+
       if (authMode === "signup") {
+
         if (title) {
           title.textContent =
             "Create your account";
@@ -3115,10 +3345,18 @@
         }
 
         if (businessGroup) {
-          businessGroup.classList.remove("hidden");
+          businessGroup.classList.remove(
+            "hidden"
+          );
+        }
+
+        if (password) {
+          password.autocomplete =
+            "new-password";
         }
 
       } else {
+
         if (title) {
           title.textContent =
             "Welcome back";
@@ -3140,36 +3378,63 @@
         }
 
         if (businessGroup) {
-          businessGroup.classList.add("hidden");
+          businessGroup.classList.add(
+            "hidden"
+          );
+        }
+
+        if (password) {
+          password.autocomplete =
+            "current-password";
         }
       }
     }
 
     async function handleAuthSubmit(event) {
+
       event.preventDefault();
 
       const email =
-        $("authEmail")?.value.trim();
+        $("authEmail")?.value
+          .trim()
+          .toLowerCase();
 
       const password =
-        $("authPassword")?.value;
+        $("authPassword")?.value || "";
 
       const businessName =
-        $("businessName")?.value.trim() || "";
+        $("businessName")?.value
+          .trim() || "";
 
       if (!email || !password) {
+
         showToast(
           "Please enter your email and password.",
           "error"
         );
+
+        return;
+      }
+
+      if (
+        password.length < 6
+      ) {
+
+        showToast(
+          "Your password must be at least 6 characters.",
+          "error"
+        );
+
         return;
       }
 
       if (!supabaseClient) {
+
         showToast(
-          "Supabase is not configured. Please check the connection settings.",
+          "AZÈLE could not connect to Supabase. Check the browser console for the connection status.",
           "error"
         );
+
         return;
       }
 
@@ -3177,12 +3442,17 @@
         $("authSubmit");
 
       if (submit) {
+
         submit.disabled = true;
+
         submit.textContent =
-          "Please wait...";
+          authMode === "signup"
+            ? "Creating account..."
+            : "Signing in...";
       }
 
       try {
+
         if (authMode === "signup") {
 
           const {
@@ -3192,8 +3462,9 @@
             await supabaseClient.auth.signUp({
               email,
               password,
-              options:{
-                data:{
+
+              options: {
+                data: {
                   business_name:
                     businessName ||
                     "My Business"
@@ -3205,30 +3476,55 @@
             throw error;
           }
 
-          if (data?.session) {
-            showToast(
-              "Account created successfully."
-            );
+          if (data?.user) {
 
-            closeAuthModal();
+            if (data?.session) {
+
+              currentUser =
+                data.session.user;
+
+              updateAuthUI();
+
+              showToast(
+                "Account created successfully."
+              );
+
+              closeAuthModal();
+
+            } else {
+
+              showToast(
+                "Account created. Check your email to confirm your account."
+              );
+            }
 
           } else {
+
             showToast(
-              "Account created. Check your email if confirmation is required."
+              "Account creation completed. Check your email if confirmation is required."
             );
           }
 
         } else {
 
-          const { error } =
-            await supabaseClient.auth.signInWithPassword({
-              email,
-              password
-            });
+          const {
+            data,
+            error
+          } =
+            await supabaseClient.auth
+              .signInWithPassword({
+                email,
+                password
+              });
 
           if (error) {
             throw error;
           }
+
+          currentUser =
+            data?.user || null;
+
+          updateAuthUI();
 
           showToast(
             "Signed in successfully."
@@ -3238,41 +3534,75 @@
         }
 
       } catch (error) {
+
         console.error(
-          "Authentication error:",
+          "AZÈLE authentication error:",
           error
         );
 
-        showToast(
+        let message =
           error?.message ||
-            "Authentication failed. Please try again.",
+          "Authentication failed. Please try again.";
+
+        if (
+          message
+            .toLowerCase()
+            .includes("email not confirmed")
+        ) {
+          message =
+            "Please confirm your email address before signing in.";
+        }
+
+        if (
+          message
+            .toLowerCase()
+            .includes("invalid login credentials")
+        ) {
+          message =
+            "The email or password is incorrect.";
+        }
+
+        showToast(
+          message,
           "error"
         );
 
       } finally {
+
         if (submit) {
+
           submit.disabled = false;
+
           updateAuthModal();
         }
       }
     }
 
     async function logout() {
+
       if (!supabaseClient) {
+
         currentUser = null;
+
         updateAuthUI();
+
         return;
       }
 
       try {
-        const { error } =
-          await supabaseClient.auth.signOut();
+
+        const {
+          error
+        } =
+          await supabaseClient.auth
+            .signOut();
 
         if (error) {
           throw error;
         }
 
         currentUser = null;
+
         updateAuthUI();
 
         showToast(
@@ -3280,6 +3610,7 @@
         );
 
       } catch (error) {
+
         console.error(
           "Logout failed:",
           error
@@ -3293,6 +3624,7 @@
     }
 
     function updateAuthUI() {
+
       const authArea =
         $("authArea");
 
@@ -3301,6 +3633,7 @@
       }
 
       if (currentUser) {
+
         const email =
           currentUser.email ||
           "Signed in";
@@ -3323,6 +3656,7 @@
         `;
 
       } else {
+
         authArea.innerHTML = `
           <button
             class="btn btn-small"
@@ -3335,21 +3669,31 @@
     }
 
     async function loadCurrentUser() {
+
       if (!supabaseClient) {
+
+        currentUser = null;
+
         updateAuthUI();
+
         return;
       }
 
       try {
+
         const {
           data,
           error
         } =
-          await supabaseClient.auth.getUser();
+          await supabaseClient.auth
+            .getUser();
 
         if (error) {
+
           currentUser = null;
+
         } else {
+
           currentUser =
             data?.user || null;
         }
@@ -3357,12 +3701,14 @@
         updateAuthUI();
 
       } catch (error) {
+
         console.error(
           "Could not load current user:",
           error
         );
 
         currentUser = null;
+
         updateAuthUI();
       }
     }
@@ -3370,29 +3716,43 @@
     /* SECURITY ASSISTANT */
 
     function generateSecurityResponse(text) {
+
       const normalized =
         String(text || "")
           .toLowerCase()
           .trim();
 
       if (!normalized) {
+
         return (
           "Tell me what you want help with and I’ll point you in the right direction."
         );
       }
 
       if (
-        normalized.includes("secure my business") ||
-        normalized.includes("protect my business")
+        normalized.includes(
+          "secure my business"
+        ) ||
+        normalized.includes(
+          "protect my business"
+        )
       ) {
+
         return (
           "Start with the fundamentals:\n\n" +
+
           "1. Enable MFA on important accounts.\n" +
+
           "2. Use unique passwords and a password manager.\n" +
+
           "3. Keep devices and software updated.\n" +
+
           "4. Maintain reliable backups.\n" +
+
           "5. Train employees to recognize phishing.\n" +
+
           "6. Review who has access to sensitive systems.\n\n" +
+
           "Those controls cover a surprisingly large portion of everyday business security."
         );
       }
@@ -3401,9 +3761,12 @@
         normalized.includes("password") ||
         normalized.includes("passcode")
       ) {
+
         return (
           "For business passwords, prioritize unique passwords for every important account. " +
+
           "A password manager makes that practical. Then enable MFA wherever it is available, " +
+
           "especially for email, financial accounts, cloud services, and administrator accounts."
         );
       }
@@ -3413,10 +3776,14 @@
         normalized.includes("suspicious email") ||
         normalized.includes("scam")
       ) {
+
         return (
           "Common phishing warning signs include unexpected urgency, requests for passwords or payments, " +
+
           "unusual sender addresses, suspicious links, unexpected attachments, and messages that pressure " +
+
           "you to bypass normal procedures.\n\n" +
+
           "If something feels unusual, verify it through a trusted channel instead of replying to the message."
         );
       }
@@ -3426,9 +3793,12 @@
         normalized.includes("two factor") ||
         normalized.includes("2fa")
       ) {
+
         return (
           "MFA adds another verification step beyond the password. " +
+
           "Enable it first on email, financial systems, cloud storage, administrative accounts, and other services " +
+
           "that could expose important business information."
         );
       }
@@ -3437,9 +3807,12 @@
         normalized.includes("backup") ||
         normalized.includes("ransomware")
       ) {
+
         return (
           "Reliable backups are an important recovery control. " +
+
           "Keep backups protected from ordinary user access where possible and periodically verify that the data " +
+
           "can actually be restored."
         );
       }
@@ -3449,8 +3822,10 @@
         normalized.includes("customer data") ||
         normalized.includes("personal information")
       ) {
+
         return (
           "Start by identifying what sensitive information you collect, where it is stored, who can access it, " +
+
           "and how long you actually need it. Reduce unnecessary collection and limit access based on role."
         );
       }
@@ -3460,8 +3835,10 @@
         normalized.includes("wi-fi") ||
         normalized.includes("network")
       ) {
+
         return (
           "Use strong unique Wi-Fi credentials, modern encryption, updated network equipment, and separate guest access " +
+
           "from business systems where possible. Avoid relying on default administrator credentials."
         );
       }
@@ -3471,21 +3848,27 @@
         normalized.includes("staff") ||
         normalized.includes("team")
       ) {
+
         return (
           "People are part of your security system. Give employees practical guidance on phishing, passwords, MFA, " +
+
           "sensitive data, and what to do when something seems suspicious."
         );
       }
 
       return (
         "A good starting point is to identify what you're protecting, who has access to it, " +
+
         "and what would happen if that access were compromised.\n\n" +
+
         "For most businesses, I would review MFA, passwords, backups, software updates, phishing awareness, " +
+
         "access permissions, device security, and incident response."
       );
     }
 
     function sendAssistantMessage() {
+
       const input =
         $("assistantInput");
 
@@ -3522,6 +3905,7 @@
         generateSecurityResponse(text);
 
       setTimeout(() => {
+
         const aiMessage =
           document.createElement("div");
 
@@ -3538,7 +3922,7 @@
         messages.scrollTop =
           messages.scrollHeight;
 
-      },250);
+      }, 250);
 
       messages.scrollTop =
         messages.scrollHeight;
@@ -3547,6 +3931,7 @@
     /* SCAM DETECTOR */
 
     function runScamDetector() {
+
       const input =
         $("scamInput");
 
@@ -3561,10 +3946,12 @@
         input.value.trim();
 
       if (!text) {
+
         showToast(
           "Paste a message first.",
           "error"
         );
+
         return;
       }
 
@@ -3574,73 +3961,81 @@
       const signals = [];
 
       const checks = [
+
         {
-          terms:[
+          terms: [
             "urgent",
             "immediately",
             "act now",
             "final warning"
           ],
+
           message:
             "Urgency or pressure to act immediately"
         },
 
         {
-          terms:[
+          terms: [
             "password",
             "verify your account",
             "login",
             "sign in"
           ],
+
           message:
             "Request for account credentials or verification"
         },
 
         {
-          terms:[
+          terms: [
             "gift card",
             "bitcoin",
             "crypto",
             "payment",
             "wire transfer"
           ],
+
           message:
             "Unusual payment or money-transfer request"
         },
 
         {
-          terms:[
+          terms: [
             "click here",
             "open the attachment",
             "download"
           ],
+
           message:
             "Potentially risky link, attachment, or download request"
         },
 
         {
-          terms:[
+          terms: [
             "congratulations",
             "you won",
             "prize",
             "claim"
           ],
+
           message:
             "Unexpected prize or reward language"
         },
 
         {
-          terms:[
+          terms: [
             "account suspended",
             "account locked",
             "security alert"
           ],
+
           message:
             "Fear-based account or security warning"
         }
       ];
 
       checks.forEach((check) => {
+
         if (
           check.terms.some(
             (term) =>
@@ -3657,9 +4052,12 @@
         "Low concern";
 
       if (signals.length >= 3) {
+
         level =
           "High concern";
+
       } else if (signals.length >= 1) {
+
         level =
           "Potential concern";
       }
@@ -3668,10 +4066,12 @@
         <strong>
           ${escapeHtml(level)}
         </strong>
+
         <br><br>
       `;
 
       if (signals.length) {
+
         html += `
           <strong>
             Warning signs:
@@ -3686,7 +4086,9 @@
               .join("")}
           </ul>
         `;
+
       } else {
+
         html += `
           No obvious warning phrases were detected.
 
@@ -3718,6 +4120,7 @@
     /* PRIVACY COACH */
 
     function runPrivacyCoach() {
+
       const input =
         $("privacyInput");
 
@@ -3732,10 +4135,12 @@
         input.value.trim();
 
       if (!text) {
+
         showToast(
           "Describe the privacy situation first.",
           "error"
         );
+
         return;
       }
 
@@ -3750,6 +4155,7 @@
         lower.includes("shared") ||
         lower.includes("drive")
       ) {
+
         response =
           "Limit sharing to the people who genuinely need access. Review link permissions, remove public access where unnecessary, and use business-managed accounts rather than personal accounts for sensitive information.";
 
@@ -3757,6 +4163,7 @@
         lower.includes("customer") ||
         lower.includes("client")
       ) {
+
         response =
           "Identify exactly what customer information you collect. Collect only what is necessary, restrict access by role, and avoid storing sensitive information longer than your business actually needs it.";
 
@@ -3764,6 +4171,7 @@
         lower.includes("employee") ||
         lower.includes("staff")
       ) {
+
         response =
           "Employee information should be accessible only to people who need it for their role. Review permissions regularly and avoid putting sensitive employee data into broadly accessible folders or tools.";
 
@@ -3771,6 +4179,7 @@
         lower.includes("password") ||
         lower.includes("login")
       ) {
+
         response =
           "Never share passwords through ordinary messages or shared documents. Use individual accounts, unique passwords, and MFA instead of shared credentials.";
       }
@@ -3793,18 +4202,23 @@
     /* EVENTS */
 
     function setupEventListeners() {
+
       const assistantInput =
         $("assistantInput");
 
       if (assistantInput) {
+
         assistantInput.addEventListener(
           "keydown",
           (event) => {
+
             if (
               event.key === "Enter" &&
               !event.shiftKey
             ) {
+
               event.preventDefault();
+
               sendAssistantMessage();
             }
           }
@@ -3815,6 +4229,7 @@
         $("authForm");
 
       if (authForm) {
+
         authForm.addEventListener(
           "submit",
           handleAuthSubmit
@@ -3825,9 +4240,11 @@
         $("authModal");
 
       if (authModal) {
+
         authModal.addEventListener(
           "click",
           (event) => {
+
             if (
               event.target === authModal
             ) {
@@ -3840,6 +4257,7 @@
       document.addEventListener(
         "keydown",
         (event) => {
+
           if (event.key === "Escape") {
             closeAuthModal();
           }
@@ -3850,6 +4268,7 @@
     /* AUTH STATE */
 
     function setupAuthListener() {
+
       if (
         !supabaseClient ||
         !supabaseClient.auth
@@ -3858,8 +4277,10 @@
       }
 
       try {
+
         supabaseClient.auth.onAuthStateChange(
-          (_event,session) => {
+          (_event, session) => {
+
             currentUser =
               session?.user || null;
 
@@ -3868,6 +4289,7 @@
         );
 
       } catch (error) {
+
         console.error(
           "AZÈLE auth listener failed:",
           error
@@ -3877,8 +4299,10 @@
 
     /* INITIALIZATION */
 
-    function initializeApp() {
+    async function initializeApp() {
+
       try {
+
         updateThemeButtons();
 
         setupEventListeners();
@@ -3889,8 +4313,16 @@
         updateAuthUI();
 
         if (configured) {
+
           setupAuthListener();
-          loadCurrentUser();
+
+          await loadCurrentUser();
+
+        } else {
+
+          console.warn(
+            "AZÈLE: Running without Supabase."
+          );
         }
 
         renderQuestion();
@@ -3900,6 +4332,7 @@
         );
 
       } catch (error) {
+
         console.error(
           "AZÈLE startup error:",
           error
@@ -3917,13 +4350,17 @@
     /* SAFE DOM START */
 
     if (
-      document.readyState === "loading"
+      document.readyState ===
+      "loading"
     ) {
+
       document.addEventListener(
         "DOMContentLoaded",
         initializeApp
       );
+
     } else {
+
       initializeApp();
     }
 
@@ -3975,4 +4412,3 @@
 
 </body>
 </html>
-```
