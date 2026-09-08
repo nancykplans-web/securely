@@ -6392,7 +6392,7 @@
 
       let actionHtml = "";
       if (analysis.score >= 30) {
-        actionHtml = `\n          <br>\n          <button class="btn btn-small" type="button" onclick="addToolAction('Review suspicious message', 'Verify the suspicious message through a trusted channel before responding, clicking links, opening attachments, or sending sensitive information.', '${escapeHtml(analysis.priority)}')">\n            Add review task\n          </button>\n        `;
+        actionHtml = `\n          <br>\n          <button class="btn btn-small" type="button" data-azele-add-review="1" data-priority="${escapeHtml(analysis.priority)}">\n            Add review task\n          </button>\n        `;
       }
 
       result.innerHTML = `
@@ -6693,6 +6693,111 @@
       }
     }
 
+    /* RELIABLE BUTTON HANDLERS
+       AZÈLE uses JavaScript listeners instead of relying on inline
+       onclick attributes. This keeps every control working even when
+       the hosting platform applies a strict Content Security Policy. */
+
+    function installReliableButtonHandlers() {
+      const elements = document.querySelectorAll("[onclick]");
+
+      elements.forEach((element) => {
+        const code = String(element.getAttribute("onclick") || "").trim();
+
+        if (!code) return;
+
+        element.removeAttribute("onclick");
+
+        if (code.includes("goHome")) {
+          element.addEventListener("click", (event) => {
+            event.preventDefault();
+            goHome();
+          });
+          return;
+        }
+
+        if (code.includes("scrollToSection('assistantSection')")) {
+          element.addEventListener("click", () => scrollToSection("assistantSection"));
+          return;
+        }
+
+        if (code.includes("scrollToSection('toolsSection')")) {
+          element.addEventListener("click", () => scrollToSection("toolsSection"));
+          return;
+        }
+
+        if (code.includes("setTheme('light')")) {
+          element.addEventListener("click", () => setTheme("light"));
+          return;
+        }
+
+        if (code.includes("setTheme('system')")) {
+          element.addEventListener("click", () => setTheme("system"));
+          return;
+        }
+
+        if (code.includes("setTheme('dark')")) {
+          element.addEventListener("click", () => setTheme("dark"));
+          return;
+        }
+
+        if (code.includes("openAuthModal('login')")) {
+          element.addEventListener("click", () => openAuthModal("login"));
+          return;
+        }
+
+        if (code.includes("openAuthModal")) {
+          element.addEventListener("click", () => openAuthModal("login"));
+          return;
+        }
+
+        if (code.includes("viewAssessmentHistory")) {
+          const match = code.match(/viewAssessmentHistory\('([^']*)'\)/);
+          const id = match ? match[1] : "";
+          element.addEventListener("click", () => {
+            if (id) viewAssessmentHistory(id);
+          });
+          return;
+        }
+
+        const simpleHandlers = {
+          "showDashboard": showDashboard,
+          "startAssessment": startAssessment,
+          "sendAssistantMessage": sendAssistantMessage,
+          "runScamDetector": runScamDetector,
+          "runPasswordSecurityChecker": runPasswordSecurityChecker,
+          "runPrivacyCoach": runPrivacyCoach,
+          "refreshDashboard": refreshDashboard,
+          "previousQuestion": previousQuestion,
+          "nextQuestion": nextQuestion,
+          "completeAssessment": completeAssessment,
+          "closeAuthModal": closeAuthModal,
+          "toggleAuthMode": toggleAuthMode,
+          "logout": logout
+        };
+
+        for (const [name, handler] of Object.entries(simpleHandlers)) {
+          if (code.includes(name + "(")) {
+            element.addEventListener("click", () => handler());
+            return;
+          }
+        }
+      });
+
+      document.addEventListener("click", (event) => {
+        const reviewButton = event.target.closest("[data-azele-add-review]");
+
+        if (reviewButton) {
+          event.preventDefault();
+          addToolAction(
+            "Review suspicious message",
+            "Verify the suspicious message through a trusted channel before responding, clicking links, opening attachments, or sending sensitive information.",
+            reviewButton.dataset.priority || "medium"
+          );
+        }
+      });
+    }
+
     /* INITIALIZATION */
 
     async function initializeApp() {
@@ -6756,11 +6861,15 @@
 
       document.addEventListener(
         "DOMContentLoaded",
-        initializeApp
+        () => {
+          installReliableButtonHandlers();
+          initializeApp();
+        }
       );
 
     } else {
 
+      installReliableButtonHandlers();
       initializeApp();
     }
 
@@ -6814,8 +6923,13 @@
     window.runScamDetector =
       runScamDetector;
 
+    window.runPasswordSecurityChecker =
+      runPasswordSecurityChecker;
+
+    window.addToolAction =
+      addToolAction;
+
     window.runPrivacyCoach =
       runPrivacyCoach;
 
     window.scrollToSection =
-      scrollToSection;
