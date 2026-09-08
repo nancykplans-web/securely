@@ -995,7 +995,7 @@
 
     .tools-grid {
       display: grid;
-      grid-template-columns: repeat(2,1fr);
+      grid-template-columns: repeat(3,1fr);
       gap: 18px;
     }
 
@@ -2067,17 +2067,18 @@
           <article class="tool-card">
 
             <h3>
-              Scam Detector
+              Phishing &amp; Scam Analyzer
             </h3>
 
             <p>
-              Paste a suspicious message, email, or notification
-              and AZÈLE will highlight common warning signs.
+              Paste a suspicious email, text, notification, or message.
+              AZÈLE checks for urgency, credential requests, money requests,
+              suspicious links, impersonation, and other common red flags.
             </p>
 
             <textarea
               id="scamInput"
-              placeholder="Paste a suspicious message here..."
+              placeholder="Paste the suspicious message here..."
             ></textarea>
 
             <br /><br />
@@ -2086,7 +2087,7 @@
               class="btn btn-gold"
               onclick="runScamDetector()"
             >
-              Check message
+              Analyze message
             </button>
 
             <div
@@ -2099,11 +2100,47 @@
           <article class="tool-card">
 
             <h3>
+              Password Security Checker
+            </h3>
+
+            <p>
+              Check the strength of a <strong>sample</strong> password locally.
+              Never enter a password you currently use. AZÈLE does not send or save
+              the value.
+            </p>
+
+            <input
+              id="passwordCheckInput"
+              type="password"
+              placeholder="Enter a sample password..."
+              autocomplete="new-password"
+              style="width:100%;box-sizing:border-box;border:1px solid var(--border);background:var(--surface-2);color:var(--text);padding:14px;border-radius:12px;outline:none;"
+            />
+
+            <br /><br />
+
+            <button
+              class="btn btn-gold"
+              onclick="runPasswordSecurityChecker()"
+            >
+              Check strength
+            </button>
+
+            <div
+              class="tool-result hidden"
+              id="passwordCheckResult"
+            ></div>
+
+          </article>
+
+          <article class="tool-card">
+
+            <h3>
               Privacy Coach
             </h3>
 
             <p>
-              Describe a privacy situation and get a practical
+              Describe a privacy or data-sharing situation and get a practical
               recommendation for reducing unnecessary exposure.
             </p>
 
@@ -3407,34 +3444,29 @@
           }
         }
 
-        const {
-          data: actions,
-          error: actionsError
-        } =
-          await supabaseClient
-            .from("actions")
-            .select(
-              "id, assessment_id, title, description, priority, completed, created_at"
-            )
-            .order("created_at", {
-              ascending: false
-            });
+        if (latest?.id) {
+          const {
+            data: actions,
+            error: actionsError
+          } =
+            await supabaseClient
+              .from("actions")
+              .select(
+                "id, assessment_id, title, description, priority, completed, created_at"
+              )
+              .eq("assessment_id", latest.id)
+              .order("created_at", {
+                ascending: false
+              });
 
-        if (actionsError) {
-          console.warn(
-            "AZÈLE actions fetch failed:",
-            actionsError
-          );
-        } else {
-          allActions =
-            (actions || []).filter(
-              (action) =>
-                assessmentRows.some(
-                  (assessment) =>
-                    assessment.id ===
-                    action.assessment_id
-                )
+          if (actionsError) {
+            console.warn(
+              "AZÈLE actions fetch failed:",
+              actionsError
             );
+          } else {
+            allActions = actions || [];
+          }
         }
 
         renderDashboardData({
@@ -3720,10 +3752,15 @@
               const completed =
                 Boolean(action.completed);
 
-              const priority =
+              const rawPriority =
                 String(
                   action.priority || "low"
                 ).toLowerCase();
+
+              const priority =
+                ["high", "medium", "low"].includes(rawPriority)
+                  ? rawPriority
+                  : "medium";
 
               return `
                 <div
@@ -6013,403 +6050,446 @@
       }
     }
 
-    /* SECURITY ASSISTANT */
+    /* SECURITY ASSISTANT + CYBER SAFETY COACH */
+
+    function getSecurityTopic(text) {
+      const normalized = String(text || "").toLowerCase().trim();
+
+      if (!normalized) return "general";
+      if (/(phishing|scam|suspicious|fake email|fraud|text message|smishing)/.test(normalized)) return "phishing";
+      if (/(password|passcode|credential|login)/.test(normalized)) return "password";
+      if (/(mfa|2fa|two factor|authenticator)/.test(normalized)) return "mfa";
+      if (/(backup|ransomware|recover|recovery)/.test(normalized)) return "backup";
+      if (/(incident|breach|hacked|compromised)/.test(normalized)) return "incident";
+      if (/(update|patch|software|device)/.test(normalized)) return "updates";
+      if (/(access|permission|admin|privilege)/.test(normalized)) return "access";
+      if (/(privacy|customer data|personal information|pii|employee data)/.test(normalized)) return "privacy";
+      if (/(ai tool|chatbot|artificial intelligence|confidential)/.test(normalized)) return "ai-data";
+      if (/(wifi|wi-fi|network|router)/.test(normalized)) return "network";
+      if (/(employee|staff|team|training)/.test(normalized)) return "people";
+      if (/(secure my business|protect my business|security plan|where do i start)/.test(normalized)) return "business";
+
+      return "general";
+    }
+
+    function getSecurityGuidance(text) {
+      const topic = getSecurityTopic(text);
+
+      const guidance = {
+        business: {
+          title: "Business security baseline",
+          priority: "high",
+          response:
+            "Start with the controls that reduce the most common business risks:\n\n" +
+            "1. Enable MFA on email, financial accounts, cloud services, and admin accounts.\n" +
+            "2. Use unique passwords with a password manager.\n" +
+            "3. Keep operating systems, browsers, apps, and security tools updated.\n" +
+            "4. Maintain backups and periodically test that they can be restored.\n" +
+            "5. Train people to recognize phishing and verify unusual requests.\n" +
+            "6. Review access so people only have the permissions their role needs.\n" +
+            "7. Keep a short incident-response plan for what to do when something goes wrong.\n\n" +
+            "Do these before chasing fancy security products. Humans invented enough dashboards already."
+        },
+        phishing: {
+          title: "Phishing and scam guidance",
+          priority: "high",
+          response:
+            "Treat unexpected urgency, requests for passwords or payments, unusual sender details, suspicious links or attachments, secrecy, and requests to bypass normal procedures as warning signs.\n\n" +
+            "Do not reply with credentials or sensitive information. Do not use a phone number, link, or contact method supplied only by the suspicious message. Verify the request through a trusted channel you already know.\n\n" +
+            "If the message claims to be from a coworker or executive, independently confirm the request before sending money or sensitive data."
+        },
+        password: {
+          title: "Password security",
+          priority: "high",
+          response:
+            "Use a different password for every important account. Prefer long, unique passwords or passphrases and store them in a reputable password manager.\n\n" +
+            "Then enable MFA, especially for email, financial accounts, cloud storage, administrator accounts, and anything that can reset other passwords.\n\n" +
+            "Never share passwords through ordinary messages or shared documents."
+        },
+        mfa: {
+          title: "Multi-factor authentication",
+          priority: "high",
+          response:
+            "MFA adds another verification step beyond the password. Prioritize it for email, financial systems, cloud storage, admin accounts, and services containing sensitive business information.\n\n" +
+            "If a service supports stronger phishing-resistant sign-in options, prefer those over relying only on passwords."
+        },
+        backup: {
+          title: "Backup resilience",
+          priority: "high",
+          response:
+            "A backup is only useful if you can recover from it. Keep important data backed up, protect backups from ordinary user access where possible, and periodically test restoration.\n\n" +
+            "For ransomware resilience, avoid having every backup permanently exposed to the same accounts and devices that could be compromised."
+        },
+        incident: {
+          title: "Incident response",
+          priority: "high",
+          response:
+            "Create a one-page incident plan before you need it. Include who should be contacted, which accounts or systems need to be isolated, how evidence should be preserved, how customers or partners would be notified when necessary, and when to involve your IT provider, insurer, legal counsel, or appropriate authorities.\n\n" +
+            "Keep the plan somewhere people can reach even if a normal business account is unavailable."
+        },
+        updates: {
+          title: "Software and device updates",
+          priority: "medium",
+          response:
+            "Turn on automatic security updates where practical. Prioritize operating systems, browsers, internet-facing software, endpoint security tools, routers, and applications that handle sensitive information.\n\n" +
+            "Remove unsupported software rather than letting it quietly become a permanent security problem."
+        },
+        access: {
+          title: "Access control",
+          priority: "medium",
+          response:
+            "Give each person an individual account and only the permissions required for their role. Avoid shared administrator accounts.\n\n" +
+            "Review access when someone changes roles or leaves, and periodically check who can reach sensitive data, financial systems, cloud storage, and administrative tools."
+        },
+        privacy: {
+          title: "Privacy and sensitive data",
+          priority: "medium",
+          response:
+            "First identify what sensitive information you collect, where it is stored, who can access it, and why you need it. Collect only what is necessary and restrict access by role.\n\n" +
+            "Avoid putting unnecessary personal, financial, authentication, or confidential business information into broadly accessible tools or documents."
+        },
+        "ai-data": {
+          title: "AI data safety",
+          priority: "high",
+          response:
+            "Create a simple rule for what employees may enter into AI tools. Keep passwords, authentication codes, payment details, unnecessary personal information, confidential contracts, and sensitive customer data out of tools unless the business has intentionally approved the service and understands its data handling.\n\n" +
+            "Use approved accounts and minimize the information you provide to an AI system."
+        },
+        network: {
+          title: "Network security",
+          priority: "medium",
+          response:
+            "Use strong unique Wi-Fi credentials, modern encryption, updated router firmware, and a separate guest network where practical. Change default administrator credentials and avoid exposing router management interfaces unnecessarily."
+        },
+        people: {
+          title: "People and security habits",
+          priority: "medium",
+          response:
+            "Give employees short, practical guidance on phishing, MFA, passwords, sensitive data, and what to do when something feels wrong.\n\n" +
+            "Make reporting suspicious activity easy and non-punitive. Fast reporting is more useful than pretending humans will never click anything suspicious."
+        },
+        general: {
+          title: "Security starting point",
+          priority: "medium",
+          response:
+            "Start with three questions: What are we protecting? Who can access it? What happens if that access is compromised?\n\n" +
+            "For most small businesses, review MFA, passwords, backups, phishing awareness, software updates, access permissions, privacy, device security, and incident response."
+        }
+      };
+
+      return guidance[topic] || guidance.general;
+    }
 
     function generateSecurityResponse(text) {
+      return getSecurityGuidance(text).response;
+    }
 
-      const normalized =
-        String(text || "")
-          .toLowerCase()
-          .trim();
+    function createAssistantActionButton(container, guidance) {
+      if (!container || !guidance) return;
 
-      if (!normalized) {
+      const wrapper = document.createElement("div");
+      wrapper.style.marginTop = "10px";
 
-        return (
-          "Tell me what you want help with and I’ll point you in the right direction."
+      const button = document.createElement("button");
+      button.className = "btn btn-small";
+      button.type = "button";
+      button.textContent = "Add to Action Center";
+      button.onclick = () => {
+        addToolAction(
+          guidance.title,
+          "Recommended by AZÈLE Security Assistant. Review this control and apply it to your business.",
+          guidance.priority
         );
-      }
+      };
 
-      if (
-        normalized.includes(
-          "secure my business"
-        ) ||
-        normalized.includes(
-          "protect my business"
-        )
-      ) {
-
-        return (
-          "Start with the fundamentals:\n\n" +
-
-          "1. Enable MFA on important accounts.\n" +
-          "2. Use unique passwords and a password manager.\n" +
-          "3. Keep devices and software updated.\n" +
-          "4. Maintain reliable backups.\n" +
-          "5. Train employees to recognize phishing.\n" +
-          "6. Review who has access to sensitive systems.\n\n" +
-
-          "Those controls cover a surprisingly large portion of everyday business security."
-        );
-      }
-
-      if (
-        normalized.includes("password") ||
-        normalized.includes("passcode")
-      ) {
-
-        return (
-          "For business passwords, prioritize unique passwords for every important account. " +
-
-          "A password manager makes that practical. Then enable MFA wherever it is available, " +
-
-          "especially for email, financial accounts, cloud services, and administrator accounts."
-        );
-      }
-
-      if (
-        normalized.includes("phishing") ||
-        normalized.includes("suspicious email") ||
-        normalized.includes("scam")
-      ) {
-
-        return (
-          "Common phishing warning signs include unexpected urgency, requests for passwords or payments, " +
-
-          "unusual sender addresses, suspicious links, unexpected attachments, and messages that pressure " +
-
-          "you to bypass normal procedures.\n\n" +
-
-          "If something feels unusual, verify it through a trusted channel instead of replying to the message."
-        );
-      }
-
-      if (
-        normalized.includes("mfa") ||
-        normalized.includes("two factor") ||
-        normalized.includes("2fa")
-      ) {
-
-        return (
-          "MFA adds another verification step beyond the password. " +
-
-          "Enable it first on email, financial systems, cloud storage, administrative accounts, and other services " +
-
-          "that could expose important business information."
-        );
-      }
-
-      if (
-        normalized.includes("backup") ||
-        normalized.includes("ransomware")
-      ) {
-
-        return (
-          "Reliable backups are an important recovery control. " +
-
-          "Keep backups protected from ordinary user access where possible and periodically verify that the data " +
-
-          "can actually be restored."
-        );
-      }
-
-      if (
-        normalized.includes("privacy") ||
-        normalized.includes("customer data") ||
-        normalized.includes("personal information")
-      ) {
-
-        return (
-          "Start by identifying what sensitive information you collect, where it is stored, who can access it, " +
-
-          "and how long you actually need it. Reduce unnecessary collection and limit access based on role."
-        );
-      }
-
-      if (
-        normalized.includes("wifi") ||
-        normalized.includes("wi-fi") ||
-        normalized.includes("network")
-      ) {
-
-        return (
-          "Use strong unique Wi-Fi credentials, modern encryption, updated network equipment, and separate guest access " +
-
-          "from business systems where possible. Avoid relying on default administrator credentials."
-        );
-      }
-
-      if (
-        normalized.includes("employee") ||
-        normalized.includes("staff") ||
-        normalized.includes("team")
-      ) {
-
-        return (
-          "People are part of your security system. Give employees practical guidance on phishing, passwords, MFA, " +
-
-          "sensitive data, and what to do when something seems suspicious."
-        );
-      }
-
-      return (
-        "A good starting point is to identify what you're protecting, who has access to it, " +
-
-        "and what would happen if that access were compromised.\n\n" +
-
-        "For most businesses, I would review MFA, passwords, backups, software updates, phishing awareness, " +
-
-        "access permissions, device security, and incident response."
-      );
+      wrapper.appendChild(button);
+      container.appendChild(wrapper);
     }
 
     function sendAssistantMessage() {
+      const input = $("assistantInput");
+      const messages = $("assistantMessages");
 
-      const input =
-        $("assistantInput");
+      if (!input || !messages) return;
 
-      const messages =
-        $("assistantMessages");
+      const text = input.value.trim();
+      if (!text) return;
 
-      if (!input || !messages) {
-        return;
-      }
-
-      const text =
-        input.value.trim();
-
-      if (!text) {
-        return;
-      }
-
-      const userMessage =
-        document.createElement("div");
-
-      userMessage.className =
-        "message user";
-
-      userMessage.textContent =
-        text;
-
-      messages.appendChild(
-        userMessage
-      );
-
+      const userMessage = document.createElement("div");
+      userMessage.className = "message user";
+      userMessage.textContent = text;
+      messages.appendChild(userMessage);
       input.value = "";
 
-      const response =
-        generateSecurityResponse(text);
+      const guidance = getSecurityGuidance(text);
 
       setTimeout(() => {
+        const aiMessage = document.createElement("div");
+        aiMessage.className = "message ai";
+        aiMessage.textContent = guidance.response;
+        messages.appendChild(aiMessage);
+        createAssistantActionButton(aiMessage, guidance);
+        messages.scrollTop = messages.scrollHeight;
+      }, 180);
 
-        const aiMessage =
-          document.createElement("div");
-
-        aiMessage.className =
-          "message ai";
-
-        aiMessage.textContent =
-          response;
-
-        messages.appendChild(
-          aiMessage
-        );
-
-        messages.scrollTop =
-          messages.scrollHeight;
-
-      }, 250);
-
-      messages.scrollTop =
-        messages.scrollHeight;
+      messages.scrollTop = messages.scrollHeight;
     }
 
-    /* SCAM DETECTOR */
+    /* SECURITY TOOLS */
 
-    function runScamDetector() {
-
-      const input =
-        $("scamInput");
-
-      const result =
-        $("scamResult");
-
-      if (!input || !result) {
-        return;
-      }
-
-      const text =
-        input.value.trim();
-
-      if (!text) {
-
-        showToast(
-          "Paste a message first.",
-          "error"
-        );
-
-        return;
-      }
-
-      const lower =
-        text.toLowerCase();
-
+    function calculateScamRisk(text) {
+      const lower = String(text || "").toLowerCase();
       const signals = [];
+      let score = 0;
 
       const checks = [
-
         {
-          terms: [
-            "urgent",
-            "immediately",
-            "act now",
-            "final warning"
-          ],
-
-          message:
-            "Urgency or pressure to act immediately"
+          points: 18,
+          terms: ["urgent", "immediately", "act now", "final warning", "within 24 hours", "today only"],
+          message: "Pressure or urgency is being used to push a fast decision."
         },
-
         {
-          terms: [
-            "password",
-            "verify your account",
-            "login",
-            "sign in"
-          ],
-
-          message:
-            "Request for account credentials or verification"
+          points: 22,
+          terms: ["password", "verify your account", "login", "sign in", "verification code", "security code", "one-time code", "otp"],
+          message: "The message asks for credentials, account access, or a verification code."
         },
-
         {
-          terms: [
-            "gift card",
-            "bitcoin",
-            "crypto",
-            "payment",
-            "wire transfer"
-          ],
-
-          message:
-            "Unusual payment or money-transfer request"
+          points: 24,
+          terms: ["gift card", "bitcoin", "crypto", "payment", "wire transfer", "bank transfer", "send money", "invoice", "e-transfer"],
+          message: "It requests money, a transfer, a payment, or another financial action."
         },
-
         {
-          terms: [
-            "click here",
-            "open the attachment",
-            "download"
-          ],
-
-          message:
-            "Potentially risky link, attachment, or download request"
+          points: 18,
+          terms: ["click here", "open the attachment", "download", "open this file", "tap this link", "visit this link"],
+          message: "It asks you to click, open, download, or otherwise interact with content."
         },
-
         {
-          terms: [
-            "congratulations",
-            "you won",
-            "prize",
-            "claim"
-          ],
-
-          message:
-            "Unexpected prize or reward language"
+          points: 15,
+          terms: ["congratulations", "you won", "prize", "claim your", "free gift", "reward"],
+          message: "Unexpected prize or reward language is being used."
         },
-
         {
-          terms: [
-            "account suspended",
-            "account locked",
-            "security alert"
-          ],
-
-          message:
-            "Fear-based account or security warning"
+          points: 18,
+          terms: ["account suspended", "account locked", "security alert", "unusual activity", "your account will be closed"],
+          message: "Fear-based account or security warnings are being used to create pressure."
+        },
+        {
+          points: 15,
+          terms: ["keep this confidential", "don't tell", "do not tell", "secret", "between us"],
+          message: "The sender is trying to prevent you from independently checking the request."
+        },
+        {
+          points: 12,
+          terms: ["ceo", "boss", "manager", "owner", "payroll", "hr department"],
+          message: "The message may be impersonating a person or department with authority."
         }
       ];
 
       checks.forEach((check) => {
-
-        if (
-          check.terms.some(
-            (term) =>
-              lower.includes(term)
-          )
-        ) {
-          signals.push(
-            check.message
-          );
+        if (check.terms.some((term) => lower.includes(term))) {
+          signals.push(check.message);
+          score += check.points;
         }
       });
 
-      let level =
-        "Low concern";
-
-      if (signals.length >= 3) {
-
-        level =
-          "High concern";
-
-      } else if (signals.length >= 1) {
-
-        level =
-          "Potential concern";
+      const urlCount = (lower.match(/https?:\/\//g) || []).length;
+      if (urlCount > 0) {
+        score += 10;
+        signals.push("The message contains a web link. The link should be independently verified before opening.");
       }
 
-      let html = `
-        <strong>
-          ${escapeHtml(level)}
-        </strong>
-
-        <br><br>
-      `;
-
-      if (signals.length) {
-
-        html += `
-          <strong>
-            Warning signs:
-          </strong>
-
-          <ul>
-            ${signals
-              .map(
-                (signal) =>
-                  `<li>${escapeHtml(signal)}</li>`
-              )
-              .join("")}
-          </ul>
-        `;
-
-      } else {
-
-        html += `
-          No obvious warning phrases were detected.
-
-          That does <strong>not</strong>
-          prove the message is legitimate.
-        `;
+      const attachmentTerms = [".zip", ".exe", ".html", ".htm", ".docm", ".xlsm", "attachment"];
+      if (attachmentTerms.some((term) => lower.includes(term))) {
+        score += 12;
+        signals.push("The message references an attachment or potentially executable/document content.");
       }
 
-      html += `
+      score = Math.min(100, score);
+
+      let label = "Low concern";
+      let description = "No major warning pattern was detected in the text you provided.";
+      let priority = "low";
+
+      if (score >= 60) {
+        label = "High concern";
+        description = "Several warning patterns were detected. Treat the message as suspicious until independently verified.";
+        priority = "high";
+      } else if (score >= 30) {
+        label = "Potential concern";
+        description = "One or more warning patterns were detected. Verify the request before taking action.";
+        priority = "medium";
+      }
+
+      return { score, label, description, signals, priority };
+    }
+
+    async function addToolAction(title, description, priority = "medium") {
+      if (!currentUser || !supabaseClient) {
+        showToast("Sign in and complete an assessment before saving an Action Center task.", "error");
+        return;
+      }
+
+      try {
+        const business = await getBusinessForUser(currentUser.id);
+        if (!business?.id) {
+          showToast("Create your business profile before saving actions.", "error");
+          return;
+        }
+
+        const { data: latestAssessment, error: assessmentError } = await supabaseClient
+          .from("assessments")
+          .select("id")
+          .eq("business_id", business.id)
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (assessmentError) throw assessmentError;
+
+        if (!latestAssessment?.id) {
+          showToast("Complete an assessment before saving an Action Center task.", "error");
+          return;
+        }
+
+        const normalizedPriority = ["high", "medium", "low"].includes(String(priority).toLowerCase())
+          ? String(priority).toLowerCase()
+          : "medium";
+
+        const { error } = await supabaseClient
+          .from("actions")
+          .insert({
+            assessment_id: latestAssessment.id,
+            title: String(title || "Security recommendation"),
+            description: String(description || "Review this security recommendation."),
+            priority: normalizedPriority,
+            completed: false
+          });
+
+        if (error) throw error;
+
+        showToast("Added to your Action Center.", "success");
+        await loadDashboard();
+      } catch (error) {
+        console.error("AZÈLE tool action save failed:", error);
+        showToast("Could not save this recommendation right now.", "error");
+      }
+    }
+
+    function runScamDetector() {
+      const input = $("scamInput");
+      const result = $("scamResult");
+
+      if (!input || !result) return;
+
+      const text = input.value.trim();
+      if (!text) {
+        showToast("Paste a message first.", "error");
+        return;
+      }
+
+      const analysis = calculateScamRisk(text);
+      const score = analysis.score;
+
+      let actionHtml = "";
+      if (analysis.score >= 30) {
+        actionHtml = `\n          <br>\n          <button class="btn btn-small" type="button" onclick="addToolAction('Review suspicious message', 'Verify the suspicious message through a trusted channel before responding, clicking links, opening attachments, or sending sensitive information.', '${escapeHtml(analysis.priority)}')">\n            Add review task\n          </button>\n        `;
+      }
+
+      result.innerHTML = `
+        <strong>${escapeHtml(analysis.label)}</strong>
+        <div style="margin-top:8px;font-size:24px;font-weight:700;">${escapeHtml(score)}/100</div>
+        <div style="margin-top:6px;">${escapeHtml(analysis.description)}</div>
         <br>
-
-        <strong>
-          Best next step:
-        </strong>
-
-        Do not provide passwords, payment information,
-        or sensitive data until you independently
-        verify the request.
+        <strong>Signals detected</strong>
+        ${analysis.signals.length
+          ? `<ul>${analysis.signals.map((signal) => `<li>${escapeHtml(signal)}</li>`).join("")}</ul>`
+          : `<p>No obvious warning phrases were detected.</p>`}
+        <strong>Best next step</strong>
+        <p>Do not provide passwords, verification codes, payment information, or sensitive data until you independently verify the request.</p>
+        <p style="margin-bottom:0;font-size:12px;color:var(--muted);">This is a text-based screening tool, not proof that a message is safe or malicious. Links and sender identities are not reputation-checked here.</p>
+        ${actionHtml}
       `;
 
-      result.innerHTML =
-        html;
+      result.classList.remove("hidden");
+    }
 
-      result.classList.remove(
-        "hidden"
-      );
+    function runPasswordSecurityChecker() {
+      const input = $("passwordCheckInput");
+      const result = $("passwordCheckResult");
+
+      if (!input || !result) return;
+
+      const password = input.value;
+      if (!password) {
+        showToast("Enter a sample password first.", "error");
+        return;
+      }
+
+      const lower = password.toLowerCase();
+      const common = [
+        "password", "password1", "123456", "12345678", "123456789", "qwerty", "qwerty123",
+        "letmein", "welcome", "admin", "abc123", "iloveyou", "monkey", "dragon", "football",
+        "baseball", "sunshine", "princess"
+      ];
+
+      let score = 0;
+      const improvements = [];
+
+      if (password.length >= 16) score += 35;
+      else if (password.length >= 12) score += 27;
+      else if (password.length >= 10) score += 18;
+      else if (password.length >= 8) score += 10;
+      else improvements.push("Use a longer password or passphrase.");
+
+      const varieties = [
+        /[a-z]/.test(password),
+        /[A-Z]/.test(password),
+        /\d/.test(password),
+        /[^A-Za-z0-9]/.test(password)
+      ].filter(Boolean).length;
+      score += varieties * 10;
+
+      if (varieties < 3) improvements.push("Mix multiple character types or use a longer passphrase.");
+
+      if (common.some((item) => lower.includes(item))) {
+        score -= 35;
+        improvements.push("Avoid common words, predictable patterns, and well-known passwords.");
+      }
+
+      if (/(.)\1\1/.test(password)) {
+        score -= 10;
+        improvements.push("Avoid long runs of the same character.");
+      }
+
+      if (/(0123|1234|2345|3456|4567|5678|6789|abcd|qwer|asdf)/i.test(password)) {
+        score -= 10;
+        improvements.push("Avoid simple sequences and keyboard patterns.");
+      }
+
+      score = Math.max(0, Math.min(100, score));
+
+      let label = "Weak";
+      if (score >= 75) label = "Strong";
+      else if (score >= 55) label = "Good";
+      else if (score >= 35) label = "Fair";
+
+      if (!improvements.length) {
+        improvements.push("Keep it unique to this account and protect it with MFA.");
+      }
+
+      result.innerHTML = `
+        <strong>${escapeHtml(label)}</strong>
+        <div style="margin-top:8px;font-size:24px;font-weight:700;">${escapeHtml(score)}/100</div>
+        <p style="margin-bottom:8px;">${escapeHtml(password.length >= 12 ? "Good length is doing some heavy lifting here." : "Length is the biggest area to improve.")}</p>
+        <strong>Improve it</strong>
+        <ul>${improvements.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+        <p style="margin-bottom:0;font-size:12px;color:var(--muted);">This check runs in your browser only. AZÈLE does not send or store the password value. Use a sample, not a real password.</p>
+      `;
+
+      result.classList.remove("hidden");
+
+      // Remove the value after analysis so it is not left sitting in the page.
+      input.value = "";
     }
 
     /* PRIVACY COACH */
@@ -6739,8 +6819,3 @@
 
     window.scrollToSection =
       scrollToSection;
-
-  </script>
-
-</body>
-</html>
