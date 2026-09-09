@@ -1694,10 +1694,21 @@
           </button>
         </div>
 
-        <div id="authArea"></div>
+        <div id="authArea">
+          <button
+            class="btn btn-small"
+            type="button"
+            data-azele-action="login"
+            aria-label="Sign in to AZÈLE"
+          >
+            Sign in
+          </button>
+        </div>
 
         <button
           class="btn btn-primary"
+          type="button"
+          data-azele-action="start-assessment"
           onclick="startAssessment()"
         >
           Assess my business
@@ -2026,6 +2037,8 @@
 
             <button
               class="btn btn-gold"
+              type="button"
+              data-azele-action="ask-assistant"
               onclick="sendAssistantMessage()"
             >
               Ask
@@ -2085,6 +2098,8 @@
 
             <button
               class="btn btn-gold"
+              type="button"
+              data-azele-action="scam"
               onclick="runScamDetector()"
             >
               Analyze message
@@ -2121,6 +2136,8 @@
 
             <button
               class="btn btn-gold"
+              type="button"
+              data-azele-action="password"
               onclick="runPasswordSecurityChecker()"
             >
               Check strength
@@ -2153,6 +2170,8 @@
 
             <button
               class="btn btn-gold"
+              type="button"
+              data-azele-action="privacy"
               onclick="runPrivacyCoach()"
             >
               Get guidance
@@ -6638,6 +6657,19 @@
           }
         }
       );
+
+      document.addEventListener("click", (event) => {
+        const reviewButton = event.target.closest("[data-azele-add-review]");
+
+        if (!reviewButton) return;
+
+        event.preventDefault();
+        addToolAction(
+          "Review suspicious message",
+          "Verify the suspicious message through a trusted channel before responding, clicking links, opening attachments, or sending sensitive information.",
+          reviewButton.dataset.priority || "medium"
+        );
+      });
     }
 
     /* AUTH STATE */
@@ -6691,111 +6723,6 @@
           error
         );
       }
-    }
-
-    /* RELIABLE BUTTON HANDLERS
-       AZÈLE uses JavaScript listeners instead of relying on inline
-       onclick attributes. This keeps every control working even when
-       the hosting platform applies a strict Content Security Policy. */
-
-    function installReliableButtonHandlers() {
-      const elements = document.querySelectorAll("[onclick]");
-
-      elements.forEach((element) => {
-        const code = String(element.getAttribute("onclick") || "").trim();
-
-        if (!code) return;
-
-        element.removeAttribute("onclick");
-
-        if (code.includes("goHome")) {
-          element.addEventListener("click", (event) => {
-            event.preventDefault();
-            goHome();
-          });
-          return;
-        }
-
-        if (code.includes("scrollToSection('assistantSection')")) {
-          element.addEventListener("click", () => scrollToSection("assistantSection"));
-          return;
-        }
-
-        if (code.includes("scrollToSection('toolsSection')")) {
-          element.addEventListener("click", () => scrollToSection("toolsSection"));
-          return;
-        }
-
-        if (code.includes("setTheme('light')")) {
-          element.addEventListener("click", () => setTheme("light"));
-          return;
-        }
-
-        if (code.includes("setTheme('system')")) {
-          element.addEventListener("click", () => setTheme("system"));
-          return;
-        }
-
-        if (code.includes("setTheme('dark')")) {
-          element.addEventListener("click", () => setTheme("dark"));
-          return;
-        }
-
-        if (code.includes("openAuthModal('login')")) {
-          element.addEventListener("click", () => openAuthModal("login"));
-          return;
-        }
-
-        if (code.includes("openAuthModal")) {
-          element.addEventListener("click", () => openAuthModal("login"));
-          return;
-        }
-
-        if (code.includes("viewAssessmentHistory")) {
-          const match = code.match(/viewAssessmentHistory\('([^']*)'\)/);
-          const id = match ? match[1] : "";
-          element.addEventListener("click", () => {
-            if (id) viewAssessmentHistory(id);
-          });
-          return;
-        }
-
-        const simpleHandlers = {
-          "showDashboard": showDashboard,
-          "startAssessment": startAssessment,
-          "sendAssistantMessage": sendAssistantMessage,
-          "runScamDetector": runScamDetector,
-          "runPasswordSecurityChecker": runPasswordSecurityChecker,
-          "runPrivacyCoach": runPrivacyCoach,
-          "refreshDashboard": refreshDashboard,
-          "previousQuestion": previousQuestion,
-          "nextQuestion": nextQuestion,
-          "completeAssessment": completeAssessment,
-          "closeAuthModal": closeAuthModal,
-          "toggleAuthMode": toggleAuthMode,
-          "logout": logout
-        };
-
-        for (const [name, handler] of Object.entries(simpleHandlers)) {
-          if (code.includes(name + "(")) {
-            element.addEventListener("click", () => handler());
-            return;
-          }
-        }
-      });
-
-      document.addEventListener("click", (event) => {
-        const reviewButton = event.target.closest("[data-azele-add-review]");
-
-        if (reviewButton) {
-          event.preventDefault();
-          addToolAction(
-            "Review suspicious message",
-            "Verify the suspicious message through a trusted channel before responding, clicking links, opening attachments, or sending sensitive information.",
-            reviewButton.dataset.priority || "medium"
-          );
-        }
-      });
     }
 
     /* INITIALIZATION */
@@ -6862,14 +6789,12 @@
       document.addEventListener(
         "DOMContentLoaded",
         () => {
-          installReliableButtonHandlers();
           initializeApp();
         }
       );
 
     } else {
 
-      installReliableButtonHandlers();
       initializeApp();
     }
 
@@ -6933,3 +6858,111 @@
       runPrivacyCoach;
 
     window.scrollToSection =
+      scrollToSection;
+
+  </script>
+
+
+  <!-- AZÈLE INTERACTION BRIDGE
+       This is intentionally independent from the main app initializer.
+       It makes navigation/auth/tool controls work even if another startup
+       task fails, and it avoids relying on inline event handlers alone. -->
+  <script>
+    (function azèleInteractionBridge() {
+      "use strict";
+
+      function run(name, args) {
+        try {
+          const fn = window[name];
+          if (typeof fn === "function") {
+            return fn.apply(window, args || []);
+          }
+        } catch (error) {
+          console.error("AZÈLE action failed:", name, error);
+          const toast = document.getElementById("toast");
+          if (toast) {
+            toast.textContent = "That action hit an error. Check the browser console.";
+            toast.classList.add("show", "error");
+            setTimeout(() => toast.classList.remove("show"), 3000);
+          }
+        }
+        return undefined;
+      }
+
+      function install() {
+        document.documentElement.style.setProperty("--azele-interactive", "1");
+
+        document.addEventListener("click", function (event) {
+          const target = event.target instanceof Element
+            ? event.target.closest("button, a")
+            : null;
+          if (!target) return;
+
+          const action = target.getAttribute("data-azele-action");
+          if (!action) return;
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          switch (action) {
+            case "login":
+              run("openAuthModal", ["login"]);
+              break;
+            case "signup":
+              run("openAuthModal", ["signup"]);
+              break;
+            case "start-assessment":
+              run("startAssessment");
+              break;
+            case "ask-assistant":
+              run("sendAssistantMessage");
+              break;
+            case "scam":
+              run("runScamDetector");
+              break;
+            case "password":
+              run("runPasswordSecurityChecker");
+              break;
+            case "privacy":
+              run("runPrivacyCoach");
+              break;
+            case "dashboard":
+              run("showDashboard");
+              break;
+            case "home":
+              run("goHome");
+              break;
+          }
+        }, true);
+
+        // Keep a visible login control even before Supabase finishes loading.
+        const authArea = document.getElementById("authArea");
+        if (authArea && !window.__azeleAuthBridgeReady) {
+          window.__azeleAuthBridgeReady = true;
+          if (!window.currentUser) {
+            const login = authArea.querySelector("[data-azele-action='login']");
+            if (!login) {
+              authArea.innerHTML =
+                '<button class="btn btn-small" type="button" data-azele-action="login">Sign in</button>';
+            }
+          }
+        }
+
+        // Make sure controls cannot be accidentally disabled by a stale state.
+        document.querySelectorAll("button").forEach((button) => {
+          if (button.dataset.azeleKeepDisabled !== "true" && button.id !== "authSubmit") {
+            button.style.pointerEvents = "auto";
+          }
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", install, { once: true });
+      } else {
+        install();
+      }
+    })();
+  </script>
+
+</body>
+</html>
