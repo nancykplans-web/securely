@@ -1555,7 +1555,9 @@
         max-width: 100%;
       }
     }
-  </style>
+  
+    @media (max-width: 700px) { #categoryBreakdown, #dashboardCategoryBreakdown { grid-template-columns: 1fr !important; } }
+</style>
 </head>
 
 <body>
@@ -2620,7 +2622,7 @@
         <div class="progress-meta">
 
           <span id="questionProgress">
-            Question 1 of 10
+            Question 1 of 20
           </span>
 
           <span id="progressPercent">
@@ -2748,6 +2750,12 @@
           </button>
 
         </div>
+      </div>
+
+      <div class="results-card" style="margin-top:18px;">
+        <h3>Security category breakdown</h3>
+        <p style="margin:0 0 18px;color:var(--muted);font-size:13px;line-height:1.6;">See where your business is strongest and where the biggest improvements can make the most difference.</p>
+        <div id="categoryBreakdown" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;"></div>
       </div>
 
       <div class="results-grid">
@@ -3488,13 +3496,35 @@
           }
         }
 
+        let dashboardCategoryScores = null;
+
+        if (latest?.id) {
+          const { data: storedAnswers, error: answersError } = await supabaseClient
+            .from("assessment_answers")
+            .select("question_id, points")
+            .eq("assessment_id", latest.id);
+
+          if (!answersError && storedAnswers?.length) {
+            const scoreMap = new Map(storedAnswers.map((row) => [row.question_id, Number(row.points || 0)]));
+            dashboardCategoryScores = assessmentCategories.map((category) => {
+              const categoryQuestions = questions.filter((question) => question.category === category.name);
+              const answeredQuestions = categoryQuestions.filter((question) => scoreMap.has(question.id));
+              const totalPoints = categoryQuestions.reduce((sum, question) => sum + (scoreMap.get(question.id) || 0), 0);
+              const maxPoints = categoryQuestions.length * 10;
+              const score = maxPoints ? Math.round(100 - (totalPoints / maxPoints) * 100) : 100;
+              return { name: category.name, weight: category.weight, score, answered: answeredQuestions.length, total: categoryQuestions.length, level: score >= 80 ? "low" : score >= 60 ? "medium" : "high" };
+            });
+          }
+        }
+
         renderDashboardData({
           business,
           businessName,
           assessments: assessmentRows,
           latest,
           risks: latestRisks,
-          actions: allActions
+          actions: allActions,
+          categoryScores: dashboardCategoryScores
         });
 
       } catch (error) {
@@ -3551,7 +3581,8 @@
         assessments,
         latest,
         risks,
-        actions
+        actions,
+        categoryScores
       } = data;
 
       updateBusinessProfile(
@@ -3668,6 +3699,11 @@
 
       renderDashboardRisks(
         risks
+      );
+
+      renderCategoryBreakdown(
+        categoryScores,
+        "dashboardCategoryBreakdown"
       );
 
       renderDashboardActions(
@@ -4262,6 +4298,8 @@
         }
       }
 
+      renderCategoryBreakdown(categoryScores, "categoryBreakdown");
+
       if (actionsContainer) {
 
         if (!actions.length) {
@@ -4396,7 +4434,8 @@
           assessments,
           latest: assessments[0],
           risks,
-          actions
+          actions,
+          categoryScores: latest.categoryScores || null
         });
 
         showToast(
@@ -4417,320 +4456,27 @@
     /* QUESTIONS */
 
     const questions = [
-      {
-        id: "passwords",
-        question:
-          "How does your business manage employee passwords?",
-        answers: [
-          {
-            text:
-              "We use strong unique passwords and a password manager.",
-            points: 0
-          },
-          {
-            text:
-              "Most passwords are strong, but we do not use a manager consistently.",
-            points: 5
-          },
-          {
-            text:
-              "Employees reuse passwords or use simple passwords.",
-            points: 10
-          }
-        ]
-      },
-
-      {
-        id: "mfa",
-        question:
-          "How widely is multi-factor authentication enabled?",
-        answers: [
-          {
-            text:
-              "MFA is enabled across important business accounts.",
-            points: 0
-          },
-          {
-            text:
-              "MFA is enabled on some accounts.",
-            points: 5
-          },
-          {
-            text:
-              "We rarely or never use MFA.",
-            points: 10
-          }
-        ]
-      },
-
-      {
-        id: "backups",
-        question:
-          "How does your business handle backups?",
-        answers: [
-          {
-            text:
-              "We maintain regular tested backups.",
-            points: 0
-          },
-          {
-            text:
-              "We have backups but rarely test them.",
-            points: 5
-          },
-          {
-            text:
-              "We do not have a reliable backup process.",
-            points: 10
-          }
-        ]
-      },
-
-      {
-        id: "updates",
-        question:
-          "How are software and device updates handled?",
-        answers: [
-          {
-            text:
-              "Updates are installed regularly and automatically where possible.",
-            points: 0
-          },
-          {
-            text:
-              "Updates are performed occasionally.",
-            points: 5
-          },
-          {
-            text:
-              "Updates are often delayed or ignored.",
-            points: 10
-          }
-        ]
-      },
-
-      {
-        id: "phishing",
-        question:
-          "How prepared is your team to recognize phishing?",
-        answers: [
-          {
-            text:
-              "Employees receive regular security awareness guidance.",
-            points: 0
-          },
-          {
-            text:
-              "Employees know some common warning signs.",
-            points: 5
-          },
-          {
-            text:
-              "We have little or no phishing awareness training.",
-            points: 10
-          }
-        ]
-      },
-
-      {
-        id: "access",
-        question:
-          "How is employee access to business systems managed?",
-        answers: [
-          {
-            text:
-              "Access is based on role and reviewed regularly.",
-            points: 0
-          },
-          {
-            text:
-              "Access is mostly managed manually.",
-            points: 5
-          },
-          {
-            text:
-              "Employees often have access they no longer need.",
-            points: 10
-          }
-        ]
-      },
-
-      {
-        id: "devices",
-        question:
-          "How are business devices protected?",
-        answers: [
-          {
-            text:
-              "Devices use security software, encryption, and screen locks.",
-            points: 0
-          },
-          {
-            text:
-              "Most devices have basic security protections.",
-            points: 5
-          },
-          {
-            text:
-              "Device protection is inconsistent.",
-            points: 10
-          }
-        ]
-      },
-
-      {
-        id: "wifi",
-        question:
-          "How is your business Wi-Fi secured?",
-        answers: [
-          {
-            text:
-              "We use strong encryption, unique credentials, and separated guest access.",
-            points: 0
-          },
-          {
-            text:
-              "Our Wi-Fi has a strong password but limited additional controls.",
-            points: 5
-          },
-          {
-            text:
-              "We use shared or default Wi-Fi credentials.",
-            points: 10
-          }
-        ]
-      },
-
-      {
-        id: "incident",
-        question:
-          "Do you have a plan for responding to a security incident?",
-        answers: [
-          {
-            text:
-              "Yes, we have documented steps and know who is responsible.",
-            points: 0
-          },
-          {
-            text:
-              "We have an informal plan.",
-            points: 5
-          },
-          {
-            text:
-              "We have no incident response plan.",
-            points: 10
-          }
-        ]
-      },
-
-      {
-        id: "privacy",
-        question:
-          "How does your business protect sensitive customer information?",
-        answers: [
-          {
-            text:
-              "Sensitive data is limited, protected, and access is controlled.",
-            points: 0
-          },
-          {
-            text:
-              "We have some protections but they are inconsistent.",
-            points: 5
-          },
-          {
-            text:
-              "Sensitive information is widely accessible or poorly controlled.",
-            points: 10
-          }
-        ]
-      }
+      { id: "passwords", category: "Account Security", question: "How does your business manage employee passwords?", answers: [{text:"We use strong unique passwords and a password manager.",points:0},{text:"Most passwords are strong, but we do not use a manager consistently.",points:5},{text:"Employees reuse passwords or use simple passwords.",points:10}] },
+      { id: "mfa", category: "Account Security", question: "How widely is multi-factor authentication enabled?", answers: [{text:"MFA is enabled across important business accounts.",points:0},{text:"MFA is enabled on some accounts.",points:5},{text:"We rarely or never use MFA.",points:10}] },
+      { id: "privileged", category: "Account Security", question: "How are administrator and other high-privilege accounts managed?", answers: [{text:"Privileged access is limited, individual, and reviewed regularly.",points:0},{text:"We limit some privileged access but reviews are inconsistent.",points:5},{text:"Multiple people share administrator access or permissions are rarely reviewed.",points:10}] },
+      { id: "account-recovery", category: "Account Security", question: "How well are account recovery methods protected?", answers: [{text:"Recovery email, phone, and security settings are protected and reviewed.",points:0},{text:"Most recovery settings are protected but have not been reviewed recently.",points:5},{text:"Recovery methods are shared, outdated, or not protected with MFA.",points:10}] },
+      { id: "phishing", category: "Employee Security", question: "How prepared is your team to recognize phishing?", answers: [{text:"Employees receive regular security awareness guidance.",points:0},{text:"Employees know some common warning signs.",points:5},{text:"We have little or no phishing awareness training.",points:10}] },
+      { id: "training", category: "Employee Security", question: "How often does your team receive practical security training?", answers: [{text:"Training is provided regularly and updated when risks change.",points:0},{text:"Training happens occasionally or only during onboarding.",points:5},{text:"There is little or no security training.",points:10}] },
+      { id: "reporting", category: "Employee Security", question: "What happens when an employee notices something suspicious?", answers: [{text:"There is a clear, easy way to report suspicious activity and get help.",points:0},{text:"Employees know roughly who to contact, but the process is informal.",points:5},{text:"There is no clear reporting process.",points:10}] },
+      { id: "ai-data", category: "Employee Security", question: "Does your business have clear rules for what employees may enter into AI tools?", answers: [{text:"We have clear approved-use and sensitive-data rules for AI tools.",points:0},{text:"Employees receive some informal guidance about AI data use.",points:5},{text:"There are no clear rules for sensitive information and AI tools.",points:10}] },
+      { id: "backups", category: "Backup & Recovery", question: "How does your business handle backups?", answers: [{text:"We maintain regular tested backups.",points:0},{text:"We have backups but rarely test them.",points:5},{text:"We do not have a reliable backup process.",points:10}] },
+      { id: "backup-separation", category: "Backup & Recovery", question: "How protected are your backups from accidental deletion or a compromised account?", answers: [{text:"Important backups are separated, access-controlled, or otherwise protected from the primary environment.",points:0},{text:"Some backups have extra protection, but coverage is inconsistent.",points:5},{text:"Backups are broadly accessible from the same accounts or systems they protect.",points:10}] },
+      { id: "recovery", category: "Backup & Recovery", question: "How prepared are you to restore important systems and data?", answers: [{text:"We know what must be restored first and have tested the recovery process.",points:0},{text:"We have a general idea of recovery priorities but have not tested them recently.",points:5},{text:"We do not know how long recovery would take or what to restore first.",points:10}] },
+      { id: "updates", category: "Device & Software Security", question: "How are software and device updates handled?", answers: [{text:"Updates are installed regularly and automatically where possible.",points:0},{text:"Updates are performed occasionally.",points:5},{text:"Updates are often delayed or ignored.",points:10}] },
+      { id: "devices", category: "Device & Software Security", question: "How are business devices protected?", answers: [{text:"Devices use security software, encryption, and screen locks.",points:0},{text:"Most devices have basic security protections.",points:5},{text:"Device protection is inconsistent.",points:10}] },
+      { id: "unsupported", category: "Device & Software Security", question: "How does your business handle unsupported software and devices?", answers: [{text:"Unsupported systems are replaced, isolated, or formally managed as exceptions.",points:0},{text:"We know about some unsupported systems but replacement is inconsistent.",points:5},{text:"Unsupported software or devices remain in regular use without a plan.",points:10}] },
+      { id: "incident", category: "Incident Response", question: "Do you have a plan for responding to a security incident?", answers: [{text:"Yes, we have documented steps and know who is responsible.",points:0},{text:"We have an informal plan.",points:5},{text:"We have no incident response plan.",points:10}] },
+      { id: "contacts", category: "Incident Response", question: "Do you know who to contact if a serious security incident happens?", answers: [{text:"We have a current contact list for internal leaders and relevant external providers.",points:0},{text:"We know the main contacts but the list is informal or outdated.",points:5},{text:"We would have to figure out who to contact during the incident.",points:10}] },
+      { id: "incident-testing", category: "Incident Response", question: "Have you practiced how your team would respond to a security incident?", answers: [{text:"We periodically review or practice the response process.",points:0},{text:"We have discussed it but have not practiced it.",points:5},{text:"We have never reviewed how we would respond.",points:10}] },
+      { id: "access", category: "Access Control", question: "How is employee access to business systems managed?", answers: [{text:"Access is based on role and reviewed regularly.",points:0},{text:"Access is mostly managed manually.",points:5},{text:"Employees often have access they no longer need.",points:10}] },
+      { id: "offboarding", category: "Access Control", question: "How quickly is access removed when someone leaves or changes roles?", answers: [{text:"Access is removed or adjusted promptly using a defined process.",points:0},{text:"We usually remove access promptly, but the process is manual.",points:5},{text:"Access can remain active because there is no reliable offboarding process.",points:10}] },
+      { id: "sensitive-access", category: "Access Control", question: "How is access to sensitive business or customer information limited?", answers: [{text:"Sensitive data is restricted by role and reviewed regularly.",points:0},{text:"Some sensitive data is restricted, but reviews are inconsistent.",points:5},{text:"Sensitive information is widely accessible or poorly controlled.",points:10}] }
     ];
-
-    /* RISKS */
-
-    const riskDefinitions = {
-      passwords: {
-        title: "Password security",
-        description:
-          "Weak or reused passwords can expose multiple business accounts at once.",
-        recommendation:
-          "Use unique passwords and a reputable password manager."
-      },
-
-      mfa: {
-        title: "Multi-factor authentication",
-        description:
-          "Accounts without MFA have less protection if a password is compromised.",
-        recommendation:
-          "Enable MFA on email, financial, administrative, and cloud accounts first."
-      },
-
-      backups: {
-        title: "Backup resilience",
-        description:
-          "Unreliable backups can make recovery from data loss significantly harder.",
-        recommendation:
-          "Create regular backups and periodically verify that recovery actually works."
-      },
-
-      updates: {
-        title: "Software updates",
-        description:
-          "Delayed security updates can leave known vulnerabilities exposed.",
-        recommendation:
-          "Enable automatic updates where practical and establish a patch routine."
-      },
-
-      phishing: {
-        title: "Phishing awareness",
-        description:
-          "Social engineering can bypass technical controls by targeting people directly.",
-        recommendation:
-          "Teach employees how to recognize suspicious links, attachments, and requests."
-      },
-
-      access: {
-        title: "Access control",
-        description:
-          "Excessive permissions increase the impact of compromised accounts.",
-        recommendation:
-          "Review user access regularly and remove permissions that are no longer needed."
-      },
-
-      devices: {
-        title: "Device protection",
-        description:
-          "Unprotected devices can expose business data and accounts.",
-        recommendation:
-          "Use screen locks, security software, encryption, and timely updates."
-      },
-
-      wifi: {
-        title: "Network security",
-        description:
-          "Poorly secured Wi-Fi can create an unnecessary entry point into business systems.",
-        recommendation:
-          "Use strong unique credentials and separate guest access."
-      },
-
-      incident: {
-        title: "Incident response",
-        description:
-          "Without a response plan, teams can lose valuable time during a security event.",
-        recommendation:
-          "Create a simple written incident response checklist and assign responsibility."
-      },
-
-      privacy: {
-        title: "Data privacy",
-        description:
-          "Unnecessary access to sensitive information increases privacy and security risk.",
-        recommendation:
-          "Limit collection, storage, and access to sensitive business and customer information."
-      }
-    };
 
     /* ASSESSMENT STATE */
 
@@ -4946,32 +4692,33 @@
 
     /* SCORE */
 
+    const assessmentCategories = [
+      { name: "Account Security", weight: 20 },
+      { name: "Employee Security", weight: 20 },
+      { name: "Backup & Recovery", weight: 15 },
+      { name: "Device & Software Security", weight: 15 },
+      { name: "Incident Response", weight: 15 },
+      { name: "Access Control", weight: 15 }
+    ];
+
+    function calculateCategoryScores() {
+      return assessmentCategories.map((category) => {
+        const categoryQuestions = questions.filter((question) => question.category === category.name);
+        const answered = categoryQuestions.filter((question) => answers[questions.indexOf(question)] !== null);
+        const totalPoints = answered.reduce((total, question) => {
+          const index = questions.indexOf(question);
+          return total + question.answers[answers[index]].points;
+        }, 0);
+        const maxPoints = categoryQuestions.length * 10;
+        const score = maxPoints ? Math.round(100 - (totalPoints / maxPoints) * 100) : 100;
+        return { name: category.name, weight: category.weight, score, answered: answered.length, total: categoryQuestions.length, level: score >= 80 ? "low" : score >= 60 ? "medium" : "high" };
+      });
+    }
+
     function calculateScore() {
-      const totalPoints =
-        answers.reduce(
-          (total, answerIndex, index) => {
-
-            if (answerIndex === null) {
-              return total;
-            }
-
-            return (
-              total +
-              questions[index]
-                .answers[answerIndex]
-                .points
-            );
-          },
-          0
-        );
-
-      const maxPoints =
-        questions.length * 10;
-
-      return Math.round(
-        100 -
-        (totalPoints / maxPoints) * 100
-      );
+      const categoryScores = calculateCategoryScores();
+      const totalWeight = categoryScores.reduce((total, category) => total + category.weight, 0);
+      return Math.round(categoryScores.reduce((total, category) => total + category.score * category.weight, 0) / totalWeight);
     }
 
     function getRiskLevel(points) {
@@ -5031,44 +4778,18 @@
     /* RISKS */
 
     function buildRisks() {
-      return questions
-        .map((question, index) => {
-
-          const answerIndex =
-            answers[index];
-
-          if (answerIndex === null) {
-            return null;
-          }
-
-          const points =
-            question
-              .answers[answerIndex]
-              .points;
-
-          if (points === 0) {
-            return null;
-          }
-
-          const definition =
-            riskDefinitions[question.id];
-
-          if (!definition) {
-            return null;
-          }
-
-          return {
-            ...definition,
-            severity:
-              getRiskLevel(points),
-            points
-          };
-        })
-        .filter(Boolean)
-        .sort(
-          (a, b) =>
-            b.points - a.points
-        );
+      return questions.map((question, index) => {
+        const answerIndex = answers[index];
+        if (answerIndex === null) return null;
+        const points = question.answers[answerIndex].points;
+        if (points === 0) return null;
+        const definition = riskDefinitions[question.id] || {
+          title: question.category,
+          description: `Your answer indicates an opportunity to improve ${question.category.toLowerCase()}.`,
+          recommendation: `Review and strengthen your ${question.category.toLowerCase()} controls.`
+        };
+        return { ...definition, category: question.category, questionId: question.id, severity: getRiskLevel(points), points };
+      }).filter(Boolean).sort((a, b) => b.points - a.points);
     }
 
     function buildActions(risks) {
@@ -5103,6 +4824,19 @@
       return actions.slice(0, 6);
     }
 
+    function renderCategoryBreakdown(categoryScores, containerId) {
+      const container = $(containerId);
+      if (!container) return;
+      if (!categoryScores || !categoryScores.length) {
+        container.innerHTML = `<div class="dashboard-empty">Category scoring will appear after an assessment.</div>`;
+        return;
+      }
+      container.innerHTML = categoryScores.map((category) => {
+        const safeScore = Math.max(0, Math.min(100, Number(category.score) || 0));
+        return `<div style="padding:15px;border:1px solid var(--border);border-radius:14px;background:var(--surface);"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px;"><strong style="font-size:14px;">${escapeHtml(category.name)}</strong><span class="badge ${escapeHtml(category.level)}">${safeScore} · ${escapeHtml(getRiskLabel(category.level))}</span></div><div style="height:7px;border-radius:999px;background:var(--border);overflow:hidden;"><div style="height:100%;width:${safeScore}%;background:var(--gold,#b28c3c);border-radius:999px;"></div></div><p style="margin:8px 0 0;color:var(--muted);font-size:12px;">${category.answered}/${category.total} questions answered · ${category.weight}% overall weight</p></div>`;
+      }).join("");
+    }
+
     /* COMPLETE */
 
     async function completeAssessment() {
@@ -5111,6 +4845,9 @@
 
       const scoreInfo =
         getScoreInfo(score);
+
+      const categoryScores =
+        calculateCategoryScores();
 
       const risks =
         buildRisks();
@@ -5244,7 +4981,8 @@
       await saveAssessment({
         score,
         risks,
-        actions
+        actions,
+        categoryScores
       });
 
       window.scrollTo({
@@ -6965,4 +6703,16 @@
   </script>
 
 </body>
-</html>
+</html      privileged: { title: "Privileged access", description: "High-privilege accounts can create larger consequences when compromised.", recommendation: "Limit administrator access to individual accounts and review privileged permissions regularly." },
+      "account-recovery": { title: "Account recovery security", description: "Weak recovery settings can undermine otherwise strong account protection.", recommendation: "Review recovery emails, phone numbers, backup codes, and security settings for important accounts." },
+      training: { title: "Security training", description: "Without regular practical training, employees may miss changing security threats.", recommendation: "Provide short recurring training on phishing, passwords, MFA, sensitive data, and reporting." },
+      reporting: { title: "Security reporting", description: "Unclear reporting channels can delay response to suspicious activity.", recommendation: "Create one simple way for employees to report suspicious messages or security concerns." },
+      "ai-data": { title: "AI data safety", description: "Unclear AI data rules can expose sensitive business or customer information.", recommendation: "Define clear rules for what employees may enter into approved AI tools." },
+      "backup-separation": { title: "Backup protection", description: "Backups that share the same access path as production systems may be affected by the same incident.", recommendation: "Protect important backups with separate access controls or other isolation measures." },
+      recovery: { title: "Recovery planning", description: "Unclear recovery priorities can slow restoration after data loss or disruption.", recommendation: "Document which systems and data must be restored first and test the recovery process." },
+      unsupported: { title: "Unsupported software", description: "Unsupported software may no longer receive security fixes.", recommendation: "Replace unsupported software or formally isolate and manage it as an exception." },
+      contacts: { title: "Incident contacts", description: "Missing or outdated incident contacts can delay important decisions during an event.", recommendation: "Maintain a current list of internal leaders and relevant external security or technology contacts." },
+      "incident-testing": { title: "Incident response practice", description: "A plan is more useful when people know how to use it under pressure.", recommendation: "Run a short tabletop exercise or review the incident plan periodically." },
+      offboarding: { title: "Offboarding access", description: "Former or transferred users can retain unnecessary access when offboarding is inconsistent.", recommendation: "Use a clear joiner-mover-leaver process to remove or adjust access promptly." },
+      "sensitive-access": { title: "Sensitive data access", description: "Broad access to sensitive information increases the impact of compromised accounts.", recommendation: "Restrict sensitive data by role and review permissions regularly." },
+>
