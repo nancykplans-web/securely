@@ -156,18 +156,48 @@
       gap: 20px;
     }
 
+    /* AZÈLE LOGO */
     .logo {
-      font-family: "Cormorant Garamond", serif;
-      font-size: 34px;
-      font-weight: 700;
-      letter-spacing: .10em;
-      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold);
       white-space: nowrap;
+      text-decoration: none;
+      line-height: 1;
     }
 
-    .logo span {
-      color: inherit;
+    .logo-mark {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      line-height: 1;
+      color: var(--gold);
     }
+
+    .logo-wordmark {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: .35em;
+      margin-left: .35em;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .footer-inner .logo {
+      align-self: flex-start;
+    }
+
+    .footer-inner .logo-mark {
+      font-size: 38px;
+    }
+
+    .footer-inner .logo-wordmark {
+      font-size: 22px;
+    }
+
 
     .nav-actions {
       display: flex;
@@ -1631,9 +1661,11 @@
       <a
         href="#"
         class="logo"
+        aria-label="AZÈLE home"
         onclick="goHome(); return false;"
       >
-        AZÈLE
+        <span class="logo-mark" aria-hidden="true">A</span>
+        <span class="logo-wordmark">AZÈLE</span>
       </a>
 
       <div class="nav-actions">
@@ -2789,8 +2821,9 @@
   <footer>
     <div class="container footer-inner">
 
-      <div class="logo">
-        AZÈLE
+      <div class="logo" aria-label="AZÈLE">
+        <span class="logo-mark" aria-hidden="true">A</span>
+        <span class="logo-wordmark">AZÈLE</span>
       </div>
 
       <p>
@@ -6714,5 +6747,3 @@
       contacts: { title: "Incident contacts", description: "Missing or outdated incident contacts can delay important decisions during an event.", recommendation: "Maintain a current list of internal leaders and relevant external security or technology contacts." },
       "incident-testing": { title: "Incident response practice", description: "A plan is more useful when people know how to use it under pressure.", recommendation: "Run a short tabletop exercise or review the incident plan periodically." },
       offboarding: { title: "Offboarding access", description: "Former or transferred users can retain unnecessary access when offboarding is inconsistent.", recommendation: "Use a clear joiner-mover-leaver process to remove or adjust access promptly." },
-      "sensitive-access": { title: "Sensitive data access", description: "Broad access to sensitive information increases the impact of compromised accounts.", recommendation: "Restrict sensitive data by role and review permissions regularly." },
->
