@@ -3105,18 +3105,64 @@
       }
     }
 
-    /* SCROLL */
+    /* SCROLL / HOME NAVIGATION */
 
     function scrollToSection(id) {
       const element = $(id);
 
       if (!element) {
+        console.warn("AZÈLE section not found:", id);
         return;
       }
 
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
+      // Assistant and Tools live inside the public home view.
+      // When a signed-in user is on the dashboard, homeContent is hidden,
+      // so restore the home view before scrolling to the requested section.
+      const home = $("homeContent");
+      const dashboard = $("dashboardSection");
+      const assessment = $("assessmentSection");
+      const results = $("resultsSection");
+
+      if (home) {
+        home.classList.remove("hidden");
+      }
+
+      if (dashboard) {
+        dashboard.classList.add("hidden");
+      }
+
+      if (assessment) {
+        assessment.classList.add("hidden");
+      }
+
+      if (results) {
+        results.classList.add("hidden");
+      }
+
+      document
+        .querySelectorAll(".nav-link")
+        .forEach((button) => {
+          button.classList.remove("active");
+        });
+
+      const matchingButton = Array.from(
+        document.querySelectorAll(".nav-link")
+      ).find((button) =>
+        String(button.getAttribute("onclick") || "").includes(
+          "scrollToSection('" + id + "')"
+        )
+      );
+
+      if (matchingButton) {
+        matchingButton.classList.add("active");
+      }
+
+      // Let the browser paint the restored home view first, then scroll.
+      requestAnimationFrame(() => {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
       });
     }
 
