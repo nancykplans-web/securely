@@ -1683,22 +1683,28 @@
         >
 
           <button
+            type="button"
             class="nav-link hidden"
             id="dashboardNavBtn"
+            data-azele-nav="dashboard"
             onclick="showDashboard()"
           >
             Dashboard
           </button>
 
           <button
+            type="button"
             class="nav-link"
+            data-azele-nav="assistant"
             onclick="scrollToSection('assistantSection')"
           >
             Assistant
           </button>
 
           <button
+            type="button"
             class="nav-link"
+            data-azele-nav="tools"
             onclick="scrollToSection('toolsSection')"
           >
             Tools
@@ -6726,6 +6732,22 @@
           if (!target) return;
 
           const action = target.getAttribute("data-azele-action");
+          const nav = target.getAttribute("data-azele-nav");
+
+          if (nav) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (nav === "dashboard") {
+              run("showDashboard");
+            } else if (nav === "assistant") {
+              run("scrollToSection", ["assistantSection"]);
+            } else if (nav === "tools") {
+              run("scrollToSection", ["toolsSection"]);
+            }
+            return;
+          }
+
           if (!action) return;
 
           event.preventDefault();
@@ -6792,16 +6814,4 @@
   </script>
 
 </body>
-</html      privileged: { title: "Privileged access", description: "High-privilege accounts can create larger consequences when compromised.", recommendation: "Limit administrator access to individual accounts and review privileged permissions regularly." },
-      "account-recovery": { title: "Account recovery security", description: "Weak recovery settings can undermine otherwise strong account protection.", recommendation: "Review recovery emails, phone numbers, backup codes, and security settings for important accounts." },
-      training: { title: "Security training", description: "Without regular practical training, employees may miss changing security threats.", recommendation: "Provide short recurring training on phishing, passwords, MFA, sensitive data, and reporting." },
-      reporting: { title: "Security reporting", description: "Unclear reporting channels can delay response to suspicious activity.", recommendation: "Create one simple way for employees to report suspicious messages or security concerns." },
-      "ai-data": { title: "AI data safety", description: "Unclear AI data rules can expose sensitive business or customer information.", recommendation: "Define clear rules for what employees may enter into approved AI tools." },
-      "backup-separation": { title: "Backup protection", description: "Backups that share the same access path as production systems may be affected by the same incident.", recommendation: "Protect important backups with separate access controls or other isolation measures." },
-      recovery: { title: "Recovery planning", description: "Unclear recovery priorities can slow restoration after data loss or disruption.", recommendation: "Document which systems and data must be restored first and test the recovery process." },
-      unsupported: { title: "Unsupported software", description: "Unsupported software may no longer receive security fixes.", recommendation: "Replace unsupported software or formally isolate and manage it as an exception." },
-      contacts: { title: "Incident contacts", description: "Missing or outdated incident contacts can delay important decisions during an event.", recommendation: "Maintain a current list of internal leaders and relevant external security or technology contacts." },
-      "incident-testing": { title: "Incident response practice", description: "A plan is more useful when people know how to use it under pressure.", recommendation: "Run a short tabletop exercise or review the incident plan periodically." },
-      offboarding: { title: "Offboarding access", description: "Former or transferred users can retain unnecessary access when offboarding is inconsistent.", recommendation: "Use a clear joiner-mover-leaver process to remove or adjust access promptly." },
-      "sensitive-access": { title: "Sensitive data access", description: "Broad access to sensitive information increases the impact of compromised accounts.", recommendation: "Restrict sensitive data by role and review permissions regularly." },
->
+</html>
