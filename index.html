@@ -6006,6 +6006,15 @@
       }
     }
 
+    .assistant-response-note {
+      margin: 12px 0 0;
+      padding-top: 9px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
     /* SECURITY ASSISTANT + CYBER SAFETY COACH */
 
     function getSecurityTopic(text) {
@@ -6162,32 +6171,103 @@
       container.appendChild(wrapper);
     }
 
-    function sendAssistantMessage() {
+    async function sendAssistantMessage() {
       const input = $("assistantInput");
       const messages = $("assistantMessages");
+      const askButton = document.querySelector('[data-azele-action="ask-assistant"]');
 
       if (!input || !messages) return;
 
-      const text = input.value.trim();
-      if (!text) return;
+      const question = input.value.trim();
+      if (!question) return;
+      if (question.length > 2000) {
+        input.setCustomValidity("Please keep your question under 2,000 characters.");
+        input.reportValidity();
+        input.setCustomValidity("");
+        return;
+      }
 
       const userMessage = document.createElement("div");
       userMessage.className = "message user";
-      userMessage.textContent = text;
+      userMessage.textContent = question;
       messages.appendChild(userMessage);
       input.value = "";
+      input.disabled = true;
+      if (askButton) {
+        askButton.disabled = true;
+        askButton.dataset.originalText = askButton.textContent;
+        askButton.textContent = "Thinking…";
+      }
 
-      const guidance = getSecurityGuidance(text);
+      const aiMessage = document.createElement("div");
+      aiMessage.className = "message ai";
+      aiMessage.textContent = "Reviewing your question…";
+      aiMessage.setAttribute("aria-live", "polite");
+      messages.appendChild(aiMessage);
+      messages.scrollTop = messages.scrollHeight;
 
-      setTimeout(() => {
-        const aiMessage = document.createElement("div");
-        aiMessage.className = "message ai";
-        aiMessage.textContent = guidance.response;
-        messages.appendChild(aiMessage);
-        createAssistantActionButton(aiMessage, guidance);
-        messages.scrollTop = messages.scrollHeight;
-      }, 180);
+      const guidance = getSecurityGuidance(question);
+      let answer = guidance.response;
+      let usedAI = false;
 
+      try {
+        if (supabaseClient && isSupabaseConfigured()) {
+          const { data: sessionData } = await supabaseClient.auth.getSession();
+          const accessToken = sessionData && sessionData.session && sessionData.session.access_token;
+
+          // The AI endpoint requires an authenticated session. Never expose the model API key in browser code.
+          if (accessToken) {
+            const response = await fetch(`${SUPABASE_URL}/functions/v1/security-assistant`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_PUBLISHABLE_KEY,
+                "Authorization": `Bearer ${accessToken}`
+              },
+              body: JSON.stringify({ question }),
+              signal: AbortSignal.timeout(25000)
+            });
+
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              throw new Error(payload.error || `Assistant request failed (${response.status}).`);
+            }
+            if (typeof payload.answer !== "string" || !payload.answer.trim()) {
+              throw new Error("The assistant returned an empty response.");
+            }
+            answer = payload.answer.trim();
+            usedAI = true;
+          }
+        }
+      } catch (error) {
+        console.error("AZÈLE Security Assistant request failed:", error);
+        answer = guidance.response + "\n\nAI assistance is temporarily unavailable, so this is AZÈLE’s built-in guidance instead. Please try again later.";
+      }
+
+      aiMessage.textContent = answer;
+      if (usedAI) {
+        const label = document.createElement("p");
+        label.className = "assistant-response-note";
+        label.textContent = "AI-generated guidance. Verify important decisions with your IT or security professional.";
+        aiMessage.appendChild(label);
+      } else if (!supabaseClient || !isSupabaseConfigured()) {
+        const note = document.createElement("p");
+        note.className = "assistant-response-note";
+        note.textContent = "Built-in guidance mode. Configure Supabase and deploy the secured assistant function for AI-powered responses.";
+        aiMessage.appendChild(note);
+      } else {
+        const note = document.createElement("p");
+        note.className = "assistant-response-note";
+        note.textContent = "Built-in guidance mode. Sign in and ensure the Security Assistant Edge Function is deployed to use AI-powered responses.";
+        aiMessage.appendChild(note);
+      }
+      createAssistantActionButton(aiMessage, guidance);
+      input.disabled = false;
+      if (askButton) {
+        askButton.disabled = false;
+        askButton.textContent = askButton.dataset.originalText || "Ask";
+      }
+      input.focus();
       messages.scrollTop = messages.scrollHeight;
     }
 
