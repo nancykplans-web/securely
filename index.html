@@ -1641,6 +1641,15 @@
       .operations-panel { padding: 19px; }
     }
 
+    .assistant-response-note {
+      margin: 12px 0 0;
+      padding-top: 9px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
 </style>
 </head>
 
@@ -6006,15 +6015,6 @@
       }
     }
 
-    .assistant-response-note {
-      margin: 12px 0 0;
-      padding-top: 9px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.5;
-    }
-
     /* SECURITY ASSISTANT + CYBER SAFETY COACH */
 
     function getSecurityTopic(text) {
@@ -7032,6 +7032,14 @@
 
           const action = target.getAttribute("data-azele-action");
           const nav = target.getAttribute("data-azele-nav");
+          const theme = target.getAttribute("data-theme-option");
+
+          if (theme) {
+            event.preventDefault();
+            event.stopPropagation();
+            run("setTheme", [theme]);
+            return;
+          }
 
           if (nav) {
             event.preventDefault();
