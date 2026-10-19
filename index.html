@@ -1591,6 +1591,56 @@
     }
   
     @media (max-width: 700px) { #categoryBreakdown, #dashboardCategoryBreakdown { grid-template-columns: 1fr !important; } }
+
+
+    /* AZÈLE OPERATIONS INTELLIGENCE */
+    .operations-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+      gap: 24px;
+      align-items: start;
+    }
+    .operations-panel {
+      padding: 26px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+    .operations-panel h3 { margin-top: 0; }
+    .operations-form { display: grid; gap: 16px; }
+    .operations-field { display: grid; gap: 7px; }
+    .operations-field label { font-size: 13px; font-weight: 600; }
+    .operations-field input, .operations-field select {
+      width: 100%; min-height: 46px; box-sizing: border-box;
+      padding: 11px 12px; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--bg); color: var(--text);
+    }
+    .operations-field input:focus, .operations-field select:focus {
+      outline: 2px solid var(--gold); outline-offset: 2px;
+    }
+    .operations-stats {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px; margin-bottom: 20px;
+    }
+    .operations-stat {
+      padding: 17px; border: 1px solid var(--border);
+      border-radius: 14px; background: var(--surface-2); min-width: 0;
+    }
+    .operations-stat span { display: block; font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .operations-stat strong { display: block; margin-top: 7px; font-size: clamp(20px, 3vw, 29px); overflow-wrap: anywhere; }
+    .operations-list { display: grid; gap: 12px; }
+    .operations-item { padding: 15px; border: 1px solid var(--border); border-radius: 12px; }
+    .operations-item h4 { margin: 0 0 7px; overflow-wrap: anywhere; }
+    .operations-item p { margin: 5px 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .operations-item button { margin-top: 10px; }
+    .operations-note { color: var(--muted); font-size: 12px; line-height: 1.7; }
+    @media (max-width: 760px) {
+      .operations-grid { grid-template-columns: 1fr; }
+      .operations-panel { padding: 19px; }
+    }
+
 </style>
 </head>
 
@@ -1690,6 +1740,15 @@
             onclick="showDashboard()"
           >
             Dashboard
+          </button>
+
+          <button
+            type="button"
+            class="nav-link"
+            data-azele-nav="operations"
+            onclick="scrollToSection('operationsSection')"
+          >
+            Operations
           </button>
 
           <button
@@ -2007,6 +2066,51 @@
     </section>
 
     <!-- SECURITY ASSISTANT -->
+
+
+
+    <!-- OPERATIONS INTELLIGENCE -->
+    <section class="section" id="operationsSection">
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">OPERATIONS INTELLIGENCE</span>
+          <h2>Find the work costing your business time.</h2>
+          <p>Model a repetitive workflow, estimate its annual labour cost, and explore a potential improvement opportunity.</p>
+        </div>
+        <div class="operations-grid">
+          <article class="operations-panel">
+            <h3>Workflow opportunity calculator</h3>
+            <p class="operations-note">Use approximate figures. This calculator creates an estimate, not a guaranteed savings forecast.</p>
+            <form class="operations-form" id="operationsForm" onsubmit="calculateOperationsOpportunity(event)">
+              <div class="operations-field"><label for="operationsName">Workflow name</label><input id="operationsName" name="workflowName" maxlength="100" placeholder="Example: Manual invoice review" required /></div>
+              <div class="operations-field"><label for="operationsTeam">Team or department</label><select id="operationsTeam" name="team"><option>Finance</option><option>IT and Security</option><option>Human Resources</option><option>Customer Operations</option><option>Compliance</option><option>Sales and Marketing</option><option>Other</option></select></div>
+              <div class="operations-field"><label for="operationsHours">Hours spent each week across the team</label><input id="operationsHours" name="weeklyHours" type="number" min="0.5" max="100000" step="0.5" value="20" required /></div>
+              <div class="operations-field"><label for="operationsRate">Estimated labour cost per hour (CAD)</label><input id="operationsRate" name="hourlyCost" type="number" min="1" max="10000" step="1" value="40" required /></div>
+              <div class="operations-field"><label for="operationsImprovement">Potential time reduction</label><select id="operationsImprovement" name="improvementRate"><option value="10">10% · Conservative</option><option value="25" selected>25% · Moderate</option><option value="40">40% · Ambitious</option><option value="60">60% · High, requires validation</option></select></div>
+              <button class="btn btn-gold" type="submit">Calculate opportunity</button>
+            </form>
+          </article>
+          <article class="operations-panel" aria-live="polite">
+            <h3>Your estimated opportunity</h3>
+            <div class="operations-stats">
+              <div class="operations-stat"><span>Annual workflow labour cost</span><strong id="operationsAnnualCost">$41,600</strong></div>
+              <div class="operations-stat"><span>Potential annual value recovered</span><strong id="operationsAnnualValue">$10,400</strong></div>
+              <div class="operations-stat"><span>Hours potentially recovered yearly</span><strong id="operationsRecoveredHours">260</strong></div>
+              <div class="operations-stat"><span>Improvement assumption</span><strong id="operationsRateLabel">25%</strong></div>
+            </div>
+            <p id="operationsSummary">At the current assumptions, this workflow uses an estimated 1,040 labour hours per year.</p>
+            <button class="btn btn-primary" type="button" onclick="saveOperationsOpportunity()">Save opportunity</button>
+            <p class="operations-note">Recovered labour value is not the same as cash savings. Actual results depend on implementation costs, workflow quality, adoption, and whether recovered capacity is put to productive use.</p>
+          </article>
+        </div>
+        <div class="operations-panel" style="margin-top:24px;">
+          <h3>Saved opportunities on this device</h3>
+          <div id="operationsSavedList" class="operations-list"><p class="operations-note">Your saved opportunity models will appear here.</p></div>
+          <p class="operations-note">Prototype note: saved items stay in this browser using local storage. They are not shared with your team or synced to Supabase yet.</p>
+        </div>
+      </div>
+    </section>
+
 
     <section
       class="section"
@@ -6505,6 +6609,116 @@
       });
     }
 
+
+
+    /* OPERATIONS INTELLIGENCE */
+    let latestOperationsOpportunity = null;
+
+    function formatOperationsCurrency(value) {
+      return new Intl.NumberFormat("en-CA", {
+        style: "currency", currency: "CAD", maximumFractionDigits: 0
+      }).format(Number.isFinite(value) ? value : 0);
+    }
+
+    function getOperationsSaved() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("azele-operations-opportunities") || "[]");
+        return Array.isArray(saved) ? saved : [];
+      } catch (error) {
+        console.warn("AZÈLE could not read saved operations opportunities.", error);
+        return [];
+      }
+    }
+
+    function calculateOperationsOpportunity(event) {
+      if (event) event.preventDefault();
+      const nameInput = $("operationsName");
+      const teamInput = $("operationsTeam");
+      const hoursInput = $("operationsHours");
+      const rateInput = $("operationsRate");
+      const improvementInput = $("operationsImprovement");
+      if (!nameInput || !hoursInput || !rateInput || !improvementInput) return;
+
+      const name = nameInput.value.trim();
+      const weeklyHours = Number(hoursInput.value);
+      const hourlyCost = Number(rateInput.value);
+      const improvementRate = Number(improvementInput.value);
+      if (!name || !Number.isFinite(weeklyHours) || weeklyHours <= 0 ||
+          !Number.isFinite(hourlyCost) || hourlyCost <= 0 ||
+          !Number.isFinite(improvementRate) || improvementRate < 0 || improvementRate > 100) {
+        showToast("Enter a workflow name and valid positive numbers.", "error");
+        return;
+      }
+
+      const annualHours = weeklyHours * 52;
+      const annualCost = annualHours * hourlyCost;
+      const recoveredHours = annualHours * improvementRate / 100;
+      const annualValue = annualCost * improvementRate / 100;
+      latestOperationsOpportunity = {
+        id: (typeof crypto !== "undefined" && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()),
+        name: name.slice(0, 100),
+        team: teamInput ? teamInput.value : "Other",
+        weeklyHours, hourlyCost, improvementRate,
+        annualHours, annualCost, recoveredHours, annualValue,
+        createdAt: new Date().toISOString()
+      };
+
+      $("operationsAnnualCost").textContent = formatOperationsCurrency(annualCost);
+      $("operationsAnnualValue").textContent = formatOperationsCurrency(annualValue);
+      $("operationsRecoveredHours").textContent = Math.round(recoveredHours).toLocaleString("en-CA");
+      $("operationsRateLabel").textContent = improvementRate + "%";
+      $("operationsSummary").textContent = `${name}: an estimated ${Math.round(annualHours).toLocaleString("en-CA")} labour hours per year. If the assumed ${improvementRate}% reduction is achievable, approximately ${Math.round(recoveredHours).toLocaleString("en-CA")} hours of capacity and ${formatOperationsCurrency(annualValue)} in annual labour value could be recovered.`;
+      showToast("Opportunity estimate updated.", "success");
+    }
+
+    function saveOperationsOpportunity() {
+      if (!latestOperationsOpportunity) {
+        calculateOperationsOpportunity();
+      }
+      if (!latestOperationsOpportunity) return;
+      const saved = getOperationsSaved();
+      saved.unshift(latestOperationsOpportunity);
+      try {
+        localStorage.setItem("azele-operations-opportunities", JSON.stringify(saved.slice(0, 25)));
+        renderOperationsSaved();
+        showToast("Opportunity saved in this browser.", "success");
+      } catch (error) {
+        console.error("AZÈLE could not save the opportunity.", error);
+        showToast("Could not save this opportunity in your browser.", "error");
+      }
+    }
+
+    function deleteOperationsOpportunity(id) {
+      const saved = getOperationsSaved().filter(item => item && item.id !== id);
+      try {
+        localStorage.setItem("azele-operations-opportunities", JSON.stringify(saved));
+        renderOperationsSaved();
+        showToast("Saved opportunity removed.", "success");
+      } catch (error) {
+        showToast("Could not update saved opportunities.", "error");
+      }
+    }
+
+    function renderOperationsSaved() {
+      const container = $("operationsSavedList");
+      if (!container) return;
+      const saved = getOperationsSaved();
+      if (!saved.length) {
+        container.innerHTML = '<p class="operations-note">Your saved opportunity models will appear here.</p>';
+        return;
+      }
+      container.innerHTML = saved.map(item => `
+        <article class="operations-item">
+          <h4>${escapeHtml(item.name || "Untitled workflow")}</h4>
+          <p>${escapeHtml(item.team || "Other")} · ${formatOperationsCurrency(Number(item.annualCost) || 0)} estimated annual labour cost</p>
+          <p>Potential recovered value: <strong>${formatOperationsCurrency(Number(item.annualValue) || 0)}/year</strong> · ${Math.round(Number(item.recoveredHours) || 0).toLocaleString("en-CA")} hours/year</p>
+          <p class="operations-note">Assumed time reduction: ${Number(item.improvementRate) || 0}% · Estimate only</p>
+          <button class="btn btn-small" type="button" onclick="deleteOperationsOpportunity('${String(item.id || "").replace(/[^a-zA-Z0-9_-]/g, "") }')">Remove</button>
+        </article>
+      `).join("");
+    }
+
+
     /* AUTH STATE */
 
     function setupAuthListener() {
@@ -6565,6 +6779,7 @@
       try {
 
         updateThemeButtons();
+        renderOperationsSaved();
 
         setupEventListeners();
 
@@ -6693,6 +6908,10 @@
     window.scrollToSection =
       scrollToSection;
 
+    window.calculateOperationsOpportunity = calculateOperationsOpportunity;
+    window.saveOperationsOpportunity = saveOperationsOpportunity;
+    window.deleteOperationsOpportunity = deleteOperationsOpportunity;
+
   </script>
 
 
@@ -6744,6 +6963,8 @@
               run("scrollToSection", ["assistantSection"]);
             } else if (nav === "tools") {
               run("scrollToSection", ["toolsSection"]);
+            } else if (nav === "operations") {
+              run("scrollToSection", ["operationsSection"]);
             }
             return;
           }
