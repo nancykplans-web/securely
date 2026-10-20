@@ -1658,6 +1658,59 @@
       line-height: 1.5;
     }
 
+
+
+    /* ACCESSIBILITY PATCH: stronger contrast for the evergreen + bright-gold theme */
+    .btn-gold,
+    .btn-gold:hover:not(:disabled) {
+      color: #0B2212 !important;
+      background: #F5C542;
+      border-color: #F5C542;
+      font-weight: 700;
+    }
+
+    .nav-link.active,
+    .theme-btn.active,
+    .eyebrow {
+      color: var(--text);
+    }
+
+    .nav-link.active,
+    .theme-btn.active {
+      border: 1px solid var(--gold);
+      background: var(--gold-soft);
+    }
+
+    input, textarea, select {
+      color: var(--text);
+      background-color: var(--surface);
+      border-color: var(--border);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: var(--muted);
+      opacity: .9;
+    }
+
+    html[data-theme="dark"] .eyebrow,
+    html[data-theme="dark"] .nav-link.active,
+    html[data-theme="dark"] .theme-btn.active {
+      color: #FFD966;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html[data-theme="system"] .eyebrow,
+      html[data-theme="system"] .nav-link.active,
+      html[data-theme="system"] .theme-btn.active {
+        color: #FFD966;
+      }
+    }
+
+    html[data-theme="dark"] .btn-primary { color: #0B2212; }
+    @media (prefers-color-scheme: dark) {
+      html[data-theme="system"] .btn-primary { color: #0B2212; }
+    }
+
 </style>
 </head>
 
