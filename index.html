@@ -34,62 +34,65 @@
   <style>
     :root {
       /* AZÈLE evergreen palette: light surfaces with deep forest-green accents */
-      --bg: #F5F1E7;
-      --surface: #fffdf8;
-      --surface-2: #eee9dc;
-      --text: #0F311B;
-      --muted: #657468;
-      --border: rgba(15,49,27,.16);
-      --gold: #F5C542;
-      --gold-bright: #FFD966;
-      --gold-deep: #D4A017;
-      --gold-dark: #0B2212;
-      --gold-soft: rgba(245,197,66,.18);
+      --bg: #EBEEDB;
+      --surface: #F7F8EF;
+      --surface-2: #DFE5CE;
+      --text: #16311E;
+      --muted: #66745F;
+      --border: rgba(22,49,30,.16);
+      --gold: #E6BE44;
+      --gold-bright: #F2CC55;
+      --gold-deep: #DDB52F;
+      --gold-champagne: #F5D76E;
+      --gold-dark: #102719;
+      --gold-soft: rgba(230,190,68,.18);
       --danger: #b34d4d;
       --warning: #a97926;
       --success: #34784a;
       --shadow: 0 20px 60px rgba(11,34,18,.08);
-      --nav-bg: rgba(245,241,231,.94);
+      --nav-bg: rgba(235,238,219,.94);
     }
 
     html[data-theme="dark"] {
-      /* Primary dark canvas #0b2212; elevated surfaces #0f311b */
-      --bg: #0B2212;
-      --surface: #0F311B;
-      --surface-2: #153C24;
-      --text: #F5F3EA;
-      --muted: #C5D2C4;
-      --border: rgba(245,243,234,.13);
-      --gold: #F5C542;
-      --gold-bright: #FFD966;
-      --gold-deep: #D4A017;
-      --gold-dark: #0B2212;
-      --gold-soft: rgba(245,197,66,.15);
+      /* Primary dark canvas #102719; elevated surfaces #16311E */
+      --bg: #102719;
+      --surface: #16311E;
+      --surface-2: #21432B;
+      --text: #EBEEDB;
+      --muted: #C8D5C3;
+      --border: rgba(235,238,219,.13);
+      --gold: #E6BE44;
+      --gold-bright: #F2CC55;
+      --gold-deep: #DDB52F;
+      --gold-champagne: #F5D76E;
+      --gold-dark: #102719;
+      --gold-soft: rgba(230,190,68,.16);
       --danger: #f08b8b;
       --warning: #e7c477;
       --success: #9bd6a8;
       --shadow: 0 25px 70px rgba(0,0,0,.30);
-      --nav-bg: rgba(11,34,18,.94);
+      --nav-bg: rgba(16,39,25,.94);
     }
 
     @media (prefers-color-scheme: dark) {
       html[data-theme="system"] {
-        --bg: #0B2212;
-        --surface: #0F311B;
-        --surface-2: #153C24;
-        --text: #F5F3EA;
-        --muted: #C5D2C4;
-        --border: rgba(245,243,234,.13);
-        --gold: #F5C542;
-        --gold-bright: #FFD966;
-        --gold-deep: #D4A017;
-        --gold-dark: #0B2212;
-        --gold-soft: rgba(245,197,66,.15);
+        --bg: #102719;
+        --surface: #16311E;
+        --surface-2: #21432B;
+        --text: #EBEEDB;
+        --muted: #C8D5C3;
+        --border: rgba(235,238,219,.13);
+        --gold: #E6BE44;
+        --gold-bright: #F2CC55;
+        --gold-deep: #DDB52F;
+        --gold-champagne: #F5D76E;
+        --gold-dark: #102719;
+        --gold-soft: rgba(230,190,68,.16);
         --danger: #f08b8b;
         --warning: #e7c477;
         --success: #9bd6a8;
         --shadow: 0 25px 70px rgba(0,0,0,.30);
-        --nav-bg: rgba(11,34,18,.94);
+        --nav-bg: rgba(16,39,25,.94);
       }
     }
 
@@ -1663,9 +1666,9 @@
     /* ACCESSIBILITY PATCH: stronger contrast for the evergreen + bright-gold theme */
     .btn-gold,
     .btn-gold:hover:not(:disabled) {
-      color: #0B2212 !important;
-      background: #F5C542;
-      border-color: #F5C542;
+      color: #102719 !important;
+      background: #E6BE44;
+      border-color: #E6BE44;
       font-weight: 700;
     }
 
@@ -1695,20 +1698,20 @@
     html[data-theme="dark"] .eyebrow,
     html[data-theme="dark"] .nav-link.active,
     html[data-theme="dark"] .theme-btn.active {
-      color: #FFD966;
+      color: #F5D76E;
     }
 
     @media (prefers-color-scheme: dark) {
       html[data-theme="system"] .eyebrow,
       html[data-theme="system"] .nav-link.active,
       html[data-theme="system"] .theme-btn.active {
-        color: #FFD966;
+        color: #F5D76E;
       }
     }
 
-    html[data-theme="dark"] .btn-primary { color: #0B2212; }
+    html[data-theme="dark"] .btn-primary { color: #102719; }
     @media (prefers-color-scheme: dark) {
-      html[data-theme="system"] .btn-primary { color: #0B2212; }
+      html[data-theme="system"] .btn-primary { color: #102719; }
     }
 
 
@@ -1721,7 +1724,7 @@
     .gov-pill{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700;background:var(--gold-soft);color:var(--text);white-space:nowrap}.gov-pill.high{background:rgba(179,77,77,.15);color:var(--danger)}.gov-pill.low{background:rgba(52,120,74,.15);color:var(--success)}
     .governance-policy label,.governance-modal label{display:block;color:var(--text);font-size:13px;font-weight:700;margin:12px 0 6px}.governance-policy textarea,.governance-modal input,.governance-modal textarea,.governance-modal select{width:100%;box-sizing:border-box}.governance-footnote,.governance-disclaimer{font-size:12px;color:var(--muted)}.governance-disclaimer{padding:12px 4px 30px}.governance-audit-list{display:grid;gap:10px}.governance-audit-item{padding:12px;border-radius:12px;background:var(--surface-2);color:var(--text);font-size:13px}.governance-audit-item small{display:block;color:var(--muted);margin-top:4px}
     .governance-modal{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.66);display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto}.governance-modal.hidden{display:none}.governance-modal-card{width:min(720px,100%);max-height:92vh;overflow:auto;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:20px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,.35)}.governance-modal-head{display:flex;justify-content:space-between;align-items:flex-start}.governance-modal-head h2{margin:5px 0 18px}.governance-close{border:0;background:transparent;color:var(--text);font-size:28px;cursor:pointer}.governance-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}.governance-full{grid-column:1/-1}.governance-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
-    html[data-theme="dark"] .governance-stat,html[data-theme="dark"] .governance-panel,html[data-theme="dark"] .governance-modal-card{background:#0F311B;color:#F5F3EA;border-color:#45634B}html[data-theme="dark"] .governance-table th,html[data-theme="dark"] .governance-table td,html[data-theme="dark"] .governance-panel h2,html[data-theme="dark"] .governance-policy label,html[data-theme="dark"] .governance-modal label{color:#F5F3EA}html[data-theme="dark"] .governance-stat span,html[data-theme="dark"] .governance-stat small,html[data-theme="dark"] .governance-panel p,html[data-theme="dark"] .governance-footnote,html[data-theme="dark"] .governance-disclaimer{color:#C5D2C4}html[data-theme="dark"] .governance-audit-item{background:#153D23;color:#F5F3EA}html[data-theme="dark"] .governance-search,html[data-theme="dark"] .governance-modal input,html[data-theme="dark"] .governance-modal textarea,html[data-theme="dark"] .governance-modal select,html[data-theme="dark"] .governance-policy textarea{background:#102A18;color:#F5F3EA;border:1px solid #54745A}html[data-theme="dark"] .governance-modal input::placeholder,html[data-theme="dark"] .governance-modal textarea::placeholder{color:#B5C5B4}
+    html[data-theme="dark"] .governance-stat,html[data-theme="dark"] .governance-panel,html[data-theme="dark"] .governance-modal-card{background:#16311E;color:#EBEEDB;border-color:#49634C}html[data-theme="dark"] .governance-table th,html[data-theme="dark"] .governance-table td,html[data-theme="dark"] .governance-panel h2,html[data-theme="dark"] .governance-policy label,html[data-theme="dark"] .governance-modal label{color:#EBEEDB}html[data-theme="dark"] .governance-stat span,html[data-theme="dark"] .governance-stat small,html[data-theme="dark"] .governance-panel p,html[data-theme="dark"] .governance-footnote,html[data-theme="dark"] .governance-disclaimer{color:#C8D5C3}html[data-theme="dark"] .governance-audit-item{background:#21432B;color:#EBEEDB}html[data-theme="dark"] .governance-search,html[data-theme="dark"] .governance-modal input,html[data-theme="dark"] .governance-modal textarea,html[data-theme="dark"] .governance-modal select,html[data-theme="dark"] .governance-policy textarea{background:#193522;color:#EBEEDB;border:1px solid #66816A}html[data-theme="dark"] .governance-modal input::placeholder,html[data-theme="dark"] .governance-modal textarea::placeholder{color:#C8D5C3}
     @media(max-width:850px){.governance-layout{grid-template-columns:1fr}.governance-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.governance-panel-head{flex-direction:column}.governance-search{max-width:none;width:100%}}
     @media(max-width:520px){.governance-form-grid{grid-template-columns:1fr}.governance-full{grid-column:auto}.governance-modal-card{padding:18px}.governance-stats{gap:10px}.governance-stat{padding:14px}}
 </style>
