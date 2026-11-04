@@ -1711,6 +1711,19 @@
       html[data-theme="system"] .btn-primary { color: #0B2212; }
     }
 
+
+    /* AI GOVERNANCE CENTER */
+    .governance-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:28px 0}
+    .governance-stat,.governance-panel{background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+    .governance-stat{padding:20px}.governance-stat span,.governance-stat small{display:block;color:var(--muted)}.governance-stat strong{display:block;font-size:32px;color:var(--text);margin:8px 0}.governance-stat small{font-size:12px}
+    .governance-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);gap:18px;align-items:start}.governance-panel{padding:22px;margin-bottom:18px;min-width:0}.governance-panel h2{margin:5px 0 6px;color:var(--text)}.governance-panel p{color:var(--muted)}.governance-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}.governance-search{max-width:220px}
+    .governance-table-wrap{overflow-x:auto}.governance-table{width:100%;border-collapse:collapse;min-width:650px}.governance-table th,.governance-table td{padding:13px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}.governance-table th{color:var(--muted);font-weight:700}.governance-table td small{display:block;color:var(--muted);margin-top:4px}.governance-table button{margin:2px;padding:6px 9px;font-size:12px}
+    .gov-pill{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700;background:var(--gold-soft);color:var(--text);white-space:nowrap}.gov-pill.high{background:rgba(179,77,77,.15);color:var(--danger)}.gov-pill.low{background:rgba(52,120,74,.15);color:var(--success)}
+    .governance-policy label,.governance-modal label{display:block;color:var(--text);font-size:13px;font-weight:700;margin:12px 0 6px}.governance-policy textarea,.governance-modal input,.governance-modal textarea,.governance-modal select{width:100%;box-sizing:border-box}.governance-footnote,.governance-disclaimer{font-size:12px;color:var(--muted)}.governance-disclaimer{padding:12px 4px 30px}.governance-audit-list{display:grid;gap:10px}.governance-audit-item{padding:12px;border-radius:12px;background:var(--surface-2);color:var(--text);font-size:13px}.governance-audit-item small{display:block;color:var(--muted);margin-top:4px}
+    .governance-modal{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.66);display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto}.governance-modal.hidden{display:none}.governance-modal-card{width:min(720px,100%);max-height:92vh;overflow:auto;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:20px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,.35)}.governance-modal-head{display:flex;justify-content:space-between;align-items:flex-start}.governance-modal-head h2{margin:5px 0 18px}.governance-close{border:0;background:transparent;color:var(--text);font-size:28px;cursor:pointer}.governance-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}.governance-full{grid-column:1/-1}.governance-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+    html[data-theme="dark"] .governance-stat,html[data-theme="dark"] .governance-panel,html[data-theme="dark"] .governance-modal-card{background:#0F311B;color:#F5F3EA;border-color:#45634B}html[data-theme="dark"] .governance-table th,html[data-theme="dark"] .governance-table td,html[data-theme="dark"] .governance-panel h2,html[data-theme="dark"] .governance-policy label,html[data-theme="dark"] .governance-modal label{color:#F5F3EA}html[data-theme="dark"] .governance-stat span,html[data-theme="dark"] .governance-stat small,html[data-theme="dark"] .governance-panel p,html[data-theme="dark"] .governance-footnote,html[data-theme="dark"] .governance-disclaimer{color:#C5D2C4}html[data-theme="dark"] .governance-audit-item{background:#153D23;color:#F5F3EA}html[data-theme="dark"] .governance-search,html[data-theme="dark"] .governance-modal input,html[data-theme="dark"] .governance-modal textarea,html[data-theme="dark"] .governance-modal select,html[data-theme="dark"] .governance-policy textarea{background:#102A18;color:#F5F3EA;border:1px solid #54745A}html[data-theme="dark"] .governance-modal input::placeholder,html[data-theme="dark"] .governance-modal textarea::placeholder{color:#B5C5B4}
+    @media(max-width:850px){.governance-layout{grid-template-columns:1fr}.governance-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.governance-panel-head{flex-direction:column}.governance-search{max-width:none;width:100%}}
+    @media(max-width:520px){.governance-form-grid{grid-template-columns:1fr}.governance-full{grid-column:auto}.governance-modal-card{padding:18px}.governance-stats{gap:10px}.governance-stat{padding:14px}}
 </style>
 </head>
 
@@ -1819,6 +1832,15 @@
             onclick="scrollToSection('operationsSection')"
           >
             Operations
+          </button>
+
+          <button
+            type="button"
+            class="nav-link"
+            data-azele-nav="governance"
+            onclick="showGovernance()"
+          >
+            AI Governance
           </button>
 
           <button
@@ -2410,6 +2432,58 @@
     </section>
 
   </main>
+
+  <!-- AI GOVERNANCE CENTER -->
+  <section class="dashboard-section hidden" id="governanceSection">
+    <div class="container">
+      <div class="dashboard-header">
+        <div>
+          <span class="eyebrow">AZÈLE · ENTERPRISE RISK INTELLIGENCE</span>
+          <h1>AI Governance Center</h1>
+          <p>Maintain visibility over the AI tools your organization uses, the risks they introduce, and the decisions made about them.</p>
+        </div>
+        <button class="btn btn-primary" type="button" onclick="openAIGovernanceForm()">＋ Register AI system</button>
+      </div>
+      <div class="governance-stats" id="aiGovStats">
+        <article class="governance-stat"><span>AI systems</span><strong id="aiGovTotal">0</strong><small>Registered inventory</small></article>
+        <article class="governance-stat"><span>Under review</span><strong id="aiGovReview">0</strong><small>Awaiting a decision</small></article>
+        <article class="governance-stat"><span>High risk</span><strong id="aiGovHigh">0</strong><small>Needs attention</small></article>
+        <article class="governance-stat"><span>Approved</span><strong id="aiGovApproved">0</strong><small>Approved systems</small></article>
+      </div>
+      <div class="governance-layout">
+        <div class="governance-panel">
+          <div class="governance-panel-head"><div><span class="eyebrow">REGISTER</span><h2>AI system inventory</h2><p>Track ownership, purpose, risk and approval status.</p></div><input id="aiGovSearch" class="governance-search" placeholder="Search systems…" oninput="renderAIGovernance()" aria-label="Search AI systems"></div>
+          <div class="governance-table-wrap"><table class="governance-table"><thead><tr><th>System</th><th>Owner / department</th><th>Risk</th><th>Status</th><th>Actions</th></tr></thead><tbody id="aiGovRows"><tr><td colspan="5">No AI systems registered yet. Add your first system to begin.</td></tr></tbody></table></div>
+        </div>
+        <div class="governance-panel governance-policy">
+          <span class="eyebrow">POLICY MANAGEMENT</span><h2>AI use policy</h2><p>Set the rules employees should follow when using AI tools at work.</p>
+          <label for="aiGovPolicy">Organization policy notes</label><textarea id="aiGovPolicy" rows="7" placeholder="Example: Do not enter confidential customer data into unapproved AI tools. Require human review before AI-generated decisions are used."></textarea>
+          <button class="btn btn-primary" type="button" onclick="saveAIGovernancePolicy()">Save policy notes</button>
+          <p class="governance-footnote">Policy notes are stored in this browser for this prototype.</p>
+        </div>
+      </div>
+      <div class="governance-panel governance-audit"><div class="governance-panel-head"><div><span class="eyebrow">TRACEABILITY</span><h2>Activity history</h2><p>Recent changes to the local AI inventory.</p></div></div><div id="aiGovAudit" class="governance-audit-list"><p>No activity recorded yet.</p></div></div>
+      <div class="governance-disclaimer">Prototype workspace · Data is saved in this browser only. This is not yet a secured, shared enterprise record system or a compliance certification.</div>
+    </div>
+  </section>
+
+  <div class="governance-modal hidden" id="aiGovModal" role="dialog" aria-modal="true" aria-labelledby="aiGovModalTitle">
+    <form class="governance-modal-card" id="aiGovForm" onsubmit="saveAIGovernanceSystem(event)">
+      <div class="governance-modal-head"><div><span class="eyebrow">AI INVENTORY</span><h2 id="aiGovModalTitle">Register AI system</h2></div><button type="button" class="governance-close" onclick="closeAIGovernanceForm()" aria-label="Close">×</button></div>
+      <input type="hidden" id="aiGovEditId">
+      <div class="governance-form-grid">
+        <div><label for="aiGovName">System / tool name *</label><input id="aiGovName" required maxlength="100" placeholder="e.g. Customer Support Copilot"></div>
+        <div><label for="aiGovVendor">Provider</label><input id="aiGovVendor" maxlength="100" placeholder="e.g. Microsoft"></div>
+        <div><label for="aiGovOwner">Business owner *</label><input id="aiGovOwner" required maxlength="100" placeholder="Responsible person or team"></div>
+        <div><label for="aiGovDepartment">Department</label><select id="aiGovDepartment"><option>IT & Security</option><option>Finance</option><option>Human Resources</option><option>Customer Operations</option><option>Legal & Compliance</option><option>Sales & Marketing</option><option>Other</option></select></div>
+        <div class="governance-full"><label for="aiGovPurpose">Business purpose *</label><textarea id="aiGovPurpose" required rows="3" maxlength="600" placeholder="What does this AI system do and who uses it?"></textarea></div>
+        <div><label for="aiGovRisk">Initial risk level</label><select id="aiGovRisk"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+        <div><label for="aiGovStatus">Approval status</label><select id="aiGovStatus"><option>Submitted</option><option>Under review</option><option>Approved</option><option>Restricted</option></select></div>
+        <div class="governance-full"><label for="aiGovData">Data handled / risk notes</label><textarea id="aiGovData" rows="3" maxlength="600" placeholder="Personal data, confidential information, external access, human review needs…"></textarea></div>
+      </div>
+      <div class="governance-modal-actions"><button type="button" class="btn btn-secondary" onclick="closeAIGovernanceForm()">Cancel</button><button type="submit" class="btn btn-primary">Save AI system</button></div>
+    </form>
+  </div>
 
   <!-- DASHBOARD -->
 
@@ -3302,6 +3376,9 @@
       const dashboard = $("dashboardSection");
       const assessment = $("assessmentSection");
       const results = $("resultsSection");
+      const governance = $("governanceSection");
+
+      if (governance) governance.classList.add("hidden");
 
       if (home) {
         home.classList.remove("hidden");
@@ -3394,6 +3471,9 @@
       const dashboard = $("dashboardSection");
       const assessment = $("assessmentSection");
       const results = $("resultsSection");
+      const governance = $("governanceSection");
+
+      if (governance) governance.classList.add("hidden");
 
       if (home) {
         home.classList.add("hidden");
@@ -3432,6 +3512,40 @@
         behavior: "smooth"
       });
     }
+
+
+    /* AI GOVERNANCE CENTER - LOCAL PROTOTYPE */
+    const AI_GOV_SYSTEMS_KEY = "azele-ai-governance-systems-v1";
+    const AI_GOV_POLICY_KEY = "azele-ai-governance-policy-v1";
+    const AI_GOV_AUDIT_KEY = "azele-ai-governance-audit-v1";
+    function getAIGovData(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch(e) { return fallback; } }
+    function getAIGovSystems() { return getAIGovData(AI_GOV_SYSTEMS_KEY, []); }
+    function addAIGovAudit(message) { const log=getAIGovData(AI_GOV_AUDIT_KEY,[]); log.unshift({message,at:new Date().toISOString()}); localStorage.setItem(AI_GOV_AUDIT_KEY,JSON.stringify(log.slice(0,30))); }
+    function showGovernance() {
+      if (!currentUser) { openAuthModal("login"); showToast("Sign in to access your AZÈLE workspace.","error"); return; }
+      hideAllMainViews(); const view=$("governanceSection"); if(view)view.classList.remove("hidden");
+      document.querySelectorAll(".nav-link").forEach(b=>b.classList.remove("active"));
+      const nav=document.querySelector('[data-azele-nav="governance"]'); if(nav)nav.classList.add("active");
+      const policy=$("aiGovPolicy"); if(policy)policy.value=localStorage.getItem(AI_GOV_POLICY_KEY)||"";
+      renderAIGovernance(); window.scrollTo({top:0,behavior:"smooth"});
+    }
+    function renderAIGovernance() {
+      const systems=getAIGovSystems(); const total=systems.length;
+      $("aiGovTotal").textContent=total; $("aiGovReview").textContent=systems.filter(x=>["Submitted","Under review"].includes(x.status)).length;
+      $("aiGovHigh").textContent=systems.filter(x=>x.risk==="High").length; $("aiGovApproved").textContent=systems.filter(x=>x.status==="Approved").length;
+      const query=($("aiGovSearch")?.value||"").toLowerCase(); const rows=$("aiGovRows");
+      const filtered=systems.filter(x=>[x.name,x.vendor,x.owner,x.department,x.purpose].join(" ").toLowerCase().includes(query));
+      rows.innerHTML=filtered.length?filtered.map(x=>`<tr><td><strong>${escapeAIGov(x.name)}</strong><small>${escapeAIGov(x.vendor||"Provider not specified")}</small></td><td>${escapeAIGov(x.owner)}<small>${escapeAIGov(x.department)}</small></td><td><span class="gov-pill ${x.risk.toLowerCase()}">${escapeAIGov(x.risk)}</span></td><td><span class="gov-pill">${escapeAIGov(x.status)}</span></td><td><button class="btn btn-secondary" type="button" onclick="editAIGovernanceSystem('${x.id}')">Edit</button><button class="btn btn-secondary" type="button" onclick="deleteAIGovernanceSystem('${x.id}')">Delete</button></td></tr>`).join(""):`<tr><td colspan="5">${query?"No matching systems found.":"No AI systems registered yet. Add your first system to begin."}</td></tr>`;
+      const audit=getAIGovData(AI_GOV_AUDIT_KEY,[]); $("aiGovAudit").innerHTML=audit.length?audit.map(a=>`<div class="governance-audit-item">${escapeAIGov(a.message)}<small>${new Date(a.at).toLocaleString()}</small></div>`).join(""):`<p>No activity recorded yet.</p>`;
+    }
+    function escapeAIGov(value) { return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;", "'":"&#39;"}[c])); }
+    function openAIGovernanceForm() { $("aiGovForm").reset(); $("aiGovEditId").value=""; $("aiGovModalTitle").textContent="Register AI system"; $("aiGovModal").classList.remove("hidden"); $("aiGovName").focus(); }
+    function closeAIGovernanceForm() { $("aiGovModal").classList.add("hidden"); }
+    function editAIGovernanceSystem(id) { const x=getAIGovSystems().find(s=>s.id===id); if(!x)return; openAIGovernanceForm(); $("aiGovModalTitle").textContent="Update AI system"; $("aiGovEditId").value=x.id; $("aiGovName").value=x.name; $("aiGovVendor").value=x.vendor||""; $("aiGovOwner").value=x.owner; $("aiGovDepartment").value=x.department; $("aiGovPurpose").value=x.purpose; $("aiGovRisk").value=x.risk; $("aiGovStatus").value=x.status; $("aiGovData").value=x.data||""; }
+    function saveAIGovernanceSystem(event) { event.preventDefault(); const systems=getAIGovSystems(); const id=$("aiGovEditId").value; const old=systems.find(s=>s.id===id); const item={id:id||("ai-"+Date.now()+"-"+Math.random().toString(36).slice(2,7)),name:$("aiGovName").value.trim(),vendor:$("aiGovVendor").value.trim(),owner:$("aiGovOwner").value.trim(),department:$("aiGovDepartment").value,purpose:$("aiGovPurpose").value.trim(),risk:$("aiGovRisk").value,status:$("aiGovStatus").value,data:$("aiGovData").value.trim(),createdAt:old?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()}; const next=old?systems.map(s=>s.id===id?item:s):[item,...systems]; localStorage.setItem(AI_GOV_SYSTEMS_KEY,JSON.stringify(next)); addAIGovAudit(`${old?"Updated":"Registered"} ${item.name} · ${item.status} · ${item.risk} risk`); closeAIGovernanceForm(); renderAIGovernance(); showToast("AI system saved in this browser.","success"); }
+    function deleteAIGovernanceSystem(id) { const systems=getAIGovSystems(); const item=systems.find(s=>s.id===id); if(!item||!confirm(`Delete ${item.name} from this browser's AI inventory?`))return; localStorage.setItem(AI_GOV_SYSTEMS_KEY,JSON.stringify(systems.filter(s=>s.id!==id))); addAIGovAudit(`Deleted ${item.name} from the AI inventory`); renderAIGovernance(); }
+    function saveAIGovernancePolicy() { localStorage.setItem(AI_GOV_POLICY_KEY,$("aiGovPolicy").value); addAIGovAudit("Updated organization AI policy notes"); renderAIGovernance(); showToast("Policy notes saved in this browser.","success"); }
+    document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("aiGovModal")&&!$("aiGovModal").classList.contains("hidden"))closeAIGovernanceForm();});
 
     /* DASHBOARD */
 
