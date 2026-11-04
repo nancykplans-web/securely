@@ -7163,6 +7163,9 @@
     window.scrollToSection =
       scrollToSection;
 
+    // Expose AI Governance navigation to the interaction bridge.
+    window.showGovernance = showGovernance;
+
     window.calculateOperationsOpportunity = calculateOperationsOpportunity;
     window.saveOperationsOpportunity = saveOperationsOpportunity;
     window.deleteOperationsOpportunity = deleteOperationsOpportunity;
@@ -7228,6 +7231,8 @@
               run("scrollToSection", ["toolsSection"]);
             } else if (nav === "operations") {
               run("scrollToSection", ["operationsSection"]);
+            } else if (nav === "governance") {
+              run("showGovernance");
             }
             return;
           }
